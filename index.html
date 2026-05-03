@@ -1576,8 +1576,8 @@ footer {
 <script>
 // ── Extension detection & smart routing ──────────────────────────────────────
 // The extension exposes a known resource URL we can ping to detect installation
-const EXT_PING_URL = 'chrome-extension://EXTENSION_ID_PLACEHOLDER/icons/icon-128.png';
-// NOTE: Replace EXTENSION_ID_PLACEHOLDER with your actual extension ID
+const EXT_PING_URL = 'chrome-extension://fhlcnjndhiakbmcjcoiifigjfacfhiee/icons/icon-128.png';
+// NOTE: Replace fhlcnjndhiakbmcjcoiifigjfacfhiee with your actual extension ID
 // Found at chrome://extensions when developer mode is on
 
 let extInstalled  = false;
@@ -1597,7 +1597,7 @@ async function detectExtension() {
 // Route: "Add to Chrome" or "Open Dashboard" depending on install state
 function getAddToChromeUrl() {
   // Chrome Web Store URL (replace with your actual listing URL after publishing)
-  return 'https://chrome.google.com/webstore/detail/kinsentry/EXTENSION_ID_PLACEHOLDER';
+  return 'https://chrome.google.com/webstore/detail/kinsentry/fhlcnjndhiakbmcjcoiifigjfacfhiee';
 }
 
 function getExtensionUrl(page) {
@@ -1607,7 +1607,7 @@ function getExtensionUrl(page) {
     login:     'signup/signup.html?mode=login',
     newtab:    'newtab/newtab.html'
   };
-  return `chrome-extension://EXTENSION_ID_PLACEHOLDER/${pages[page] || pages.dashboard}`;
+  return `chrome-extension://fhlcnjndhiakbmcjcoiifigjfacfhiee/${pages[page] || pages.dashboard}`;
 }
 
 // Update all CTAs based on extension state
@@ -1633,12 +1633,9 @@ async function updateCTAs() {
       btn.href   = getExtensionUrl('login');
       btn.target = '_blank';
     } else {
-      // Not installed — take to Chrome Web Store first
-      btn.href = getAddToChromeUrl();
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        showExtensionPrompt('login');
-      });
+      // Extension not detected — still link directly to extension login page
+      btn.href   = getExtensionUrl('login');
+      btn.target = '_blank';
     }
   });
 
