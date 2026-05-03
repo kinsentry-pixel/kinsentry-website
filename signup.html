@@ -537,6 +537,14 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
         mode = 'login';
         applyMode();
         showMsg('Account already exists — please sign in.', 'error');
+      } else if (data.code === 'GOOGLE_ACCOUNT_NO_PASSWORD') {
+        // Google account trying email/password — offer two options
+        elMsg.innerHTML = `${data.message} <br><br>
+          <button onclick="sendResetForMerge('${document.getElementById('email').value.trim()}')"
+            style="background:none;border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0;text-decoration:underline;">
+            Set a password via email →
+          </button>`;
+        elMsg.className = 'msg show error';
       } else {
         showMsg(data.message || 'Something went wrong. Please try again.', 'error');
       }
@@ -579,6 +587,22 @@ document.getElementById('btn-forgot').addEventListener('click', async () => {
 
 // ── Enter key ─────────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-submit').click(); });
+
+// ── Send reset email for Google→email merge ──────────────────────────────────
+// Called when a Google user tries to log in with email/password.
+// Sends them a reset link so they can set a password and use either method.
+async function sendResetForMerge(email) {
+  try {
+    await fetch(`${API}/api/auth/forgot-password`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email })
+    });
+    showMsg(`✓ Password setup link sent to ${email}. Check your inbox — once set, you can sign in with email or Google.`, 'success');
+  } catch(e) {
+    showMsg('Could not send email. Please try again.', 'error');
+  }
+}
 
 // ── Session restore on page load ─────────────────────────────────────────────
 // If user is already signed in (localStorage), skip the form and show post-login state
