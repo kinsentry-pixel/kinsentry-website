@@ -1668,19 +1668,34 @@ async function updateCTAs() {
     }
   });
 
-  // Fix 2: "Log In" button → show user's name if signed in
+  // "Log In" button logic:
+  // - Signed in → show user's first name, link to dashboard
+  // - Not signed in + installed → Log In → extension login page
+  // - Not signed in + NOT installed → Log In → show install prompt (can't open extension URL)
   document.querySelectorAll('.nav-login').forEach(btn => {
-    if (installed && signedIn && userName) {
-      // Show first name only
+    if (signedIn && userName) {
       const firstName = userName.split(' ')[0];
       btn.textContent = `Hi, ${firstName}`;
-      btn.href        = getExtensionUrl('dashboard');
+      btn.href        = installed ? getExtensionUrl('dashboard') : '#';
       btn.target      = '_blank';
       btn.style.fontWeight = '600';
-    } else {
+      btn.onclick     = null;
+    } else if (installed) {
       btn.textContent = 'Log In';
       btn.href        = getExtensionUrl('login');
       btn.target      = '_blank';
+      btn.style.fontWeight = '';
+      btn.onclick     = null;
+    } else {
+      // Extension not installed — clicking Log In shows the install prompt
+      btn.textContent = 'Log In';
+      btn.href        = '#';
+      btn.target      = '';
+      btn.style.fontWeight = '';
+      btn.onclick = (e) => {
+        e.preventDefault();
+        showInstallPrompt();
+      };
     }
   });
 
