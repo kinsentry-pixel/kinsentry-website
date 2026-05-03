@@ -988,7 +988,7 @@ footer {
     <a href="#how">How It Works</a>
     <a href="#pricing">Pricing</a>
     <a href="#trust">Reviews</a>
-    <a href="/login.html" class="nav-login" id="nav-login">Log In</a>
+    <a href="/signup.html?mode=login" class="nav-login" id="nav-login">Log In</a>
     <a href="#" class="nav-cta" id="nav-cta">Add to Chrome — Free</a>
   </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Menu">
@@ -1001,7 +1001,7 @@ footer {
   <a href="#how" onclick="closeMobileNav()">How It Works</a>
   <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
   <a href="#trust" onclick="closeMobileNav()">Reviews</a>
-  <a href="/login.html" onclick="closeMobileNav()">Log In / Sign Up</a>
+  <a href="/signup.html?mode=login" onclick="closeMobileNav()">Log In / Sign Up</a>
   <a href="#" class="nav-cta" onclick="closeMobileNav()">Add to Chrome — Free</a>
 </div>
 
@@ -1668,38 +1668,27 @@ async function updateCTAs() {
     }
   });
 
-  // "Log In" button logic:
-  // - Signed in → show user's first name, link to dashboard
-  // - Not signed in + installed → Log In → extension login page
-  // - Not signed in + NOT installed → Log In → show install prompt (can't open extension URL)
+  // "Log In" button:
+  // Signed in → Hi [Name] → dashboard
+  // Not signed in → /signup.html (hosted, works without extension)
   document.querySelectorAll('.nav-login').forEach(btn => {
     if (signedIn && userName) {
       const firstName = userName.split(' ')[0];
-      btn.textContent = `Hi, ${firstName}`;
-      btn.href        = installed ? getExtensionUrl('dashboard') : '#';
-      btn.target      = '_blank';
+      btn.textContent      = `Hi, ${firstName}`;
+      btn.href             = installed ? getExtensionUrl('dashboard') : '/signup.html';
+      btn.target           = installed ? '_blank' : '';
       btn.style.fontWeight = '600';
-      btn.onclick     = null;
-    } else if (installed) {
-      btn.textContent = 'Log In';
-      btn.href        = getExtensionUrl('login');
-      btn.target      = '_blank';
-      btn.style.fontWeight = '';
-      btn.onclick     = null;
+      btn.onclick          = null;
     } else {
-      // Extension not installed — clicking Log In shows the install prompt
-      btn.textContent = 'Log In';
-      btn.href        = '#';
-      btn.target      = '';
+      btn.textContent      = 'Log In';
+      btn.href             = '/signup.html?mode=login';
+      btn.target           = '';
       btn.style.fontWeight = '';
-      btn.onclick = (e) => {
-        e.preventDefault();
-        showInstallPrompt();
-      };
+      btn.onclick          = null;
     }
   });
 
-  // Pricing buttons
+    // Pricing buttons
   document.querySelectorAll('.pricing-btn').forEach(btn => {
     if (installed) {
       btn.href   = getExtensionUrl('signup');
@@ -1761,10 +1750,10 @@ function showInstallPrompt() {
   modal.innerHTML = `
     <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:420px;width:100%;text-align:center;font-family:'Poppins',sans-serif;">
       <img src="images/logo-nav.png" style="width:52px;margin-bottom:16px;">
-      <h3 style="font-size:20px;font-weight:700;color:#0D1B3E;margin-bottom:8px;">Install the extension first</h3>
+      <h3 style="font-size:20px;font-weight:700;color:#0D1B3E;margin-bottom:8px;">Extension not installed</h3>
       <p style="font-size:13px;color:#5A6478;margin-bottom:24px;line-height:1.6;">
-        You're signed in to KinSentry but the extension isn't installed on this browser.<br>
-        Install it to start protecting your loved ones.
+        You're signed in but KinSentry isn't installed on this browser.<br>
+        Add it to Chrome or Edge to start protecting your loved ones.
       </p>
       <a href="${getAddToChromeUrl()}" target="_blank"
         style="display:block;background:#1565C0;color:white;padding:13px;border-radius:10px;font-weight:600;font-size:14px;text-decoration:none;margin-bottom:12px;">

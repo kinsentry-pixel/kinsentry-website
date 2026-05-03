@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KinSentry — Sign In / Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:      #0D1B3E;
+      --blue:      #1565C0;
+      --blue-dark: #0D47A1;
+      --accent:    #42A5F5;
+      --teal:      #1D9E75;
+      --teal-light:#E1F5EE;
+      --red:       #EF4444;
+      --bg:        #F5F6F8;
+      --surface:   #FFFFFF;
+      --border:    rgba(0,0,0,0.08);
+      --text:      #0D1B3E;
+      --text-2:    #5A6478;
+      --text-3:    #9BA3B4;
+      --input-bg:  #FFFFFF;
+      --radius:    12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-img { width: 28px; height: 28px; object-fit: contain; }
+    .logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px; color: #fff;
+      text-decoration: none;
+    }
+    .header-tagline {
+      margin-left: auto;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .signup-wrap { width: 100%; max-width: 440px; }
+
+    /* Trial badge */
+    .trial-badge {
+      background: var(--navy);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .trial-badge-icon { font-size: 22px; }
+    .trial-badge-text { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+    .trial-badge-text strong { color: #fff; }
+
+    .signup-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 16px;
+    }
+
+    /* Hero */
+    .card-hero { text-align: center; margin-bottom: 28px; }
+    .card-logo { width: 52px; height: 52px; object-fit: contain; margin: 0 auto 12px; display: block; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px; color: var(--text); margin-bottom: 6px;
+    }
+    .card-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    .feature-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      justify-content: center; margin-top: 12px;
+    }
+    .chip {
+      font-size: 11px; padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--teal-light); color: #0F6E56;
+    }
+
+    /* Google button */
+    .btn-google {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; width: 100%;
+      background: var(--input-bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px; font-size: 14px; font-weight: 500;
+      color: var(--text); cursor: pointer; font-family: inherit;
+      transition: background 0.15s; margin-bottom: 4px;
+    }
+    .btn-google:hover { background: var(--bg); }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 18px 0; font-size: 12px; color: var(--text-3);
+    }
+    .divider::before,.divider::after {
+      content:''; flex:1; height:0.5px; background:var(--border);
+    }
+
+    /* Fields */
+    .field-group { margin-bottom: 12px; }
+    label {
+      display: block; font-size: 12px; font-weight: 500;
+      color: var(--text-2); margin-bottom: 5px;
+    }
+    input[type=text],input[type=email],input[type=password] {
+      width: 100%; padding: 11px 14px;
+      background: var(--input-bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px; color: var(--text);
+      font-family: inherit; outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(21,101,192,0.1); }
+    input::placeholder { color: var(--text-3); }
+
+    /* Terms */
+    .terms-row {
+      display: flex; align-items: flex-start;
+      gap: 8px; font-size: 11px; color: var(--text-2);
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .terms-row input { width: auto; margin-top: 2px; }
+    .terms-row a { color: var(--accent); text-decoration: none; }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%; background: var(--blue); color: #fff;
+      border: none; border-radius: var(--radius);
+      padding: 13px; font-size: 15px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s; margin-bottom: 12px;
+    }
+    .btn-submit:hover { background: var(--blue-dark); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Messages */
+    .msg {
+      border-radius: var(--radius); padding: 10px 14px;
+      font-size: 13px; margin-bottom: 12px; display: none;
+    }
+    .msg.error   { background: rgba(239,68,68,0.08); border: 0.5px solid rgba(239,68,68,0.2); color: #B91C1C; }
+    .msg.success { background: rgba(29,158,117,0.08); border: 0.5px solid rgba(29,158,117,0.2); color: #065F46; }
+    .msg.show { display: block; }
+
+    /* Mode toggle */
+    .mode-toggle {
+      text-align: center; font-size: 13px;
+      color: var(--text-2); margin-top: 4px;
+    }
+    .mode-toggle button {
+      background: none; border: none;
+      color: var(--accent); font-size: 13px;
+      font-weight: 500; cursor: pointer; font-family: inherit;
+    }
+
+    /* Forgot */
+    #forgot-row {
+      display: none; justify-content: flex-end;
+      margin-top: -8px; margin-bottom: 4px;
+    }
+    #btn-forgot {
+      background: none; border: none;
+      font-size: 12px; color: var(--blue);
+      cursor: pointer; font-family: inherit; padding: 0;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* After-login box */
+    .after-login-box {
+      display: none;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+    .after-login-box.show { display: block; }
+    .after-login-box h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px; margin-bottom: 8px;
+    }
+    .after-login-box p { font-size: 13px; color: var(--text-2); margin-bottom: 20px; line-height: 1.6; }
+    .btn-dashboard {
+      display: inline-block;
+      background: var(--blue); color: white;
+      border-radius: 10px; padding: 12px 24px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; font-family: inherit;
+      transition: opacity 0.15s; margin-bottom: 10px;
+    }
+    .btn-dashboard:hover { opacity: 0.88; }
+    .btn-install {
+      display: inline-block;
+      background: var(--teal); color: white;
+      border-radius: 10px; padding: 12px 24px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; font-family: inherit;
+      transition: opacity 0.15s; margin-bottom: 10px;
+    }
+    .btn-install:hover { opacity: 0.88; }
+
+    /* Footer */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 16px 32px;
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 16px;
+    }
+    .footer-links a {
+      font-size: 11px; color: var(--text-3); text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-2); }
+  </style>
+</head>
+<body>
+
+<header>
+  <img class="logo-img" id="header-logo" src="images/logo-nav.png" alt="KinSentry">
+  <a href="/" class="logo-text">KinSentry</a>
+  <span class="header-tagline">Secure today. Safer tomorrow.</span>
+</header>
+
+<main>
+  <div class="signup-wrap">
+
+    <!-- Trial badge (signup mode only) -->
+    <div class="trial-badge" id="trial-badge">
+      <div class="trial-badge-icon">🛡️</div>
+      <div class="trial-badge-text">
+        <strong>Free account includes a 30-day Guardian trial</strong> — voice alerts, scam number notifications, and more. No credit card needed.
+      </div>
+    </div>
+
+    <!-- Auth card -->
+    <div class="signup-card" id="auth-card">
+      <div class="card-hero">
+        <img class="card-logo" src="images/logo-nav.png" alt="KinSentry">
+        <div class="card-title" id="card-title">Create your free account</div>
+        <div class="card-desc" id="card-desc">Protect your family from remote desktop scams — takes 30 seconds.</div>
+        <div class="feature-chips" id="feature-chips">
+          <span class="chip">✓ Remote site blocking</span>
+          <span class="chip">✓ 30-day Guardian trial</span>
+          <span class="chip">✓ No credit card</span>
+        </div>
+      </div>
+
+      <!-- Google -->
+      <button class="btn-google" id="btn-google">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        <span id="google-btn-text">Continue with Google</span>
+      </button>
+
+      <div class="divider">or</div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="field-group name-field-group" id="name-group">
+        <label for="name">Your name</label>
+        <input type="text" id="name" placeholder="e.g. Mary Johnson" autocomplete="name">
+      </div>
+      <div class="field-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="mary@example.com" autocomplete="email">
+      </div>
+      <div class="field-group">
+        <label for="password" style="display:flex;justify-content:space-between;align-items:center;">
+          Password
+          <button type="button" id="toggle-password" style="background:none;border:none;font-size:11px;color:var(--blue);cursor:pointer;font-family:inherit;padding:0;">Show</button>
+        </label>
+        <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password">
+      </div>
+
+      <div id="forgot-row">
+        <button type="button" id="btn-forgot">Forgot password?</button>
+      </div>
+
+      <div class="terms-row" id="terms-row">
+        <input type="checkbox" id="terms-check">
+        <label for="terms-check" style="margin:0;font-size:11px;">
+          I agree to KinSentry's <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button class="btn-submit" id="btn-submit">Start free trial →</button>
+
+      <div class="mode-toggle">
+        <span id="mode-text">Already have an account?</span>
+        <button id="btn-mode-switch"> Sign in</button>
+      </div>
+    </div>
+
+    <!-- Post-login card (shown after successful auth) -->
+    <div class="after-login-box" id="after-login-box">
+      <img src="images/logo-nav.png" style="width:48px;margin-bottom:16px;">
+      <h2>You're signed in! 🎉</h2>
+      <p id="after-login-msg">Loading...</p>
+      <div id="after-login-actions"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/support.html">Support</a>
+    <a href="/">kinsentry.com</a>
+  </div>
+</footer>
+
+<script>
+const API    = 'https://api.kinsentry.com';
+const EXT_ID = 'fhlcnjndhiakbmcjcoiifigjfacfhiee';
+const EXT_DASHBOARD = `chrome-extension://${EXT_ID}/dashboard/dashboard.html`;
+const EXT_LOGIN     = `chrome-extension://${EXT_ID}/signup/signup.html?mode=login`;
+const STORE_URL     = 'https://chromewebstore.google.com/detail/kinsentry/fhlcnjndhiakbmcjcoiifigjfacfhiee';
+
+const params = new URLSearchParams(location.search);
+let mode = params.get('mode') === 'login' ? 'login' : 'signup';
+
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const elTitle      = document.getElementById('card-title');
+const elDesc       = document.getElementById('card-desc');
+const elChips      = document.getElementById('feature-chips');
+const elTrialBadge = document.getElementById('trial-badge');
+const elNameGroup  = document.getElementById('name-group');
+const elForgot     = document.getElementById('forgot-row');
+const elTerms      = document.getElementById('terms-row');
+const elSubmit     = document.getElementById('btn-submit');
+const elModeText   = document.getElementById('mode-text');
+const elModeBtn    = document.getElementById('btn-mode-switch');
+const elGoogleText = document.getElementById('google-btn-text');
+const elMsg        = document.getElementById('msg');
+const elAuthCard   = document.getElementById('auth-card');
+const elAfterLogin = document.getElementById('after-login-box');
+
+function applyMode() {
+  if (mode === 'login') {
+    elTitle.textContent      = 'Welcome back';
+    elDesc.textContent       = 'Sign in to your KinSentry account.';
+    elChips.style.display    = 'none';
+    elTrialBadge.style.display = 'none';
+    elNameGroup.style.display  = 'none';
+    elForgot.style.display   = 'flex';
+    elTerms.style.display    = 'none';
+    elSubmit.textContent     = 'Sign in →';
+    elModeText.textContent   = "Don't have an account?";
+    elModeBtn.textContent    = ' Sign up free';
+    elGoogleText.textContent = 'Continue with Google';
+    document.getElementById('password').autocomplete = 'current-password';
+    document.getElementById('password').placeholder  = 'Your password';
+  } else {
+    elTitle.textContent      = 'Create your free account';
+    elDesc.textContent       = 'Protect your family from remote desktop scams — takes 30 seconds.';
+    elChips.style.display    = 'flex';
+    elTrialBadge.style.display = 'flex';
+    elNameGroup.style.display  = 'block';
+    elForgot.style.display   = 'none';
+    elTerms.style.display    = 'flex';
+    elSubmit.textContent     = 'Start free trial →';
+    elModeText.textContent   = 'Already have an account?';
+    elModeBtn.textContent    = ' Sign in';
+    elGoogleText.textContent = 'Sign up with Google';
+    document.getElementById('password').autocomplete = 'new-password';
+    document.getElementById('password').placeholder  = 'At least 8 characters';
+  }
+}
+applyMode();
+
+elModeBtn.addEventListener('click', () => {
+  mode = mode === 'login' ? 'signup' : 'login';
+  applyMode();
+  showMsg('', '');
+});
+
+// ── Show/hide password ────────────────────────────────────────────────────────
+document.getElementById('toggle-password').addEventListener('click', () => {
+  const inp = document.getElementById('password');
+  const btn = document.getElementById('toggle-password');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
+});
+
+function showMsg(text, type) {
+  elMsg.textContent = text;
+  elMsg.className   = text ? `msg show ${type}` : 'msg';
+}
+
+function setLoading(on) {
+  elSubmit.disabled = on;
+  elSubmit.innerHTML = on
+    ? `<span class="spinner"></span> Please wait…`
+    : (mode === 'login' ? 'Sign in →' : 'Start free trial →');
+}
+
+// ── Detect extension installed ────────────────────────────────────────────────
+function detectExtension() {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload  = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = `chrome-extension://${EXT_ID}/icons/icon-16.png?_=${Date.now()}`;
+    setTimeout(() => resolve(false), 1500);
+  });
+}
+
+// ── After successful auth ─────────────────────────────────────────────────────
+async function afterAuth({ email, name, tier }) {
+  // Save to localStorage so index.html can read it
+  localStorage.setItem('ks_user', JSON.stringify({ email, name, tier }));
+
+  // Hide auth form, show post-login card
+  elAuthCard.style.display = 'none';
+  elTrialBadge.style.display = 'none';
+  elAfterLogin.classList.add('show');
+
+  const firstName = (name || email).split(' ')[0];
+  const msgEl     = document.getElementById('after-login-msg');
+  const actionsEl = document.getElementById('after-login-actions');
+
+  // Check if extension is installed
+  const installed = await detectExtension();
+
+  if (installed) {
+    msgEl.innerHTML = `Welcome, <strong>${firstName}</strong>! The extension is installed. Open your dashboard to see your protection status.`;
+    actionsEl.innerHTML = `
+      <a href="${EXT_DASHBOARD}" target="_blank" class="btn-dashboard">🛡️ Open Dashboard</a>
+    `;
+  } else {
+    msgEl.innerHTML = `Welcome, <strong>${firstName}</strong>! Your account is ready. Now install the KinSentry extension to start protecting your loved ones.`;
+    actionsEl.innerHTML = `
+      <a href="${STORE_URL}" target="_blank" class="btn-install">Add to Chrome — Free</a>
+      <br>
+      <small style="color:var(--text-3);font-size:11px;display:block;margin-top:8px;">
+        After installing, sign in inside the extension using the same email.
+      </small>
+    `;
+  }
+}
+
+// ── Email/password submit ─────────────────────────────────────────────────────
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  showMsg('', '');
+  const name  = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const pass  = document.getElementById('password').value;
+  const terms = document.getElementById('terms-check').checked;
+
+  if (mode === 'signup') {
+    if (!name)           return showMsg('Please enter your name.', 'error');
+    if (!email)          return showMsg('Please enter your email.', 'error');
+    if (pass.length < 8) return showMsg('Password must be at least 8 characters.', 'error');
+    if (!terms)          return showMsg('Please accept the Terms of Service.', 'error');
+  } else {
+    if (!email) return showMsg('Please enter your email.', 'error');
+    if (!pass)  return showMsg('Please enter your password.', 'error');
+  }
+
+  setLoading(true);
+  try {
+    const endpoint = mode === 'signup' ? '/api/auth/signup' : '/api/auth/login';
+    const res  = await fetch(`${API}${endpoint}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name, email, password: pass }),
+      signal:  AbortSignal.timeout(12000)
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 409) {
+        mode = 'login';
+        applyMode();
+        showMsg('Account already exists — please sign in.', 'error');
+      } else {
+        showMsg(data.message || 'Something went wrong. Please try again.', 'error');
+      }
+      setLoading(false);
+      return;
+    }
+
+    await afterAuth({ email: data.email || email, name: data.name || name, tier: data.tier });
+  } catch(e) {
+    showMsg('Could not connect. Please check your connection and try again.', 'error');
+  }
+  setLoading(false);
+});
+
+// ── Google sign-in ────────────────────────────────────────────────────────────
+// Website uses OAuth redirect flow (backend handles it)
+document.getElementById('btn-google').addEventListener('click', () => {
+  const redirectBack = encodeURIComponent(location.origin + '/signup.html');
+  window.location.href = `${API}/api/auth/google-web?redirect=${redirectBack}&mode=${mode}`;
+});
+
+// ── Forgot password ───────────────────────────────────────────────────────────
+document.getElementById('btn-forgot').addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  if (!email) return showMsg('Enter your email address above first.', 'error');
+  showMsg('Sending reset link…', '');
+  try {
+    const res = await fetch(`${API}/api/auth/forgot-password`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email }),
+      signal:  AbortSignal.timeout(8000)
+    });
+    showMsg(
+      res.ok ? `✓ Reset link sent to ${email}` : 'Could not send reset link. Try again.',
+      res.ok ? 'success' : 'error'
+    );
+  } catch(e) { showMsg('Could not connect. Try again.', 'error'); }
+});
+
+// ── Enter key ─────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-submit').click(); });
+
+// ── Handle Google OAuth callback (?ks_email=...&ks_name=...&ks_tier=...) ──────
+(async () => {
+  const p = new URLSearchParams(location.search);
+  if (p.has('ks_error')) {
+    showMsg(`Google sign-in failed: ${p.get('ks_error')}`, 'error');
+    history.replaceState(null, '', location.pathname);
+    return;
+  }
+  if (p.has('ks_email')) {
+    history.replaceState(null, '', location.pathname);
+    await afterAuth({ email: p.get('ks_email'), name: p.get('ks_name') || '', tier: p.get('ks_tier') });
+  }
+})();
+</script>
+</body>
+</html>
