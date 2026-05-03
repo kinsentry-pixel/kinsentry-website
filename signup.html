@@ -456,11 +456,11 @@ function detectExtension() {
 
 // ── After successful auth ─────────────────────────────────────────────────────
 async function afterAuth({ email, name, tier }) {
-  // Save to localStorage so index.html can read it
-  localStorage.setItem('ks_user', JSON.stringify({ email, name, tier }));
+  // Persist session in localStorage (survives page reloads)
+  localStorage.setItem('ks_user', JSON.stringify({ email, name: name || '', tier: tier || 'free_trial' }));
 
   // Hide auth form, show post-login card
-  elAuthCard.style.display = 'none';
+  elAuthCard.style.display   = 'none';
   elTrialBadge.style.display = 'none';
   elAfterLogin.classList.add('show');
 
@@ -470,6 +470,18 @@ async function afterAuth({ email, name, tier }) {
 
   // Check if extension is installed
   const installed = await detectExtension();
+
+  // Bug 1 fix: Activate the extension by sending login credentials via chrome.runtime.sendMessage
+  // This logs the user into the extension automatically after website login
+  if (installed) {
+    try {
+      chrome.runtime.sendMessage(EXT_ID, {
+        type:  'KINSENTRY_USER_SIGNED_IN',
+        email: email,
+        name:  name || ''
+      }, () => { if (chrome.runtime.lastError) {} }); // silence errors
+    } catch(e) {}
+  }
 
   if (installed) {
     msgEl.innerHTML = `Welcome, <strong>${firstName}</strong>! The extension is installed. Open your dashboard to see your protection status.`;
@@ -509,12 +521,15 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
   setLoading(true);
   try {
     const endpoint = mode === 'signup' ? '/api/auth/signup' : '/api/auth/login';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
     const res  = await fetch(`${API}${endpoint}`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ name, email, password: pass }),
-      signal:  AbortSignal.timeout(12000)
+      signal:  controller.signal
     });
+    clearTimeout(timer);
     const data = await res.json();
 
     if (!res.ok) {
@@ -564,6 +579,22 @@ document.getElementById('btn-forgot').addEventListener('click', async () => {
 
 // ── Enter key ─────────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-submit').click(); });
+
+// ── Session restore on page load ─────────────────────────────────────────────
+// If user is already signed in (localStorage), skip the form and show post-login state
+(function restoreSession() {
+  try {
+    const raw = localStorage.getItem('ks_user');
+    if (!raw) return;
+    const user = JSON.parse(raw);
+    if (!user?.email) return;
+    // Already logged in — show post-login card immediately
+    // Use setTimeout so DOM is ready
+    setTimeout(async () => {
+      await afterAuth({ email: user.email, name: user.name || '', tier: user.tier || 'free_trial' });
+    }, 0);
+  } catch(e) {}
+})();
 
 // ── Handle Google OAuth callback (?ks_email=...&ks_name=...&ks_tier=...) ──────
 (async () => {
