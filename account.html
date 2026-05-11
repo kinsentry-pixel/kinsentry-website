@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Your Account — KinSentry</title>
+<link rel="icon" href="images/logo-nav.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #0D1B3E;
+    --blue:      #1565C0;
+    --blue-dark: #0D47A1;
+    --accent:    #42A5F5;
+    --teal:      #1D9E75;
+    --teal-light:#E1F5EE;
+    --amber:     #F59E0B;
+    --amber-bg:  #FEF3C7;
+    --red:       #EF4444;
+    --red-bg:    #FEE2E2;
+    --bg:        #F5F6F8;
+    --surface:   #FFFFFF;
+    --border:    rgba(0,0,0,0.08);
+    --text:      #0D1B3E;
+    --text-2:    #5A6478;
+    --text-3:    #9BA3B4;
+    --input-bg:  #FFFFFF;
+    --radius:    12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-img { width: 28px; height: 28px; object-fit: contain; }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: #fff;
+    text-decoration: none;
+  }
+  .header-tagline {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1;
+    padding: 32px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .account-wrap {
+    width: 100%;
+    max-width: 960px;
+  }
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 0;
+    position: sticky;
+    top: 20px;
+  }
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 18px;
+    font-size: 14px;
+    color: var(--text-2);
+    text-decoration: none;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.12s, color 0.12s;
+  }
+  .sidebar a:hover {
+    background: rgba(13, 71, 161, 0.04);
+    color: var(--text);
+  }
+  .sidebar a.active {
+    color: var(--blue);
+    background: rgba(21, 101, 192, 0.06);
+    border-left-color: var(--blue);
+    font-weight: 500;
+  }
+  .sidebar .nav-emoji { font-size: 15px; line-height: 1; }
+  .sidebar-divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 8px 16px;
+  }
+  .sidebar .sign-out {
+    color: var(--text-2);
+    font-size: 13px;
+  }
+  .sidebar .sign-out:hover { color: var(--red); }
+
+  /* ── CONTENT ── */
+  .panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    display: none;
+  }
+  .panel.active { display: block; }
+  .panel h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .panel-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+  }
+
+  /* Common field */
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+  }
+  .field input[readonly] {
+    background: rgba(0,0,0,0.025);
+    color: var(--text-2);
+    cursor: not-allowed;
+  }
+  .field-help {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 5px;
+  }
+
+  /* Read-only row */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 14px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .key { color: var(--text-2); }
+  .info-row .val { font-weight: 500; color: var(--text); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, transform 0.06s;
+  }
+  .btn:hover { background: rgba(0,0,0,0.03); }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .btn.primary:hover { background: var(--blue-dark); }
+  .btn.danger {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+  .btn.danger:hover { background: #DC2626; }
+
+  /* Tier badge */
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tier-badge.free       { background: rgba(0,0,0,0.06); color: var(--text-2); }
+  .tier-badge.free_trial { background: rgba(66, 165, 245, 0.12); color: var(--blue); }
+  .tier-badge.guardian   { background: var(--teal-light); color: var(--teal); }
+  .tier-badge.family     { background: rgba(245, 158, 11, 0.15); color: #B45309; }
+
+  /* Alerts */
+  .alert {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .alert.success { background: var(--teal-light); color: #0F6E56; border: 0.5px solid rgba(29, 158, 117, 0.25); }
+  .alert.error   { background: var(--red-bg);     color: #B91C1C; border: 0.5px solid rgba(239, 68, 68, 0.25); }
+  .alert.info    { background: rgba(66, 165, 245, 0.1); color: var(--blue); border: 0.5px solid rgba(66, 165, 245, 0.25); }
+  .alert.warning { background: var(--amber-bg);   color: #B45309; border: 0.5px solid rgba(245, 158, 11, 0.3); }
+  .alert.hidden  { display: none; }
+
+  /* Trial-restored banner */
+  .restore-banner {
+    background: var(--teal-light);
+    border: 0.5px solid rgba(29, 158, 117, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #0F6E56;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .restore-banner.hidden { display: none; }
+
+  /* Danger zone */
+  .danger-zone {
+    background: rgba(239, 68, 68, 0.04);
+    border: 0.5px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .danger-zone h3 {
+    color: #B91C1C;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .danger-zone p {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* Toast */
+  .toast-stack {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 1000;
+  }
+  .toast {
+    min-width: 240px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(13,27,62,0.1);
+    font-size: 13px;
+    animation: toastIn 0.18s ease;
+  }
+  .toast.success { border-left: 3px solid var(--teal); }
+  .toast.error   { border-left: 3px solid var(--red); }
+  @keyframes toastIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-3);
+    font-size: 13px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #fff;
+    border-top: 0.5px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+  }
+  .footer-links a {
+    color: var(--text-2);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--blue); }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      padding: 6px;
+      gap: 4px;
+    }
+    .sidebar a {
+      padding: 8px 14px;
+      white-space: nowrap;
+      border-left: 0;
+      border-bottom: 2px solid transparent;
+      flex-shrink: 0;
+    }
+    .sidebar a.active {
+      border-left: 0;
+      border-bottom-color: var(--blue);
+    }
+    .sidebar-divider, .sidebar .sign-out { display: none; }
+    main { padding: 20px 14px; }
+    .panel { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo-img" src="images/logo-nav.png" alt="KinSentry">
+  <a href="/" class="logo-text">KinSentry</a>
+  <span class="header-tagline">Secure today. Safer tomorrow.</span>
+</header>
+
+<main>
+  <div class="account-wrap">
+    <div id="loading-state" class="loading"><span class="spinner"></span>Loading your account…</div>
+
+    <div id="account-view" style="display:none;">
+      <h1 class="page-title">Your account</h1>
+      <p class="page-sub" id="account-greeting">Manage your profile, subscription, and security.</p>
+
+      <div class="restore-banner hidden" id="restore-banner">
+        ✅ <span>Welcome back. We restored your account that was scheduled for deletion.</span>
+      </div>
+
+      <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+          <a data-tab="profile" class="active">
+            <span class="nav-emoji">👤</span> Profile
+          </a>
+          <a data-tab="subscription">
+            <span class="nav-emoji">💳</span> Subscription
+          </a>
+          <a data-tab="security">
+            <span class="nav-emoji">🔒</span> Security
+          </a>
+          <a data-tab="delete">
+            <span class="nav-emoji">🗑️</span> Delete account
+          </a>
+          <div class="sidebar-divider"></div>
+          <a id="open-dashboard-link">
+            <span class="nav-emoji">🛡️</span> Open extension dashboard
+          </a>
+          <a id="sign-out-link" class="sign-out">
+            <span class="nav-emoji">↪︎</span> Sign out
+          </a>
+        </nav>
+
+        <!-- Content panels -->
+        <div>
+          <!-- PROFILE -->
+          <section class="panel active" id="panel-profile">
+            <h2>Profile</h2>
+            <p class="panel-sub">Your account information.</p>
+
+            <div class="alert hidden" id="profile-alert"></div>
+
+            <div class="info-row">
+              <span class="key">Email</span>
+              <span class="val" id="info-email">—</span>
+            </div>
+            <div class="info-row">
+              <span class="key">Sign-in method</span>
+              <span class="val" id="info-auth">—</span>
+            </div>
+            <div class="info-row">
+              <span class="key">Member since</span>
+              <span class="val" id="info-created">—</span>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <div class="field">
+                <label for="name-input">Display name</label>
+                <input type="text" id="name-input" maxlength="80" placeholder="Your name">
+              </div>
+              <button class="btn primary" id="save-name-btn">Save changes</button>
+            </div>
+          </section>
+
+          <!-- SUBSCRIPTION -->
+          <section class="panel" id="panel-subscription">
+            <h2>Subscription</h2>
+            <p class="panel-sub">Your KinSentry plan.</p>
+
+            <div class="info-row">
+              <span class="key">Current plan</span>
+              <span class="val">
+                <span class="tier-badge" id="tier-pill">—</span>
+              </span>
+            </div>
+            <div class="info-row" id="trial-row" style="display:none;">
+              <span class="key">Trial ends</span>
+              <span class="val" id="trial-expiry">—</span>
+            </div>
+
+            <div id="subscription-cta" style="margin-top: 22px;"></div>
+          </section>
+
+          <!-- SECURITY -->
+          <section class="panel" id="panel-security">
+            <h2>Security</h2>
+            <p class="panel-sub">Change your password.</p>
+
+            <div class="alert hidden" id="security-alert"></div>
+
+            <div id="security-google-notice" class="alert info hidden">
+              Your account uses Google sign-in. To set a password,
+              <a href="/reset-password.html" style="color: inherit; font-weight: 500; text-decoration: underline;">use the password reset flow</a>.
+            </div>
+
+            <div id="security-form-wrap">
+              <div class="field">
+                <label for="cur-pw">Current password</label>
+                <input type="password" id="cur-pw" autocomplete="current-password">
+              </div>
+              <div class="field">
+                <label for="new-pw">New password</label>
+                <input type="password" id="new-pw" autocomplete="new-password">
+                <div class="field-help">At least 8 characters.</div>
+              </div>
+              <div class="field">
+                <label for="new-pw2">Confirm new password</label>
+                <input type="password" id="new-pw2" autocomplete="new-password">
+              </div>
+              <button class="btn primary" id="change-pw-btn">Update password</button>
+            </div>
+          </section>
+
+          <!-- DELETE -->
+          <section class="panel" id="panel-delete">
+            <h2>Delete account</h2>
+            <p class="panel-sub">Permanently remove your KinSentry account.</p>
+
+            <div class="alert hidden" id="delete-alert"></div>
+
+            <div class="danger-zone">
+              <h3>This will:</h3>
+              <p>
+                • Sign you out everywhere<br>
+                • Stop protecting your devices<br>
+                • Remove your data after a <strong>90-day grace period</strong>
+              </p>
+              <p>
+                <strong>Recovery:</strong> if you change your mind within 90 days, just sign back in
+                and your account will be restored.
+              </p>
+              <div class="field">
+                <label for="confirm-email">Type your email to confirm</label>
+                <input type="email" id="confirm-email" placeholder="—">
+              </div>
+              <button class="btn danger" id="delete-account-btn" disabled>Delete my account</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/support.html">Support</a>
+    <a href="/">kinsentry.com</a>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<script src="js/account.js"></script>
+</body>
+</html>

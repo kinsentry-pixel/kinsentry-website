@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Account scheduled for deletion — KinSentry</title>
+<link rel="icon" href="images/logo-nav.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0D1B3E;
+    --blue:    #1565C0;
+    --blue-dark: #0D47A1;
+    --teal:    #1D9E75;
+    --teal-light:#E1F5EE;
+    --bg:      #F5F6F8;
+    --surface: #FFFFFF;
+    --border:  rgba(0,0,0,0.08);
+    --text:    #0D1B3E;
+    --text-2:  #5A6478;
+    --radius:  12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  header {
+    background: var(--navy);
+    padding: 14px 32px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-img { width: 28px; height: 28px; object-fit: contain; }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: #fff; text-decoration: none;
+  }
+  .header-tagline {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+  .icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 20px;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .desc {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .recovery {
+    background: var(--teal-light);
+    border: 0.5px solid rgba(29, 158, 117, 0.3);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #0F6E56;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .recovery strong { color: var(--teal); }
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    text-decoration: none;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .btn:hover { background: rgba(0,0,0,0.03); }
+  .btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .btn.primary:hover { background: var(--blue-dark); }
+
+  footer {
+    background: #fff;
+    border-top: 0.5px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+  }
+  .footer-links {
+    display: flex; justify-content: center;
+    gap: 20px; font-size: 12px;
+  }
+  .footer-links a { color: var(--text-2); text-decoration: none; }
+  .footer-links a:hover { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo-img" src="images/logo-nav.png" alt="KinSentry">
+  <a href="/" class="logo-text">KinSentry</a>
+  <span class="header-tagline">Secure today. Safer tomorrow.</span>
+</header>
+
+<main>
+  <div class="card">
+    <div class="icon">✓</div>
+    <h1>Account scheduled for deletion</h1>
+    <p class="desc">
+      We've signed you out and your account is no longer active.
+      Your KinSentry extension will stop protecting you after sign-in expires.
+    </p>
+
+    <div class="recovery">
+      <strong>Changed your mind?</strong><br>
+      You have <strong>90 days</strong> to recover this account. Just sign back in
+      with the same email — we'll restore everything automatically.
+      After 90 days, all your data is permanently deleted.
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/">Go to homepage</a>
+      <a class="btn primary" href="/signup.html?mode=login">Sign back in</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/support.html">Support</a>
+    <a href="/">kinsentry.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -487,6 +487,10 @@ async function afterAuth({ email, name, tier }) {
     msgEl.innerHTML = `Welcome, <strong>${firstName}</strong>! The extension is installed. Open your dashboard to see your protection status.`;
     actionsEl.innerHTML = `
       <a href="${EXT_DASHBOARD}" target="_blank" class="btn-dashboard">🛡️ Open Dashboard</a>
+      <br>
+      <a href="/account.html" style="display:inline-block;margin-top:10px;color:var(--blue);font-size:13px;text-decoration:none;">
+        Manage your account →
+      </a>
     `;
   } else {
     msgEl.innerHTML = `Welcome, <strong>${firstName}</strong>! Your account is ready. Now install the KinSentry extension to start protecting your loved ones.`;
@@ -496,6 +500,10 @@ async function afterAuth({ email, name, tier }) {
       <small style="color:var(--text-3);font-size:11px;display:block;margin-top:8px;">
         After installing, sign in inside the extension using the same email.
       </small>
+      <br>
+      <a href="/account.html" style="display:inline-block;margin-top:6px;color:var(--blue);font-size:13px;text-decoration:none;">
+        Manage your account →
+      </a>
     `;
   }
 }
