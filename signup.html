@@ -532,10 +532,11 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 12000);
     const res  = await fetch(`${API}${endpoint}`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ name, email, password: pass }),
-      signal:  controller.signal
+      method:      'POST',
+      headers:     { 'Content-Type': 'application/json' },
+      body:        JSON.stringify({ name, email, password: pass }),
+      signal:      controller.signal,
+      credentials: 'include'   // accept Set-Cookie from api.kinsentry.com
     });
     clearTimeout(timer);
     const data = await res.json();
