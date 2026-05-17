@@ -54,6 +54,10 @@
     wireOpenDashboard();
     wireSignOut();
 
+    // Detect extension presence on this device + render the banner.
+    // Fire-and-forget so the rest of the page renders immediately.
+    renderExtensionBanner();
+
     // Open the requested tab if hash present
     const initialTab = (location.hash || '').replace('#', '');
     if (initialTab && ['profile','subscription','security','delete'].includes(initialTab)) {
@@ -300,15 +304,82 @@
       try {
         await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
       } catch (_) {}
+      // Clear client-side cached identity so signup.html doesn't show the
+      // "already signed in" success card on its next load.
+      try {
+        localStorage.removeItem('ks_user');
+      } catch (_) {}
       location.replace('/signup.html?mode=login');
     });
   }
   function wireOpenDashboard() {
     document.getElementById('open-dashboard-link').addEventListener('click', e => {
       e.preventDefault();
-      const url = `chrome-extension://${EXT_ID}/dashboard/dashboard.html`;
-      window.open(url, '_blank');
+      openExtensionDashboard();
     });
+  }
+  function openExtensionDashboard() {
+    const url = `chrome-extension://${EXT_ID}/dashboard/dashboard.html`;
+    window.open(url, '_blank');
+  }
+
+  // ── Extension detection + banner ─────────────────────────────────────────
+  // Probe for the extension by loading its packaged icon. Works only on
+  // Chromium-based browsers where the extension is installed.
+  function detectExtension() {
+    return new Promise(resolve => {
+      const img = new Image();
+      let done = false;
+      const finish = (val) => { if (!done) { done = true; resolve(val); } };
+      img.onload  = () => finish(true);
+      img.onerror = () => finish(false);
+      img.src = `chrome-extension://${EXT_ID}/icons/icon-16.png?_=${Date.now()}`;
+      setTimeout(() => finish(false), 1500);
+    });
+  }
+
+  async function renderExtensionBanner() {
+    const banner    = document.getElementById('ext-banner');
+    const titleEl   = document.getElementById('ext-banner-title');
+    const subEl     = document.getElementById('ext-banner-sub');
+    const actionsEl = document.getElementById('ext-banner-actions');
+    if (!banner) return;
+
+    banner.classList.remove('hidden');
+
+    const installed   = await detectExtension();
+    const tier        = CURRENT_USER?.tier;
+    const monitorTier = (tier === 'guardian' || tier === 'family');
+
+    if (installed) {
+      banner.classList.remove('install');
+      banner.classList.add('active');
+      titleEl.textContent = 'Your extension is active on this device.';
+      subEl.textContent   = monitorTier
+        ? 'Open the dashboard to see your protection status and any activity on linked devices.'
+        : 'Open the dashboard to see your protection status.';
+      actionsEl.innerHTML = '';
+      const openBtn = document.createElement('button');
+      openBtn.className   = 'btn primary';
+      openBtn.textContent = 'Open dashboard';
+      openBtn.addEventListener('click', openExtensionDashboard);
+      actionsEl.appendChild(openBtn);
+    } else {
+      banner.classList.remove('active');
+      banner.classList.add('install');
+      titleEl.textContent = 'Install KinSentry on this device.';
+      subEl.textContent   = monitorTier
+        ? 'The extension is required to open your dashboard, including monitoring linked family devices from here.'
+        : 'The extension protects you from scam pages and remote-support sites, and is required to open your dashboard.';
+      actionsEl.innerHTML = '';
+      const installLink = document.createElement('a');
+      installLink.className   = 'btn primary';
+      installLink.target      = '_blank';
+      installLink.rel         = 'noopener';
+      installLink.href        = 'https://chromewebstore.google.com/detail/' + EXT_ID;
+      installLink.textContent = 'Add to Chrome — Free';
+      actionsEl.appendChild(installLink);
+    }
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────

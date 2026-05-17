@@ -281,6 +281,48 @@
   }
   .restore-banner.hidden { display: none; }
 
+  /* Extension status banner — shown on every tab */
+  .ext-banner {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .ext-banner.hidden { display: none; }
+  .ext-banner.active {
+    background: var(--teal-light);
+    border-color: rgba(29, 158, 117, 0.25);
+  }
+  .ext-banner.install {
+    background: rgba(66, 165, 245, 0.06);
+    border-color: rgba(66, 165, 245, 0.3);
+  }
+  .ext-banner-text {
+    flex: 1;
+    min-width: 200px;
+  }
+  .ext-banner-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .ext-banner-sub {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+  .ext-banner-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
   /* Danger zone */
   .danger-zone {
     background: rgba(239, 68, 68, 0.04);
@@ -409,6 +451,14 @@
 
       <div class="restore-banner hidden" id="restore-banner">
         ✅ <span>Welcome back. We restored your account that was scheduled for deletion.</span>
+      </div>
+
+      <div class="ext-banner hidden" id="ext-banner">
+        <div class="ext-banner-text">
+          <div class="ext-banner-title" id="ext-banner-title">Checking extension…</div>
+          <div class="ext-banner-sub"   id="ext-banner-sub"></div>
+        </div>
+        <div class="ext-banner-actions" id="ext-banner-actions"></div>
       </div>
 
       <div class="layout">
