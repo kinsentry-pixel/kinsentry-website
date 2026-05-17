@@ -51,7 +51,6 @@
     populateSecurity();
     populateDelete();
     wireTabs();
-    wireOpenDashboard();
     wireSignOut();
 
     // Detect extension presence on this device + render the banner.
@@ -310,12 +309,6 @@
         localStorage.removeItem('ks_user');
       } catch (_) {}
       location.replace('/signup.html?mode=login');
-    });
-  }
-  function wireOpenDashboard() {
-    document.getElementById('open-dashboard-link').addEventListener('click', e => {
-      e.preventDefault();
-      openExtensionDashboard();
     });
   }
   function openExtensionDashboard() {
