@@ -333,6 +333,9 @@
         window.open('https://chromewebstore.google.com/detail/' + EXT_ID, '_blank');
       });
     }
+
+    // Reveal only after the correct label is set
+    link.style.display = '';
   }
   function openExtensionDashboard() {
     const url = `chrome-extension://${EXT_ID}/dashboard/dashboard.html`;
