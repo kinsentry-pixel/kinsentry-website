@@ -1665,20 +1665,22 @@ async function updateCTAs() {
   });
 
   // "Log In" button:
-  // Signed in → Hi [Name] → dashboard
+  // Signed in → Hi [Name] → /account.html (same tab)
   // Not signed in → /signup.html (hosted, works without extension)
   document.querySelectorAll('.nav-login').forEach(btn => {
     if (signedIn && userName) {
       const firstName = userName.split(' ')[0];
       btn.textContent      = `Hi, ${firstName}`;
-      btn.href             = installed ? getExtensionUrl('dashboard') : '/signup.html';
-      btn.target           = installed ? '_blank' : '';
+      btn.href             = '/account.html';
+      btn.target           = '';
+      btn.title            = 'Account settings';
       btn.style.fontWeight = '600';
       btn.onclick          = null;
     } else {
       btn.textContent      = 'Log In';
       btn.href             = '/signup.html?mode=login';
       btn.target           = '';
+      btn.title            = '';
       btn.style.fontWeight = '';
       btn.onclick          = null;
     }
