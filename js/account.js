@@ -312,11 +312,27 @@
       location.replace('/signup.html?mode=login');
     });
   }
-  function wireOpenDashboard() {
-    document.getElementById('open-dashboard-link').addEventListener('click', e => {
-      e.preventDefault();
-      openExtensionDashboard();
-    });
+  async function wireOpenDashboard() {
+    const link      = document.getElementById('open-dashboard-link');
+    const iconEl    = link.querySelector('.nav-emoji');
+    const labelEl   = document.getElementById('open-dashboard-label');
+    const installed = await detectExtension();
+
+    if (installed) {
+      iconEl.textContent  = '🛡️';
+      labelEl.textContent = ' Open Extension Dashboard';
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        openExtensionDashboard();
+      });
+    } else {
+      iconEl.textContent  = '⬇️';
+      labelEl.textContent = ' Install Extension to view dashboard';
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        window.open('https://chromewebstore.google.com/detail/' + EXT_ID, '_blank');
+      });
+    }
   }
   function openExtensionDashboard() {
     const url = `chrome-extension://${EXT_ID}/dashboard/dashboard.html`;
