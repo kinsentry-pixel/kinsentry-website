@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Family — KinSentry</title>
+<link rel="icon" href="images/logo-nav.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #0D1B3E;
+    --blue:      #1565C0;
+    --blue-dark: #0D47A1;
+    --accent:    #42A5F5;
+    --teal:      #1D9E75;
+    --teal-light:#E1F5EE;
+    --amber:     #F59E0B;
+    --amber-bg:  #FEF3C7;
+    --red:       #EF4444;
+    --red-bg:    #FEE2E2;
+    --bg:        #F5F6F8;
+    --surface:   #FFFFFF;
+    --border:    rgba(0,0,0,0.08);
+    --text:      #0D1B3E;
+    --text-2:    #5A6478;
+    --text-3:    #9BA3B4;
+    --input-bg:  #FFFFFF;
+    --radius:    12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-img { width: 28px; height: 28px; object-fit: contain; }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: #fff;
+    text-decoration: none;
+  }
+  .header-back {
+    margin-left: auto;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+  }
+  .header-back:hover { color: #fff; }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1;
+    padding: 32px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .family-wrap {
+    width: 100%;
+    max-width: 820px;
+  }
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 20px;
+  }
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .panel h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+  }
+  .panel-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+  }
+  .refresh-link {
+    font-size: 12px;
+    color: var(--blue);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .refresh-link:hover { text-decoration: underline; }
+
+  /* ── INFO ROW ── */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 14px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .key { color: var(--text-2); }
+  .info-row .val { font-weight: 500; color: var(--text); }
+
+  /* ── FIELD ── */
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+  }
+  .field-help {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 5px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, transform 0.06s;
+  }
+  .btn:hover { background: rgba(0,0,0,0.03); }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .btn.primary:hover { background: var(--blue-dark); }
+  .btn.primary:disabled:hover { background: var(--blue); }
+  .btn.danger {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+  .btn.danger:hover { background: #DC2626; }
+  .btn.small {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* ── ALERTS ── */
+  .alert {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .alert.success { background: var(--teal-light); color: #0F6E56; border: 0.5px solid rgba(29, 158, 117, 0.25); }
+  .alert.error   { background: var(--red-bg);     color: #B91C1C; border: 0.5px solid rgba(239, 68, 68, 0.25); }
+  .alert.info    { background: rgba(66, 165, 245, 0.1); color: var(--blue); border: 0.5px solid rgba(66, 165, 245, 0.25); }
+  .alert.warning { background: var(--amber-bg);   color: #B45309; border: 0.5px solid rgba(245, 158, 11, 0.3); }
+  .alert.hidden  { display: none; }
+
+  /* ── DEVICE CARDS ── */
+  .device-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .device-card {
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .device-status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--text-3);
+  }
+  .device-status-dot.online { background: var(--teal); }
+  .device-main {
+    flex: 1;
+    min-width: 160px;
+  }
+  .device-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .device-meta {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .device-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .device-stats strong {
+    display: block;
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .device-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .device-rename-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .device-rename-row input {
+    flex: 1;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+  }
+  .device-rename-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+  }
+
+  /* ── INVITE CODES ── */
+  .code-result {
+    background: var(--teal-light);
+    border: 0.5px solid rgba(29, 158, 117, 0.3);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .code-result.hidden { display: none; }
+  .code-result-label {
+    font-size: 12px;
+    color: #0F6E56;
+    margin-bottom: 8px;
+  }
+  .code-big {
+    font-family: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--navy);
+  }
+  .code-result-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .code-expiry {
+    font-size: 12px;
+    color: #0F6E56;
+  }
+
+  .codes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .code-chip {
+    border: 0.5px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .code-chip-code {
+    font-family: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--navy);
+  }
+  .code-chip-main {
+    flex: 1;
+    min-width: 140px;
+  }
+  .code-chip-label {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .code-chip-expiry {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 28px 20px;
+    color: var(--text-3);
+    font-size: 13px;
+    border: 0.5px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  /* ── LOADING ── */
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-3);
+    font-size: 13px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .section-loading {
+    font-size: 12px;
+    color: var(--text-3);
+    padding: 16px 0;
+  }
+
+  /* ── TOAST ── */
+  .toast-stack {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 1000;
+  }
+  .toast {
+    min-width: 240px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(13,27,62,0.1);
+    font-size: 13px;
+    animation: toastIn 0.18s ease;
+  }
+  .toast.success { border-left: 3px solid var(--teal); }
+  .toast.error   { border-left: 3px solid var(--red); }
+  @keyframes toastIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #fff;
+    border-top: 0.5px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+  }
+  .footer-links a {
+    color: var(--text-2);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--blue); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    header { padding: 14px 18px; }
+    main { padding: 20px 14px; }
+    .panel { padding: 20px; }
+    .device-card { gap: 10px; }
+    .device-stats { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo-img" src="images/logo-nav.png" alt="KinSentry">
+  <a href="/" class="logo-text">KinSentry</a>
+  <a href="/account.html" class="header-back">← Back to account</a>
+</header>
+
+<main>
+  <div class="family-wrap">
+    <div id="loading-state" class="loading"><span class="spinner"></span>Loading your family dashboard…</div>
+
+    <div id="family-view" style="display:none;">
+      <h1 class="page-title">Family</h1>
+      <p class="page-sub">Manage the devices protected under your Family plan.</p>
+
+      <!-- ── HOUSEHOLD SUMMARY ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Household</h2>
+          <a class="refresh-link" id="refresh-link">↻ Refresh</a>
+        </div>
+        <p class="panel-sub">An overview of your family's protection.</p>
+
+        <div class="alert hidden" id="household-alert"></div>
+
+        <div class="info-row">
+          <span class="key">Devices in use</span>
+          <span class="val" id="seats-used">—</span>
+        </div>
+        <div class="info-row">
+          <span class="key">Outstanding invite codes</span>
+          <span class="val" id="outstanding-count">—</span>
+        </div>
+      </section>
+
+      <!-- ── MEMBER DEVICES ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Member devices</h2>
+        </div>
+        <p class="panel-sub">
+          Each device runs the KinSentry extension, activated with an invite code.
+        </p>
+
+        <div class="alert hidden" id="devices-alert"></div>
+        <div id="devices-loading" class="section-loading">
+          <span class="spinner"></span>Loading devices…
+        </div>
+        <div class="device-list" id="device-list" style="display:none;"></div>
+      </section>
+
+      <!-- ── INVITE CODES ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Invite codes</h2>
+        </div>
+        <p class="panel-sub">
+          Generate a code, then enter it in the KinSentry extension on the new device
+          to activate protection. Codes are single-use and expire after 24 hours.
+        </p>
+
+        <div class="alert hidden" id="invite-alert"></div>
+
+        <!-- Freshly generated code -->
+        <div class="code-result hidden" id="code-result">
+          <div class="code-result-label" id="code-result-label">New invite code</div>
+          <div class="code-result-row">
+            <span class="code-big" id="code-result-value">——————</span>
+            <button class="btn small" id="code-copy-btn">Copy</button>
+            <span class="code-expiry" id="code-result-expiry"></span>
+          </div>
+        </div>
+
+        <!-- Generate form -->
+        <div class="field">
+          <label for="invite-label">Device label (optional)</label>
+          <input type="text" id="invite-label" maxlength="100" placeholder="e.g. Sara's laptop">
+          <div class="field-help">
+            This name helps you recognise the device later. You can rename it any time.
+          </div>
+        </div>
+        <button class="btn primary" id="generate-btn">Generate invite code</button>
+        <p class="field-help" id="generate-help" style="margin-top:10px;"></p>
+
+        <!-- Outstanding codes -->
+        <div style="margin-top:24px;">
+          <div class="info-row" style="border-bottom:none;padding-bottom:6px;">
+            <span class="key" style="font-weight:500;color:var(--text);">Outstanding codes</span>
+          </div>
+          <p class="field-help" style="margin-bottom:12px;">
+            Codes you've generated but not yet used. Each one reserves a device slot
+            until it's redeemed or revoked.
+          </p>
+          <div id="codes-loading" class="section-loading" style="display:none;">
+            <span class="spinner"></span>Loading codes…
+          </div>
+          <div class="codes-list" id="codes-list"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/support.html">Support</a>
+    <a href="/">kinsentry.com</a>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<script src="js/family.js"></script>
+</body>
+</html>

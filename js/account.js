@@ -340,9 +340,29 @@
 
     banner.classList.remove('hidden');
 
+    const tier = CURRENT_USER?.tier;
+
+    // Family-tier admins manage their household from family.html and never
+    // install the extension on this device — so skip extension detection
+    // entirely and show a link to the Family dashboard instead.
+    if (tier === 'family') {
+      banner.classList.remove('install');
+      banner.classList.add('active');
+      titleEl.textContent = 'Manage your family\u2019s protection.';
+      subEl.textContent   =
+        'Add member devices, generate invite codes, and review activity ' +
+        'from your Family dashboard. No extension is needed on this device.';
+      actionsEl.innerHTML = '';
+      const familyLink = document.createElement('a');
+      familyLink.className   = 'btn primary';
+      familyLink.href        = '/family.html';
+      familyLink.textContent = 'View & control your family settings';
+      actionsEl.appendChild(familyLink);
+      return;
+    }
+
     const installed   = await detectExtension();
-    const tier        = CURRENT_USER?.tier;
-    const monitorTier = (tier === 'guardian' || tier === 'family');
+    const monitorTier = (tier === 'guardian');
 
     if (installed) {
       banner.classList.remove('install');
