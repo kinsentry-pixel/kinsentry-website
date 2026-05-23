@@ -456,6 +456,13 @@
 
     const label = labelEl.value.trim();
 
+    // Label is required — it becomes the device name on redemption.
+    if (!label) {
+      showAlert(alertEl, 'error', 'Please enter a device label before generating a code.');
+      labelEl.focus();
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Generating…';
 
