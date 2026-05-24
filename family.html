@@ -290,6 +290,110 @@
     box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
   }
 
+  /* ── DEVICE SETTINGS PANEL ── */
+  .device-settings-panel {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 0.5px solid var(--border);
+  }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 9px 0;
+  }
+  .settings-row + .settings-row {
+    border-top: 0.5px solid var(--border);
+  }
+  .settings-row-text { flex: 1; min-width: 0; }
+  .settings-row-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .settings-row-desc {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 1px;
+  }
+  .settings-note {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 10px;
+  }
+
+  /* ── TOGGLE SWITCH ── */
+  .switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 22px;
+    border-radius: 22px;
+    background: #CBD2DD;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.16s;
+  }
+  .switch::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    transition: transform 0.16s;
+  }
+  .switch.on { background: var(--blue); }
+  .switch.on::after { transform: translateX(16px); }
+  .switch:disabled { opacity: 0.5; cursor: not-allowed; }
+  .switch.busy { opacity: 0.6; cursor: wait; }
+
+  /* ── ALERTS CARD ── */
+  .alerts-field { margin-bottom: 16px; }
+  .alerts-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .alerts-field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+  }
+  .alerts-field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+  }
+  .phone-row {
+    display: flex;
+    gap: 8px;
+  }
+  .phone-row select {
+    flex-shrink: 0;
+    padding: 10px 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+  }
+  .phone-row input { flex: 1; }
+
   /* ── INVITE CODES ── */
   .code-result {
     background: var(--teal-light);
@@ -494,6 +598,68 @@
           <span class="spinner"></span>Loading devices…
         </div>
         <div class="device-list" id="device-list" style="display:none;"></div>
+      </section>
+
+      <!-- ── FAMILY ALERTS ── -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Family alerts</h2>
+        </div>
+        <p class="panel-sub">
+          Where KinSentry sends a notification when a scam is blocked on any
+          device in your family. These settings apply to the whole household.
+        </p>
+
+        <div class="alert hidden" id="alerts-alert"></div>
+
+        <div class="alerts-field">
+          <label for="alert-email">Alert email</label>
+          <input type="email" id="alert-email" maxlength="120"
+                 placeholder="family@example.com" autocomplete="off">
+        </div>
+
+        <div class="alerts-field">
+          <label for="alert-phone">Alert phone number</label>
+          <div class="phone-row">
+            <select id="alert-phone-country">
+              <option value="+1">US +1</option>
+              <option value="+44">UK +44</option>
+              <option value="+91">IN +91</option>
+              <option value="+61">AU +61</option>
+              <option value="+64">NZ +64</option>
+              <option value="+353">IE +353</option>
+              <option value="+27">ZA +27</option>
+            </select>
+            <input type="tel" id="alert-phone" maxlength="15"
+                   placeholder="800 123 4567" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <div class="settings-row-title">Send SMS alert</div>
+            <div class="settings-row-desc">
+              Text the number above when a scam is blocked.
+            </div>
+          </div>
+          <button class="switch" id="toggle-sms" role="switch"
+                  aria-checked="false" aria-label="Send SMS alert"></button>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-text">
+            <div class="settings-row-title">Weekly digest email</div>
+            <div class="settings-row-desc">
+              A weekly summary of blocked sites and new scam numbers.
+            </div>
+          </div>
+          <button class="switch" id="toggle-digest" role="switch"
+                  aria-checked="true" aria-label="Weekly digest email"></button>
+        </div>
+
+        <button class="btn primary" id="save-alerts-btn" style="margin-top:16px;">
+          Save alert settings
+        </button>
       </section>
 
       <!-- ── INVITE CODES ── -->

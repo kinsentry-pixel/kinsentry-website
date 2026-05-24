@@ -73,6 +73,20 @@
     });
     document.getElementById('generate-btn').addEventListener('click', generateCode);
     document.getElementById('code-copy-btn').addEventListener('click', copyGeneratedCode);
+
+    // Family Alerts controls
+    document.getElementById('save-alerts-btn').addEventListener('click', saveAlerts);
+    ['toggle-sms', 'toggle-digest'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => {
+        const sw = document.getElementById(id);
+        const on = !sw.classList.contains('on');
+        sw.classList.toggle('on', on);
+        sw.setAttribute('aria-checked', String(on));
+        if (id === 'toggle-sms') refreshSmsToggleState();
+      });
+    });
+    // Typing a phone number enables/disables the SMS toggle
+    document.getElementById('alert-phone').addEventListener('input', refreshSmsToggleState);
   }
 
   // ── Load + render household ──────────────────────────────────────────────
@@ -96,6 +110,7 @@
 
       renderSummary();
       renderDevices();
+      renderAlerts();
       renderInvites();
       renderGenerateState();
     } catch (err) {
@@ -124,6 +139,83 @@
       `${used} of ${limit} device${limit === 1 ? '' : 's'}`;
     document.getElementById('outstanding-count').textContent =
       codes === 0 ? 'None' : `${codes} code${codes === 1 ? '' : 's'}`;
+  }
+
+  // ── FAMILY ALERTS ────────────────────────────────────────────────────────
+  function renderAlerts() {
+    const a = (HOUSEHOLD && HOUSEHOLD.alerts) || {};
+
+    document.getElementById('alert-email').value = a.alertEmail || '';
+    document.getElementById('alert-phone').value = a.alertPhone || '';
+
+    const countrySel = document.getElementById('alert-phone-country');
+    if (a.alertPhoneCountry) {
+      const match = [...countrySel.options].some(o => o.value === a.alertPhoneCountry);
+      countrySel.value = match ? a.alertPhoneCountry : '+1';
+    }
+
+    setSwitch('toggle-sms',    a.smsEnabled === true);
+    setSwitch('toggle-digest', a.digestEnabled !== false); // default on
+
+    refreshSmsToggleState();
+  }
+
+  function setSwitch(id, on) {
+    const sw = document.getElementById(id);
+    sw.classList.toggle('on', !!on);
+    sw.setAttribute('aria-checked', String(!!on));
+  }
+
+  // The SMS toggle can only be ON when a phone number is present.
+  function refreshSmsToggleState() {
+    const hasPhone = document.getElementById('alert-phone').value.trim().length > 0;
+    const sms = document.getElementById('toggle-sms');
+    sms.disabled = !hasPhone;
+    if (!hasPhone && sms.classList.contains('on')) {
+      sms.classList.remove('on');
+      sms.setAttribute('aria-checked', 'false');
+    }
+  }
+
+  async function saveAlerts() {
+    const btn     = document.getElementById('save-alerts-btn');
+    const alertEl = document.getElementById('alerts-alert');
+    hideAlert(alertEl);
+
+    const payload = {
+      alertEmail:        document.getElementById('alert-email').value.trim(),
+      alertPhone:        document.getElementById('alert-phone').value.trim(),
+      alertPhoneCountry: document.getElementById('alert-phone-country').value,
+      smsEnabled:        document.getElementById('toggle-sms').classList.contains('on'),
+      digestEnabled:     document.getElementById('toggle-digest').classList.contains('on'),
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    try {
+      const res = await fetch(`${API}/api/household/settings`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        showAlert(alertEl, 'error', friendlyError(data.error, data.message));
+        return;
+      }
+
+      // Keep local state in sync with the server's normalized response
+      if (HOUSEHOLD) HOUSEHOLD.alerts = data.alerts;
+      toast('Alert settings saved', 'success');
+    } catch (err) {
+      showAlert(alertEl, 'error', 'Network error. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save alert settings';
+    }
   }
 
   // ── MEMBER DEVICES ───────────────────────────────────────────────────────
@@ -183,6 +275,12 @@
     const actions = document.createElement('div');
     actions.className = 'device-actions';
 
+    const settingsBtn = document.createElement('button');
+    settingsBtn.className = 'btn small';
+    settingsBtn.textContent = 'Settings';
+    settingsBtn.addEventListener('click', () => toggleSettingsPanel(card, d, settingsBtn));
+    actions.appendChild(settingsBtn);
+
     const renameBtn = document.createElement('button');
     renameBtn.className = 'btn small';
     renameBtn.textContent = 'Rename';
@@ -197,6 +295,99 @@
 
     card.appendChild(actions);
     return card;
+  }
+
+  // ── Per-device protection settings (inline panel) ────────────────────────
+  const PROTECTION_TOGGLES = [
+    { key: 'remoteBlock', title: 'Block remote desktop sites',
+      desc: 'Automatically block sites like TeamViewer, AnyDesk, UltraViewer.' },
+    { key: 'scamPage',    title: 'Block scam pages',
+      desc: 'Show a warning overlay on fake virus-alert and tech-support scam pages.' },
+    { key: 'voice',       title: 'Voice warning',
+      desc: 'Play an audio alert when a scam site is blocked.' },
+    { key: 'notif',       title: 'Browser notifications',
+      desc: 'Show a Chrome notification when a scam number is detected nearby.' },
+  ];
+
+  function toggleSettingsPanel(card, device, btn) {
+    const existing = card.querySelector('.device-settings-panel');
+    if (existing) { existing.remove(); btn.classList.remove('primary'); return; }
+    btn.classList.add('primary');
+
+    const panel = document.createElement('div');
+    panel.className = 'device-settings-panel';
+
+    PROTECTION_TOGGLES.forEach(t => {
+      const row = document.createElement('div');
+      row.className = 'settings-row';
+
+      const text = document.createElement('div');
+      text.className = 'settings-row-text';
+      text.innerHTML =
+        `<div class="settings-row-title"></div>` +
+        `<div class="settings-row-desc"></div>`;
+      text.querySelector('.settings-row-title').textContent = t.title;
+      text.querySelector('.settings-row-desc').textContent  = t.desc;
+      row.appendChild(text);
+
+      const sw = document.createElement('button');
+      sw.className = 'switch' + (device.settings[t.key] ? ' on' : '');
+      sw.setAttribute('role', 'switch');
+      sw.setAttribute('aria-checked', String(!!device.settings[t.key]));
+      sw.setAttribute('aria-label', t.title);
+      sw.addEventListener('click', () => flipDeviceToggle(sw, device, t.key));
+      row.appendChild(sw);
+
+      panel.appendChild(row);
+    });
+
+    const note = document.createElement('div');
+    note.className = 'settings-note';
+    note.textContent = 'Changes apply on the device within an hour.';
+    panel.appendChild(note);
+
+    card.appendChild(panel);
+  }
+
+  async function flipDeviceToggle(sw, device, key) {
+    if (sw.classList.contains('busy')) return;
+    const next = !sw.classList.contains('on');
+
+    // Optimistic UI
+    sw.classList.toggle('on', next);
+    sw.setAttribute('aria-checked', String(next));
+    sw.classList.add('busy');
+
+    try {
+      const res = await fetch(`${API}/api/household/devices/${device.id}/settings`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings: { [key]: next } })
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        // Revert
+        sw.classList.toggle('on', !next);
+        sw.setAttribute('aria-checked', String(!next));
+        toast(friendlyError(data.error), 'error');
+        return;
+      }
+
+      // Sync local state from the server's normalized response
+      device.settings = data.settings;
+      const m = MEMBERS.find(x => x.id === device.id);
+      if (m) m.settings = data.settings;
+
+      toast('Setting saved', 'success');
+    } catch (err) {
+      sw.classList.toggle('on', !next);
+      sw.setAttribute('aria-checked', String(!next));
+      toast('Network error. Please try again.', 'error');
+    } finally {
+      sw.classList.remove('busy');
+    }
   }
 
   // ── Rename (inline) ──────────────────────────────────────────────────────
@@ -566,7 +757,7 @@
       setTimeout(() => t.remove(), 220);
     }, 3000);
   }
-  function friendlyError(code) {
+  function friendlyError(code, fallback) {
     const map = {
       not_authenticated:        'Your session has expired. Please sign in again.',
       family_tier_required:     'This action requires an active Family plan.',
@@ -576,8 +767,10 @@
       not_found:                'That item no longer exists. The list has been refreshed.',
       already_redeemed:         'That code was already used, so it can\u2019t be revoked. Remove the device instead.',
       deviceId_required:        'Something went wrong. Please try again.',
+      invalid_email:            'Please enter a valid alert email address.',
+      phone_required:           'Add an alert phone number before enabling SMS alerts.',
       server_error:             'Something went wrong. Please try again.',
     };
-    return map[code] || 'Something went wrong. Please try again.';
+    return map[code] || fallback || 'Something went wrong. Please try again.';
   }
 })();
