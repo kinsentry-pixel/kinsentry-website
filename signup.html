@@ -243,6 +243,8 @@
 
     <!-- Auth card -->
     <div class="signup-card" id="auth-card">
+      <!-- ── FORM VIEW (signup / login) ── -->
+      <div id="form-view">
       <div class="card-hero">
         <img class="card-logo" src="images/logo-nav.png" alt="KinSentry">
         <div class="card-title" id="card-title">Create your free account</div>
@@ -302,6 +304,34 @@
         <span id="mode-text">Already have an account?</span>
         <button id="btn-mode-switch"> Sign in</button>
       </div>
+      </div><!-- /form-view -->
+
+      <!-- ── VERIFICATION VIEW (6-digit code) ── -->
+      <div id="verify-view" style="display:none;">
+        <div class="card-hero">
+          <img class="card-logo" src="images/logo-nav.png" alt="KinSentry">
+          <div class="card-title">Check your email</div>
+          <div class="card-desc">We sent a 6-digit code to <strong id="verify-email-label"></strong>. Enter it below to finish creating your account.</div>
+        </div>
+
+        <div id="verify-msg" class="msg"></div>
+
+        <div class="field-group">
+          <label for="verify-code">Verification code</label>
+          <input type="text" id="verify-code" inputmode="numeric" maxlength="6"
+                 placeholder="000000" autocomplete="one-time-code"
+                 style="letter-spacing:8px;font-size:20px;text-align:center;font-family:monospace;">
+        </div>
+
+        <button class="btn-submit" id="btn-verify">Verify &amp; continue →</button>
+
+        <div class="mode-toggle" style="flex-direction:column;gap:6px;">
+          <span id="resend-text">Didn't get it? Check spam, or
+            <button id="btn-resend" style="background:none;border:none;color:var(--blue);font-weight:600;cursor:pointer;font-family:inherit;padding:0;">resend code</button>
+          </span>
+          <button id="btn-verify-back" style="background:none;border:none;color:var(--text-2);font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← Use a different email</button>
+        </div>
+      </div><!-- /verify-view -->
     </div>
 
   </div>
@@ -498,11 +528,116 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
       return;
     }
 
+    // Signup now requires email verification — backend returns no session yet.
+    if (data.pendingVerification) {
+      setLoading(false);
+      showVerifyView(data.email || email, name);
+      return;
+    }
+
     await afterAuth({ email: data.email || email, name: data.name || name, tier: data.tier });
   } catch(e) {
     showMsg('Could not connect. Please check your connection and try again.', 'error');
   }
   setLoading(false);
+});
+
+// ── Email verification (6-digit code) ─────────────────────────────────────────
+let pendingEmail = '';
+let pendingName  = '';
+let resendTimer  = null;
+
+function showVerifyView(email, name) {
+  pendingEmail = email;
+  pendingName  = name;
+  document.getElementById('verify-email-label').textContent = email;
+  document.getElementById('form-view').style.display   = 'none';
+  document.getElementById('verify-view').style.display = 'block';
+  const codeInput = document.getElementById('verify-code');
+  codeInput.value = '';
+  codeInput.focus();
+  startResendCooldown();
+}
+
+function showVerifyMsg(text, type) {
+  const el = document.getElementById('verify-msg');
+  el.textContent = text;
+  el.className   = text ? `msg show ${type}` : 'msg';
+}
+
+function startResendCooldown() {
+  const btn = document.getElementById('btn-resend');
+  let secs = 60;
+  btn.disabled = true;
+  const tick = () => {
+    btn.textContent = `resend in ${secs}s`;
+    if (secs <= 0) {
+      clearInterval(resendTimer);
+      btn.disabled = false;
+      btn.textContent = 'resend code';
+      return;
+    }
+    secs--;
+  };
+  tick();
+  clearInterval(resendTimer);
+  resendTimer = setInterval(tick, 1000);
+}
+
+document.getElementById('btn-verify').addEventListener('click', async () => {
+  showVerifyMsg('', '');
+  const code = document.getElementById('verify-code').value.trim();
+  if (code.length !== 6) return showVerifyMsg('Enter the 6-digit code from your email.', 'error');
+
+  const btn = document.getElementById('btn-verify');
+  btn.disabled = true;
+  btn.textContent = 'Verifying…';
+  try {
+    const res = await fetch(`${API}/api/auth/verify-email`, {
+      method:      'POST',
+      headers:     { 'Content-Type': 'application/json' },
+      body:        JSON.stringify({ email: pendingEmail, code }),
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showVerifyMsg(data.message || 'Verification failed. Please try again.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Verify & continue →';
+      return;
+    }
+    // Verified — account created + session set. Proceed as a normal login.
+    await afterAuth({ email: data.email || pendingEmail, name: data.name || pendingName, tier: data.tier });
+  } catch (e) {
+    showVerifyMsg('Could not connect. Please try again.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Verify & continue →';
+  }
+});
+
+document.getElementById('btn-resend').addEventListener('click', async () => {
+  showVerifyMsg('', '');
+  try {
+    const res = await fetch(`${API}/api/auth/resend-code`, {
+      method:      'POST',
+      headers:     { 'Content-Type': 'application/json' },
+      body:        JSON.stringify({ email: pendingEmail }),
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if (!res.ok) { showVerifyMsg(data.message || 'Could not resend.', 'error'); return; }
+    showVerifyMsg('A new code is on its way. Check your inbox (and spam).', 'success');
+    startResendCooldown();
+  } catch (e) {
+    showVerifyMsg('Could not connect. Please try again.', 'error');
+  }
+});
+
+document.getElementById('btn-verify-back').addEventListener('click', () => {
+  clearInterval(resendTimer);
+  document.getElementById('verify-view').style.display = 'none';
+  document.getElementById('form-view').style.display   = 'block';
+  showMsg('', '');
 });
 
 // ── Google sign-in ────────────────────────────────────────────────────────────
