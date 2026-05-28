@@ -434,7 +434,8 @@ async function afterAuth({ email, name, tier } = {}) {
           chrome.runtime.sendMessage(EXT_ID, {
             type:  'KINSENTRY_USER_SIGNED_IN',
             email: email,
-            name:  name || ''
+            name:  name || '',
+            tier:  tier || 'free_trial'
           }, () => { if (chrome.runtime.lastError) {} });
         } catch (_) {}
       }
