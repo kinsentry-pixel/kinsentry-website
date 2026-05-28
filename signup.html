@@ -414,13 +414,19 @@ function detectExtension() {
 // New flow: cookie is set by the server, just redirect to /account.html.
 // The account page is the single home for "what to do next" (Open Dashboard
 // or Install Extension).
-async function afterAuth({ email, name } = {}) {
+async function afterAuth({ email, name, tier } = {}) {
   // Clear any legacy localStorage state from the old success-card flow.
   try { localStorage.removeItem('ks_user'); } catch (_) {}
 
   // If the extension is installed on this device, push credentials into it
   // so the user is auto-signed-in there too. Fire-and-forget; failures OK.
-  if (email) {
+  //
+  // EXCEPT for Family-tier accounts: a Family subscriber is an ADMIN who
+  // manages their household from this website and must NEVER run the
+  // extension as a personal account. Activating it here would put their
+  // device into a broken member-like state (locked sign-out, wrong tier).
+  // Member devices activate via invite code in the extension instead.
+  if (email && tier !== 'family') {
     try {
       const installed = await detectExtension();
       if (installed && typeof chrome !== 'undefined' && chrome.runtime?.sendMessage) {
