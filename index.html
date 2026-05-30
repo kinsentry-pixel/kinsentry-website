@@ -968,6 +968,279 @@ footer {
   .hero-logo-img { width: 120px; }
   .hero-logo { margin-bottom: 20px; }
 }
+
+/* ── 3D GLOBAL PERSPECTIVE ───────────── */
+:root {
+  --shadow-3d: 0 20px 60px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.4);
+  --shadow-3d-hover: 0 40px 80px rgba(0,0,0,0.7), 0 16px 40px rgba(0,194,168,0.2);
+  --glow-3d: 0 0 40px rgba(0,194,168,0.15), 0 0 80px rgba(30,111,217,0.08);
+}
+
+/* ── 3D SCENE WRAPPER ────────────────── */
+.scene-3d {
+  perspective: 1200px;
+  perspective-origin: 50% 40%;
+}
+
+/* ── 3D BG ORBS ──────────────────────── */
+.bg-orb {
+  background: radial-gradient(circle at 30% 30%, var(--teal-glow), transparent 60%), var(--blue);
+  box-shadow: 0 0 120px rgba(0,194,168,0.3), inset 0 0 60px rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.bg-orb.a {
+  background: radial-gradient(circle at 35% 35%, rgba(100,200,255,0.6), transparent 55%), var(--blue);
+}
+.bg-orb.b {
+  background: radial-gradient(circle at 30% 30%, rgba(0,232,200,0.8), transparent 55%), var(--teal);
+}
+
+/* ── 3D FEATURE CARDS ────────────────── */
+.features-grid { perspective: 1000px; }
+
+.feature-card {
+  transform-style: preserve-3d;
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  will-change: transform;
+}
+.feature-card:hover {
+  box-shadow: var(--shadow-3d-hover);
+  border-color: rgba(0,194,168,0.5);
+}
+/* 3D icon depth */
+.feature-icon {
+  transform: translateZ(8px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* ── 3D STAT CARDS ───────────────────── */
+.carousel-track { perspective: 1200px; }
+
+.stat-card {
+  transform: translateZ(0px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+.stat-card:hover {
+  transform: translateZ(20px) translateY(-8px) rotateX(3deg);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,194,168,0.2);
+}
+.stat-card .stat-number {
+  transform: translateZ(4px);
+  text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+/* ── 3D PRICING CARDS ────────────────── */
+.pricing-grid { perspective: 1400px; }
+
+.pricing-card {
+  transform-style: preserve-3d;
+  transform: translateZ(0) rotateX(0);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s ease;
+}
+.pricing-card:hover {
+  transform: translateZ(24px) translateY(-8px) rotateX(2deg);
+  box-shadow: 0 50px 100px rgba(0,0,0,0.7), 0 0 60px rgba(30,111,217,0.2);
+}
+.pricing-card.featured {
+  transform: translateZ(16px) scale(1.02);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.6), 0 0 60px rgba(0,194,168,0.15);
+}
+.pricing-card.featured:hover {
+  transform: translateZ(40px) translateY(-12px) rotateX(3deg) scale(1.03);
+  box-shadow: 0 60px 120px rgba(0,0,0,0.75), 0 0 80px rgba(0,194,168,0.3);
+}
+
+/* ── 3D HERO SECTION ─────────────────── */
+.hero { perspective: 1600px; transform-style: preserve-3d; }
+.hero-logo {
+  transform: translateZ(40px);
+  filter: drop-shadow(0 20px 40px rgba(0,194,168,0.35)) drop-shadow(0 0 80px rgba(30,111,217,0.2));
+  animation: heroFloat 6s ease-in-out infinite;
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateZ(40px) translateY(0); }
+  50%       { transform: translateZ(60px) translateY(-12px); }
+}
+.hero h1 {
+  transform: translateZ(20px);
+  text-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+}
+.hero p {
+  transform: translateZ(10px);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.hero-badge {
+  transform: translateZ(30px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(0,194,168,0.15);
+}
+.hero-actions {
+  transform: translateZ(16px);
+}
+.btn-primary {
+  box-shadow: 0 12px 40px rgba(0,194,168,0.45), 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateZ(0) translateY(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+  transform: translateZ(8px) translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,194,168,0.6), 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-secondary {
+  transform: translateZ(0);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-secondary:hover {
+  transform: translateZ(6px) translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* ── 3D NAV ──────────────────────────── */
+nav {
+  backdrop-filter: blur(24px) saturate(200%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04), inset 0 -1px 0 rgba(255,255,255,0.02);
+  transform: translateZ(50px);
+}
+.nav-cta {
+  box-shadow: 0 6px 20px rgba(0,194,168,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nav-cta:hover {
+  transform: translateY(-2px) translateZ(4px);
+  box-shadow: 0 10px 32px rgba(0,194,168,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ── 3D HOW-IT-WORKS STEPS ───────────── */
+.step-num {
+  transform-style: preserve-3d;
+  box-shadow: 0 8px 24px rgba(0,194,168,0.4), 0 0 40px rgba(30,111,217,0.2), inset 0 2px 0 rgba(255,255,255,0.2);
+  transform: translateZ(12px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.how-step:hover .step-num {
+  transform: translateZ(24px) scale(1.1);
+  box-shadow: 0 16px 48px rgba(0,194,168,0.5), 0 0 60px rgba(30,111,217,0.3);
+}
+
+/* ── 3D TRUST CARDS ──────────────────── */
+.trust-card {
+  transform-style: preserve-3d;
+  transform: translateZ(0) rotateX(0);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s ease;
+}
+.trust-card:hover {
+  transform: translateZ(16px) translateY(-6px) rotateX(2deg);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 40px rgba(30,111,217,0.15);
+}
+
+/* ── 3D SCENARIO CARDS ───────────────── */
+.scenario {
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.scenario:hover {
+  transform: translateZ(14px) translateY(-4px);
+  box-shadow: 0 28px 60px rgba(0,0,0,0.55);
+}
+
+/* ── 3D FLOW ICONS ───────────────────── */
+.flow-icon {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: translateZ(6px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.flow-step:hover .flow-icon {
+  transform: translateZ(16px) scale(1.12);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 24px rgba(0,194,168,0.25);
+}
+
+/* ── 3D SECTION TITLES ───────────────── */
+.section-title {
+  text-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
+}
+.gradient-text {
+  filter: drop-shadow(0 4px 12px rgba(0,194,168,0.4));
+}
+
+/* ── 3D SAVES SUMMARY ────────────────── */
+.saves-summary {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 40px rgba(0,194,168,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+  transform: translateZ(8px);
+}
+.eq-block {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  transform: translateZ(4px);
+  transition: transform 0.2s ease;
+}
+.eq-block:hover { transform: translateZ(12px); }
+
+/* ── 3D CTA SECTION ──────────────────── */
+.cta-section .btn-primary {
+  transform-origin: center bottom;
+}
+.cta-section .section-title {
+  transform: translateZ(20px);
+}
+
+/* ── 3D FOOTER ───────────────────────── */
+footer {
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.3);
+}
+
+/* ── 3D HERO-BADGE PULSE ─────────────── */
+.hero-badge .dot {
+  box-shadow: 0 0 12px #4CAF50, 0 0 24px rgba(76,175,80,0.6);
+}
+
+/* ── 3D DEPTH LINES ──────────────────── */
+.how-steps::before {
+  box-shadow: 2px 0 20px rgba(0,194,168,0.3);
+}
+
+/* ── TILT CARD EFFECT (JS-driven) ──── */
+.tilt-card { transition: transform 0.08s linear; }
+
+/* ── 3D SECTION ENTRANCE ─────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateZ(-40px) translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23,1,0.32,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateZ(0) translateY(0);
+}
+
+/* ── GROUND SHADOW ───────────────────── */
+.pricing-card::after,
+.feature-card::after,
+.trust-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 10%;
+  right: 10%;
+  height: 20px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+.pricing-card:hover::after,
+.feature-card:hover::after,
+.trust-card:hover::after {
+  opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -1851,5 +2124,104 @@ function setBilling(type) {
 updateCTAs();
 </script>
 
+
+<script>
+/* ── 3D MOUSE TILT FOR CARDS ── */
+(function() {
+  const TILT_STRENGTH = 8;   // max degrees of tilt
+  const LIFT = 20;            // px of Z lift on hover
+
+  function addTilt(selector) {
+    document.querySelectorAll(selector).forEach(card => {
+      card.classList.add('tilt-card');
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width / 2);
+        const dy = (e.clientY - cy) / (rect.height / 2);
+        const rotX = -dy * TILT_STRENGTH;
+        const rotY =  dx * TILT_STRENGTH;
+        card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${LIFT}px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // Apply tilt to cards
+  addTilt('.feature-card');
+  addTilt('.trust-card');
+  addTilt('.pricing-card:not(.featured)');
+
+  /* ── FEATURED PRICING — stronger lift ── */
+  document.querySelectorAll('.pricing-card.featured').forEach(card => {
+    card.classList.add('tilt-card');
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      const rotX = -dy * 6;
+      const rotY =  dx * 6;
+      card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(40px) scale(1.03)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateZ(16px) scale(1.02)';
+    });
+  });
+
+  /* ── STAT CARDS PARALLAX ── */
+  document.querySelectorAll('.stat-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const dx = (e.clientX - rect.left - rect.width/2)  / (rect.width/2);
+      const dy = (e.clientY - rect.top  - rect.height/2) / (rect.height/2);
+      card.style.transform = `translateZ(20px) translateY(-8px) rotateX(${-dy*5}deg) rotateY(${dx*5}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+
+  /* ── SCENARIO CARDS TILT ── */
+  document.querySelectorAll('.scenario').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const dy = (e.clientY - rect.top - rect.height/2) / (rect.height/2);
+      const dx = (e.clientX - rect.left - rect.width/2) / (rect.width/2);
+      card.style.transform = `translateZ(14px) translateY(-4px) rotateX(${-dy*3}deg) rotateY(${dx*3}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+
+  /* ── HERO SUBTLE MOUSE PARALLAX ── */
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth  / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
+      const heroLogo = hero.querySelector('.hero-logo');
+      const heroH1   = hero.querySelector('h1');
+      const heroBadge = hero.querySelector('.hero-badge');
+      if (heroLogo)  heroLogo.style.transform  = `translateZ(${40 + dy*-8}px) translateY(${dy*-6}px) translateX(${dx*-4}px)`;
+      if (heroH1)    heroH1.style.transform    = `translateZ(${20 + dy*-4}px) translateX(${dx*-2}px)`;
+      if (heroBadge) heroBadge.style.transform = `translateZ(${30 + dy*-6}px) translateY(${dy*-4}px)`;
+    });
+  }
+
+  /* ── 3D ORB PARALLAX ON SCROLL ── */
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    document.querySelectorAll('.bg-orb').forEach((orb, i) => {
+      const factor = (i + 1) * 0.08;
+      orb.style.transform = `translate(${i * 5}px, ${scrollY * factor * -1}px) scale(${1 + scrollY * 0.00005})`;
+    });
+  }, { passive: true });
+
+})();
+</script>
 </body>
 </html>
