@@ -503,12 +503,68 @@ nav {
 .eq-sign {
   font-size: 26px; font-weight: 800; color: var(--teal);
 }
+
 .eq-block.result {
   background: linear-gradient(135deg, rgba(0,194,168,0.15), rgba(30,111,217,0.1));
   border-color: rgba(0,194,168,0.35);
   color: var(--teal);
   font-size: 24px;
 }
+
+/* ── MONEY SAVED ANIMATION ───────────── */
+.money-saved-block {
+  position: relative;
+  overflow: visible !important;
+  cursor: pointer;
+  animation: moneySavedPulse 2.4s ease-in-out infinite;
+}
+@keyframes moneySavedPulse {
+  0%, 100% { transform: translateZ(4px) scale(1);   box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(0,194,168,0.2), inset 0 1px 0 rgba(255,255,255,0.06); }
+  50%       { transform: translateZ(4px) scale(1.04); box-shadow: 0 12px 36px rgba(0,0,0,0.5), 0 0 36px rgba(0,194,168,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+}
+.money-bag {
+  display: inline-block;
+  animation: bagBounce 1.2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes bagBounce {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  25%       { transform: rotate(5deg)  scale(1.15); }
+  50%       { transform: rotate(-3deg) scale(0.95); }
+  75%       { transform: rotate(4deg)  scale(1.1); }
+}
+.money-text {
+  display: inline-block;
+  animation: textShimmer 2.4s ease-in-out infinite;
+}
+@keyframes textShimmer {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.8; }
+}
+
+/* Bills container */
+.bills-container {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.bill {
+  position: absolute;
+  font-size: 18px;
+  opacity: 0;
+  pointer-events: none;
+  animation: billFly 0s ease-out forwards;
+  z-index: 10;
+}
+@keyframes billFly {
+  0%   { opacity: 0;   transform: translateY(0)   translateX(0)   rotate(0deg)   scale(0.5); }
+  15%  { opacity: 1; }
+  80%  { opacity: 1;   transform: var(--tx, 0)     translateY(-60px) rotate(var(--rot, 20deg)) scale(1.2); }
+  100% { opacity: 0;   transform: var(--tx, 0)     translateY(-90px) rotate(var(--rot2, 30deg)) scale(0.8); }
+}
+
+
 
 .saves-summary p {
   font-size: 15px; color: var(--muted); line-height: 1.6;
@@ -1019,18 +1075,17 @@ footer {
 .carousel-track { perspective: 1200px; }
 
 .stat-card {
-  transform: translateZ(0px);
+  transform: translateZ(0px) scale(1);
   box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
-  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+  transform-style: flat;
 }
 .stat-card:hover {
-  transform: translateZ(20px) translateY(-8px) rotateX(3deg);
+  transform: scale(1.07) translateY(-6px);
   box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,194,168,0.2);
 }
 .stat-card .stat-number {
-  transform: translateZ(4px);
-  text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* ── 3D PRICING CARDS ────────────────── */
@@ -1059,16 +1114,23 @@ footer {
 .hero { perspective: 1600px; transform-style: preserve-3d; }
 .hero-logo {
   transform: translateZ(40px);
-  filter: drop-shadow(0 20px 40px rgba(0,194,168,0.35)) drop-shadow(0 0 80px rgba(30,111,217,0.2));
+  filter: drop-shadow(0 8px 24px rgba(0,194,168,0.25));
   animation: heroFloat 6s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s ease;
+  cursor: pointer;
+}
+.hero-logo:hover {
+  animation: none;
+  transform: translateZ(80px) scale(1.25);
+  filter: drop-shadow(0 12px 32px rgba(0,194,168,0.45)) drop-shadow(0 0 20px rgba(30,111,217,0.25));
 }
 @keyframes heroFloat {
   0%, 100% { transform: translateZ(40px) translateY(0); }
-  50%       { transform: translateZ(60px) translateY(-12px); }
+  50%       { transform: translateZ(55px) translateY(-10px); }
 }
 .hero h1 {
   transform: translateZ(20px);
-  text-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  text-shadow: none;
 }
 .hero p {
   transform: translateZ(10px);
@@ -1167,7 +1229,7 @@ nav {
   text-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
 }
 .gradient-text {
-  filter: drop-shadow(0 4px 12px rgba(0,194,168,0.4));
+  filter: none;
 }
 
 /* ── 3D SAVES SUMMARY ────────────────── */
@@ -1605,7 +1667,11 @@ footer {
         <div class="eq-sign">=</div>
         <div class="eq-block">No Scam</div>
         <div class="eq-sign">=</div>
-        <div class="eq-block result">💰 Money Saved</div>
+        <div class="eq-block result money-saved-block" id="moneySavedBlock">
+          <span class="money-bag">💰</span>
+          <span class="money-text"> Money Saved</span>
+          <div class="bills-container" id="billsContainer"></div>
+        </div>
       </div>
       <p>Every tech support scam needs remote access to steal your money. KinSentry makes that impossible — whether the scam is caught at the popup stage or at the remote access stage, scammers can never get in.</p>
     </div>
@@ -2173,15 +2239,14 @@ updateCTAs();
     });
   });
 
-  /* ── STAT CARDS PARALLAX ── */
+  /* ── STAT CARDS — scale only, no tilt ── */
   document.querySelectorAll('.stat-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const dx = (e.clientX - rect.left - rect.width/2)  / (rect.width/2);
-      const dy = (e.clientY - rect.top  - rect.height/2) / (rect.height/2);
-      card.style.transform = `translateZ(20px) translateY(-8px) rotateX(${-dy*5}deg) rotateY(${dx*5}deg)`;
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'scale(1.07) translateY(-6px)';
     });
-    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
   });
 
   /* ── SCENARIO CARDS TILT ── */
@@ -2212,7 +2277,44 @@ updateCTAs();
     });
   }
 
-  /* ── 3D ORB PARALLAX ON SCROLL ── */
+
+  /* ── MONEY SAVED — bills on hover ── */
+  const moneySavedBlock = document.getElementById('moneySavedBlock');
+  const billsContainer  = document.getElementById('billsContainer');
+  const BILL_EMOJIS = ['💵','💴','💶','💷','💸'];
+  let billInterval = null;
+
+  function spawnBill() {
+    if (!billsContainer) return;
+    const bill = document.createElement('span');
+    bill.classList.add('bill');
+    bill.textContent = BILL_EMOJIS[Math.floor(Math.random() * BILL_EMOJIS.length)];
+
+    const startX = (Math.random() * 100) - 50;    // -50% to +50%
+    const rot    = (Math.random() * 60) - 30;
+    const rot2   = rot + (Math.random() * 30) - 15;
+    bill.style.setProperty('--tx',   `translateX(${startX}px)`);
+    bill.style.setProperty('--rot',  `${rot}deg`);
+    bill.style.setProperty('--rot2', `${rot2}deg`);
+    bill.style.left   = `${20 + Math.random() * 60}%`;
+    bill.style.bottom = '10px';
+    bill.style.animationDuration = `${0.8 + Math.random() * 0.6}s`;
+
+    billsContainer.appendChild(bill);
+    setTimeout(() => bill.remove(), 1500);
+  }
+
+  if (moneySavedBlock) {
+    moneySavedBlock.addEventListener('mouseenter', () => {
+      spawnBill();
+      billInterval = setInterval(spawnBill, 180);
+    });
+    moneySavedBlock.addEventListener('mouseleave', () => {
+      clearInterval(billInterval);
+    });
+  }
+
+
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     document.querySelectorAll('.bg-orb').forEach((orb, i) => {
