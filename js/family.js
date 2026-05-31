@@ -303,6 +303,8 @@
       desc: 'Automatically block sites like TeamViewer, AnyDesk, UltraViewer.' },
     { key: 'scamPage',    title: 'Block scam pages',
       desc: 'Show a warning overlay on fake virus-alert and tech-support scam pages.' },
+    { key: 'phishingEmail', title: 'Detect phishing emails',
+      desc: 'Show a warning banner on suspicious scam emails in Gmail, Outlook, Yahoo and AOL.' },
     { key: 'voice',       title: 'Voice warning',
       desc: 'Play an audio alert when a scam site is blocked.' },
     { key: 'notif',       title: 'Browser notifications',
