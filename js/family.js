@@ -267,7 +267,7 @@
     const stats = document.createElement('div');
     stats.className = 'device-stats';
     stats.innerHTML =
-      `<div><strong>${d.totalThreats || 0}</strong>Total threats caught · all time</div>`;
+      `<div><strong>${d.totalThreats || 0}</strong>Total threats caught</div>`;
     card.appendChild(stats);
 
     // Actions
