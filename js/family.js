@@ -263,17 +263,22 @@
 
     card.appendChild(main);
 
-    // Stats
+    // Stats — collapsed card shows the all-time total only.
     const stats = document.createElement('div');
     stats.className = 'device-stats';
     stats.innerHTML =
-      `<div><strong>${d.blocksToday || 0}</strong>blocks today</div>` +
-      `<div><strong>${d.alertsToday || 0}</strong>alerts today</div>`;
+      `<div><strong>${d.totalThreats || 0}</strong>Total threats caught · all time</div>`;
     card.appendChild(stats);
 
     // Actions
     const actions = document.createElement('div');
     actions.className = 'device-actions';
+
+    const statsBtn = document.createElement('button');
+    statsBtn.className = 'btn small';
+    statsBtn.textContent = 'View all Stats';
+    statsBtn.addEventListener('click', () => toggleStatsPanel(card, d, statsBtn));
+    actions.appendChild(statsBtn);
 
     const settingsBtn = document.createElement('button');
     settingsBtn.className = 'btn small';
@@ -311,9 +316,59 @@
       desc: 'Show a Chrome notification when a scam number is detected nearby.' },
   ];
 
+  // ── Per-device all-time stats (inline panel) ─────────────────────────────
+  const STAT_CARDS = [
+    { key: 'totalThreats',    label: 'Total threats caught' },
+    { key: 'remoteAllTime',   label: 'Remote Site Blocked' },
+    { key: 'scampageAllTime', label: 'Scam page/Popup Blocked' },
+    { key: 'phishingAllTime', label: 'Phishing/Scam Email Detected' },
+    { key: 'adAllTime',       label: 'Fake/Scam Ads detected' },
+  ];
+
+  function toggleStatsPanel(card, device, btn) {
+    const existing = card.querySelector('.device-stats-panel');
+    if (existing) { existing.remove(); btn.classList.remove('primary'); return; }
+    // Close the settings panel if open, so only one panel shows at a time.
+    const openSettings = card.querySelector('.device-settings-panel');
+    if (openSettings) {
+      openSettings.remove();
+      const sBtn = card.querySelector('.device-actions .btn.primary');
+      if (sBtn) sBtn.classList.remove('primary');
+    }
+    btn.classList.add('primary');
+
+    const panel = document.createElement('div');
+    panel.className = 'device-stats-panel';
+
+    STAT_CARDS.forEach(c => {
+      const cell = document.createElement('div');
+      cell.className = 'device-stat-cell' + (c.key === 'totalThreats' ? ' highlight' : '');
+      cell.innerHTML =
+        `<div class="device-stat-value"></div>` +
+        `<div class="device-stat-label"></div>`;
+      cell.querySelector('.device-stat-value').textContent = device[c.key] || 0;
+      cell.querySelector('.device-stat-label').textContent = c.label;
+      panel.appendChild(cell);
+    });
+
+    const note = document.createElement('div');
+    note.className = 'settings-note';
+    note.textContent = 'All-time totals since this device was activated.';
+    panel.appendChild(note);
+
+    card.appendChild(panel);
+  }
+
   function toggleSettingsPanel(card, device, btn) {
     const existing = card.querySelector('.device-settings-panel');
     if (existing) { existing.remove(); btn.classList.remove('primary'); return; }
+    // Close the stats panel if open.
+    const openStats = card.querySelector('.device-stats-panel');
+    if (openStats) {
+      openStats.remove();
+      const stBtn = Array.from(card.querySelectorAll('.device-actions .btn')).find(b => b.textContent === 'View all Stats');
+      if (stBtn) stBtn.classList.remove('primary');
+    }
     btn.classList.add('primary');
 
     const panel = document.createElement('div');

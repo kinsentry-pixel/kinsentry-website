@@ -297,6 +297,40 @@
     padding-top: 12px;
     border-top: 0.5px solid var(--border);
   }
+  .device-stats-panel {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 0.5px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .device-stat-cell {
+    background: var(--bg, #f7f8fa);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .device-stat-cell.highlight {
+    border-color: rgba(29,158,117,0.35);
+    background: linear-gradient(135deg, var(--bg, #f7f8fa) 60%, rgba(29,158,117,0.06));
+    grid-column: 1 / -1;
+  }
+  .device-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .device-stat-label {
+    font-size: 11px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+  .device-stats-panel .settings-note { grid-column: 1 / -1; margin-top: 2px; }
   .settings-row {
     display: flex;
     align-items: center;
