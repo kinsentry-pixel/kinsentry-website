@@ -318,7 +318,6 @@
 
   // ── Per-device all-time stats (inline panel) ─────────────────────────────
   const STAT_CARDS = [
-    { key: 'totalThreats',    label: 'Total threats caught' },
     { key: 'remoteAllTime',   label: 'Remote Site Blocked' },
     { key: 'scampageAllTime', label: 'Scam page/Popup Blocked' },
     { key: 'phishingAllTime', label: 'Phishing/Scam Email Detected' },
