@@ -10,6 +10,12 @@
 (function () {
   const API = 'https://api.kinsentry.com';
 
+  // SMS alerts are wired end-to-end but stay hidden until production Twilio
+  // (paid number + US A2P 10DLC) is live — on a trial, SMS only reaches verified
+  // numbers, so a real caregiver's number would silently fail. Flip to true once
+  // Twilio is production-ready and the phone + SMS rows re-enable.
+  const SMS_LIVE = false;
+
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const loadingEl = document.getElementById('loading-state');
   const viewEl    = document.getElementById('family-view');
@@ -87,6 +93,9 @@
     });
     // Typing a phone number enables/disables the SMS toggle
     document.getElementById('alert-phone').addEventListener('input', refreshSmsToggleState);
+
+    // Gate SMS (phone + toggle) behind "Coming soon" until Twilio is live.
+    if (!SMS_LIVE) gateSmsVisuals();
   }
 
   // ── Load + render household ──────────────────────────────────────────────
@@ -166,10 +175,42 @@
     sw.setAttribute('aria-checked', String(!!on));
   }
 
+  // Dim the phone field + SMS toggle and badge them "Coming soon" while SMS is
+  // gated. The off/disabled state is enforced by refreshSmsToggleState; this is
+  // the one-time visual treatment. Idempotent.
+  function gateSmsVisuals() {
+    const phoneField = document.getElementById('alert-phone').closest('.alerts-field');
+    const smsRow     = document.getElementById('toggle-sms').closest('.settings-row');
+    document.getElementById('alert-phone').disabled         = true;
+    document.getElementById('alert-phone-country').disabled = true;
+
+    [phoneField, smsRow].forEach(el => {
+      if (!el) return;
+      el.style.opacity = '0.55';
+      if (el.querySelector('.soon-badge')) return; // already badged
+      const badge = document.createElement('span');
+      badge.className = 'soon-badge';
+      badge.textContent = 'Coming soon';
+      badge.style.cssText =
+        'margin-left:8px;font-size:11px;font-weight:600;padding:2px 8px;' +
+        'border-radius:20px;background:rgba(217,119,6,0.12);color:#B45309;white-space:nowrap;';
+      const target = el.querySelector('label') ||
+                     el.querySelector('.settings-row-title') || el;
+      target.appendChild(badge);
+    });
+  }
+
   // The SMS toggle can only be ON when a phone number is present.
   function refreshSmsToggleState() {
-    const hasPhone = document.getElementById('alert-phone').value.trim().length > 0;
     const sms = document.getElementById('toggle-sms');
+    // SMS gated until production Twilio — force off + disabled regardless of phone.
+    if (!SMS_LIVE) {
+      sms.disabled = true;
+      sms.classList.remove('on');
+      sms.setAttribute('aria-checked', 'false');
+      return;
+    }
+    const hasPhone = document.getElementById('alert-phone').value.trim().length > 0;
     sms.disabled = !hasPhone;
     if (!hasPhone && sms.classList.contains('on')) {
       sms.classList.remove('on');
@@ -186,7 +227,7 @@
       alertEmail:        document.getElementById('alert-email').value.trim(),
       alertPhone:        document.getElementById('alert-phone').value.trim(),
       alertPhoneCountry: document.getElementById('alert-phone-country').value,
-      smsEnabled:        document.getElementById('toggle-sms').classList.contains('on'),
+      smsEnabled:        SMS_LIVE && document.getElementById('toggle-sms').classList.contains('on'),
       digestEnabled:     document.getElementById('toggle-digest').classList.contains('on'),
     };
 
