@@ -252,6 +252,19 @@
     const deleteBtn    = document.getElementById('delete-account-btn');
     confirmInput.placeholder = CURRENT_USER.email;
 
+    // The field ships with `readonly` so the browser won't autofill it with the
+    // signed-in user's email (which would defeat the type-to-confirm safeguard).
+    // Lift readonly the moment the user interacts, and clear anything the
+    // browser may have injected before that.
+    const enableTyping = () => {
+      if (confirmInput.hasAttribute('readonly')) {
+        confirmInput.value = '';
+        confirmInput.removeAttribute('readonly');
+      }
+    };
+    confirmInput.addEventListener('focus', enableTyping);
+    confirmInput.addEventListener('pointerdown', enableTyping);
+
     confirmInput.addEventListener('input', () => {
       const match = confirmInput.value.trim().toLowerCase() === CURRENT_USER.email.toLowerCase();
       deleteBtn.disabled = !match;
