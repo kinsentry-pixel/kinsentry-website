@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KinSentry — Tutorials &amp; Guides</title>
+<meta name="description" content="Step-by-step tutorials and video guides for setting up and using KinSentry to protect your family from scams.">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="shortcut icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A2540;
+  --navy-deep: #061525;
+  --blue: #1E6FD9;
+  --blue-dark: #1859AD;
+  --teal: #00C2A8;
+  --teal-glow: #00E8C8;
+  --light: #EAF2FF;
+  --white: #FFFFFF;
+  --ghost: #C8D8EE;
+  --muted: #7B93B5;
+  --card-bg: rgba(10, 37, 64, 0.65);
+  --card-border: rgba(30, 111, 217, 0.15);
+  --glass: rgba(255,255,255,0.04);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--navy-deep);
+  color: var(--ghost);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ANIMATED BG ────────────────────────── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(30,111,217,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,111,217,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.bg-orb {
+  position: fixed; border-radius: 50%; filter: blur(130px); opacity: 0.13; z-index: 0; pointer-events: none;
+  animation: orbFloat 22s ease-in-out infinite alternate;
+}
+.bg-orb.a { width: 600px; height: 600px; background: radial-gradient(circle at 35% 35%, rgba(100,200,255,0.6), transparent 55%), var(--blue); top: -10%; left: -10%; }
+.bg-orb.b { width: 500px; height: 500px; background: radial-gradient(circle at 30% 30%, rgba(0,232,200,0.8), transparent 55%), var(--teal); bottom: -10%; right: -5%; animation-delay: -8s; }
+@keyframes orbFloat { 0%{transform:translate(0,0)} 100%{transform:translate(40px,-30px)} }
+
+/* ── NAV ────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 40px;
+  background: rgba(6,21,37,0.8);
+  backdrop-filter: blur(24px) saturate(200%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: 36px; height: 36px; object-fit: contain; }
+.brand-name { font-size: 22px; font-weight: 800; }
+.kin-dark { color: var(--white); }
+.sentry-gradient { background: linear-gradient(135deg, var(--blue), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--ghost); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s ease; }
+.nav-links a:hover { color: var(--teal); }
+.nav-back { color: var(--muted) !important; }
+.nav-cta {
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: var(--white) !important; padding: 10px 20px; border-radius: 10px; font-weight: 600 !important;
+  box-shadow: 0 6px 20px rgba(0,194,168,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nav-cta:hover { transform: translateY(-2px); color: var(--white) !important; }
+.nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+.nav-hamburger span { width: 24px; height: 2px; background: var(--ghost); border-radius: 2px; }
+
+/* ── HERO ───────────────────────────────── */
+.hero {
+  position: relative; z-index: 1;
+  text-align: center; padding: 90px 24px 60px;
+  max-width: 820px; margin: 0 auto;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 18px; border-radius: 40px;
+  background: linear-gradient(135deg, rgba(0,194,168,0.12), rgba(30,111,217,0.1));
+  border: 1px solid rgba(0,194,168,0.3);
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 26px;
+}
+.hero h1 {
+  font-size: clamp(36px, 5vw, 60px); font-weight: 800; line-height: 1.1;
+  color: var(--white); margin-bottom: 18px;
+}
+.hero h1 .grad { background: linear-gradient(135deg, var(--teal), var(--teal-glow), #A0F0E0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero p { font-size: 18px; color: var(--ghost); line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+/* ── SEARCH + FILTER ────────────────────── */
+.controls { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto 48px; padding: 0 24px; }
+.tut-search {
+  width: 100%; max-width: 520px; margin: 0 auto 28px; display: block;
+  padding: 14px 20px; border-radius: 12px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  color: var(--white); font-family: inherit; font-size: 15px; outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.tut-search::placeholder { color: var(--muted); }
+.tut-search:focus { border-color: rgba(0,194,168,0.5); background: rgba(0,194,168,0.05); }
+
+.filter-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.filter-chip {
+  padding: 8px 18px; border-radius: 30px; cursor: pointer;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--ghost); font-size: 13px; font-weight: 600; font-family: inherit;
+  transition: all 0.2s ease;
+}
+.filter-chip:hover { border-color: rgba(0,194,168,0.3); color: var(--teal); }
+.filter-chip.active {
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: var(--white); border-color: transparent;
+  box-shadow: 0 6px 18px rgba(0,194,168,0.3);
+}
+
+/* ── TUTORIALS GRID ─────────────────────── */
+.tut-wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 100px; }
+.tut-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; perspective: 1400px; }
+
+.tut-card {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
+  overflow: hidden; transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s ease, border-color 0.3s ease;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  display: flex; flex-direction: column;
+}
+.tut-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 36px 70px rgba(0,0,0,0.55), 0 0 40px rgba(0,194,168,0.08);
+  border-color: rgba(0,194,168,0.3);
+}
+
+/* Video placeholder */
+.tut-video {
+  position: relative; aspect-ratio: 16/9; width: 100%;
+  background: linear-gradient(135deg, rgba(30,111,217,0.18), rgba(0,194,168,0.12));
+  display: grid; place-items: center; cursor: pointer; overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.tut-video::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 50% 50%, rgba(0,232,200,0.12), transparent 60%);
+}
+.play-btn {
+  position: relative; z-index: 1;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  display: grid; place-items: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.tut-video:hover .play-btn { transform: scale(1.12); background: rgba(0,194,168,0.3); }
+.play-btn svg { margin-left: 3px; }
+.video-soon {
+  position: absolute; bottom: 12px; right: 12px; z-index: 1;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #ffd060; background: rgba(255,184,0,0.12); border: 1px solid rgba(255,184,0,0.3);
+  padding: 3px 10px; border-radius: 20px;
+}
+.tut-duration {
+  position: absolute; bottom: 12px; left: 12px; z-index: 1;
+  font-size: 11px; font-weight: 600; color: var(--white);
+  background: rgba(0,0,0,0.5); padding: 3px 9px; border-radius: 6px;
+}
+
+/* Card body */
+.tut-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+.tut-cat {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 8px;
+}
+.tut-card h3 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; line-height: 1.3; }
+.tut-card .tut-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; flex: 1; }
+
+/* Steps toggle */
+.tut-toggle {
+  display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+  background: rgba(0,194,168,0.08); border: 1px solid rgba(0,194,168,0.2);
+  color: var(--teal); font-family: inherit; font-size: 13px; font-weight: 600;
+  padding: 10px 16px; border-radius: 10px; cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.tut-toggle:hover { background: var(--teal); color: var(--navy-deep); }
+.tut-toggle svg { transition: transform 0.3s ease; }
+.tut-toggle.open svg { transform: rotate(180deg); }
+
+.tut-steps {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, margin-top 0.3s ease, opacity 0.3s ease;
+  opacity: 0; margin-top: 0;
+}
+.tut-steps.open { max-height: 1200px; opacity: 1; margin-top: 18px; }
+.tut-steps ol { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+.tut-steps li {
+  counter-increment: step; position: relative; padding-left: 40px;
+  font-size: 14px; color: var(--ghost); line-height: 1.6;
+}
+.tut-steps li::before {
+  content: counter(step); position: absolute; left: 0; top: -2px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: var(--white); font-size: 12px; font-weight: 700;
+  display: grid; place-items: center;
+  box-shadow: 0 4px 12px rgba(0,194,168,0.3);
+}
+.tut-steps li strong { color: var(--white); font-weight: 600; }
+.tut-tip {
+  margin-top: 14px; padding: 12px 14px; border-radius: 10px;
+  background: rgba(255,184,0,0.07); border: 1px solid rgba(255,184,0,0.18);
+  font-size: 13px; color: #ffd98a; line-height: 1.5;
+}
+.tut-tip strong { color: #ffd060; }
+
+.no-results { display: none; text-align: center; padding: 60px 24px; color: var(--muted); font-size: 16px; }
+.no-results.show { display: block; }
+
+/* ── HELP CTA ───────────────────────────── */
+.help-cta {
+  position: relative; z-index: 1; max-width: 1100px; margin: 0 auto 100px; padding: 0 24px;
+}
+.help-cta-inner {
+  text-align: center; padding: 48px 40px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(0,194,168,0.06), rgba(30,111,217,0.05));
+  border: 1px solid rgba(0,194,168,0.2);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.help-cta-inner h2 { font-size: 24px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+.help-cta-inner p { font-size: 15px; color: var(--ghost); margin-bottom: 24px; }
+.help-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 26px; border-radius: 10px; text-decoration: none;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: var(--white); font-size: 14px; font-weight: 700;
+  box-shadow: 0 8px 28px rgba(0,194,168,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.2s ease;
+}
+.help-cta-btn:hover { transform: translateY(-2px); }
+
+/* ── FOOTER ─────────────────────────────── */
+footer { position: relative; z-index: 1; border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 40px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+.footer-links-row { display: flex; gap: 20px; }
+.footer-links-row a { color: var(--muted); text-decoration: none; transition: color 0.2s ease; }
+.footer-links-row a:hover { color: var(--teal); }
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media (max-width: 860px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .tut-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .hero { padding: 60px 20px 40px; }
+  .tut-body { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb a"></div>
+<div class="bg-orb b"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo-nav.png" alt="KinSentry">
+    <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="support.html">Support</a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+    <a href="index.html#" class="nav-cta">Add to Chrome — Free</a>
+  </div>
+  <button class="nav-hamburger" aria-label="Menu" onclick="location.href='index.html'">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge"><span>📚</span> Tutorials &amp; Guides</div>
+  <h1>Learn KinSentry,<br><span class="grad">step by step</span></h1>
+  <p>Clear written walkthroughs and video guides for every feature — written so anyone in the family can follow along, no tech experience needed.</p>
+</section>
+
+<!-- ── CONTROLS ── -->
+<div class="controls">
+  <input type="text" class="tut-search" id="tutSearch" placeholder="Search tutorials… (e.g. invite code, phishing, family)">
+  <div class="filter-row" id="filterRow">
+    <button class="filter-chip active" data-cat="all">All</button>
+    <button class="filter-chip" data-cat="getting-started">Getting Started</button>
+    <button class="filter-chip" data-cat="family">Family</button>
+    <button class="filter-chip" data-cat="protection">Protection</button>
+    <button class="filter-chip" data-cat="account">Account</button>
+  </div>
+</div>
+
+<!-- ── TUTORIALS ── -->
+<div class="tut-wrap">
+  <div class="tut-grid" id="tutGrid">
+
+    <!-- 1. Install -->
+    <article class="tut-card" data-cat="getting-started" data-keywords="install setup chrome edge add extension first time start">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Getting Started</div>
+        <h3>Installing KinSentry</h3>
+        <p class="tut-desc">Add KinSentry to Chrome or Edge and get protection running in under two minutes.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Open the <strong>Chrome Web Store</strong> and search for "KinSentry", or click <strong>Add to Chrome — Free</strong> on our homepage.</li>
+            <li>Click <strong>Add to Chrome</strong>, then confirm by clicking <strong>Add extension</strong> in the popup.</li>
+            <li>Look for the KinSentry shield icon in your browser's toolbar (top-right). Click the puzzle-piece icon and pin it so it's always visible.</li>
+            <li>Click the shield to open KinSentry. You're now protected — protection is on by default.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> On Microsoft Edge, the same steps work — Edge supports Chrome extensions directly.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Create account -->
+    <article class="tut-card" data-cat="getting-started" data-keywords="account signup register create email password google free trial">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Getting Started</div>
+        <h3>Creating your free account</h3>
+        <p class="tut-desc">Set up your account to unlock the 30-day Guardian trial and sync settings across devices.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Click <strong>Log In</strong> in the toolbar popup or visit the sign-up page on our website.</li>
+            <li>Choose <strong>Sign up with Google</strong> for one-click setup, or enter your name, email, and a password (at least 8 characters).</li>
+            <li>If using email, check your inbox for a <strong>6-digit verification code</strong> and enter it to confirm your email.</li>
+            <li>You're in! Your free account includes a 30-day Guardian trial — no credit card needed.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> Google sign-up skips the verification code since Google has already verified your email.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Family setup -->
+    <article class="tut-card" data-cat="family" data-keywords="family household admin setup dashboard monitor members add">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~3 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Family</div>
+        <h3>Setting up your Family household</h3>
+        <p class="tut-desc">As the family organizer, create a household so you can protect and monitor up to 3 loved ones' devices.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Upgrade to the <strong>Family plan</strong> from the pricing page, then log in at <strong>kinsentry.com</strong>.</li>
+            <li>Go to your <strong>Family dashboard</strong> (family.html). As the admin, you manage everything from here — no extension needed on your own device.</li>
+            <li>Review your household: you can add up to <strong>3 member devices</strong> for the people you want to protect.</li>
+            <li>Configure household-wide alert settings (where alerts are sent) from the dashboard.</li>
+          </ol>
+          <div class="tut-tip"><strong>Note:</strong> The admin device doesn't count toward the 3-device limit — all 3 seats go to the family members you're protecting.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. Invite codes -->
+    <article class="tut-card" data-cat="family" data-keywords="invite code activate family device member redeem 6 character">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~3 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Family</div>
+        <h3>Activating a device with an invite code</h3>
+        <p class="tut-desc">Get a loved one's device protected by generating a code and entering it in their extension.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li><strong>Admin:</strong> In your Family dashboard, click <strong>Generate invite code</strong> and give it a device label (e.g. "Mom's Laptop").</li>
+            <li>You'll get a <strong>6-character code</strong> (letters and numbers). It's valid for 24 hours and can be used once.</li>
+            <li><strong>On the family member's device:</strong> install the KinSentry extension, open it, and click <strong>Activate a family device with an invite code</strong>.</li>
+            <li>Enter the 6-character code. The device is now linked to your household and protected — no email or password needed on their end.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> Outstanding codes show in your dashboard with a Revoke button, so you can cancel one if it's no longer needed.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. Remote access blocking -->
+    <article class="tut-card" data-cat="protection" data-keywords="remote access anydesk teamviewer block download software desktop">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Protection</div>
+        <h3>How remote-access blocking works</h3>
+        <p class="tut-desc">Understand how KinSentry stops scammers from installing remote-control software like AnyDesk or TeamViewer.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>KinSentry watches for visits to <strong>70+ known remote-desktop download sites</strong> (AnyDesk, TeamViewer, UltraViewer, and more).</li>
+            <li>If you or a loved one lands on one — often because a scammer directed them there — KinSentry shows a <strong>full-screen warning</strong>.</li>
+            <li>The warning explains the risk in plain language and blocks the download before the software reaches the device.</li>
+            <li>Nothing to configure — this protection is on by default for every plan.</li>
+          </ol>
+          <div class="tut-tip"><strong>Why it matters:</strong> Remote-access software is the #1 tool scammers use to take control of a victim's computer. Blocking it stops the scam at the source.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6. Scam page / popup -->
+    <article class="tut-card" data-cat="protection" data-keywords="scam page popup fake virus alert tech support blocking overlay">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Protection</div>
+        <h3>Scam page &amp; popup blocking</h3>
+        <p class="tut-desc">See what happens when KinSentry catches a fake "virus detected" page or tech-support popup.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>When a page tries to show a <strong>fake virus alert</strong> or fraudulent tech-support warning, KinSentry detects it automatically.</li>
+            <li>A clear <strong>scam alert overlay</strong> appears, warning that the page is trying to trick you and to never call the number shown.</li>
+            <li>Tap <strong>"I'll close this — keep me safe"</strong> to dismiss the scam page safely.</li>
+            <li>If it was a false alarm on a site you trust, you can choose <strong>"Mark this site as safe"</strong> so it won't warn again there.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> Real companies like Microsoft, Apple, and Norton never show pop-ups telling you to call a phone number. That's always a scam.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7. Phishing email -->
+    <article class="tut-card" data-cat="protection" data-keywords="phishing email gmail outlook yahoo aol detection scan banner">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Protection</div>
+        <h3>Phishing email detection</h3>
+        <p class="tut-desc">Learn how KinSentry flags dangerous emails in Gmail, Outlook, Yahoo, and AOL before they fool you.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Open your webmail (Gmail, Outlook, Yahoo, or AOL) as usual — KinSentry scans messages quietly in the background.</li>
+            <li>When it spots phishing signs — spoofed senders, fake "account suspended" warnings, urgent payment requests — a <strong>warning banner</strong> appears above the email.</li>
+            <li>The banner explains why the email looks suspicious so you can decide carefully before clicking anything.</li>
+            <li>This feature is available on the <strong>free trial and Family</strong> plans. Turn it on or off anytime in <strong>Settings</strong>.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> The banner is non-blocking — it informs you without locking up your inbox, so you stay in control.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8. Voice alerts + settings -->
+    <article class="tut-card" data-cat="protection" data-keywords="voice warning alerts settings toggle sound spoken configure">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Protection</div>
+        <h3>Voice alerts &amp; adjusting settings</h3>
+        <p class="tut-desc">Turn protection features on or off and enable spoken warnings for users who don't read screens closely.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Open the KinSentry extension and go to <strong>Settings</strong>.</li>
+            <li>Toggle individual protections on or off: remote-site blocking, scam-page blocking, phishing email detection, and notifications.</li>
+            <li>Enable <strong>Voice Warning Alerts</strong> so a clear spoken warning plays the moment a scam is detected — ideal for users who may miss an on-screen message.</li>
+            <li>Settings save automatically and sync to your account.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> For a Family household, the admin can manage protection settings for each member device remotely from the dashboard.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 9. Family alerts -->
+    <article class="tut-card" data-cat="family" data-keywords="family alerts email notification scam attempt notify caregiver">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Family</div>
+        <h3>Setting up family alerts</h3>
+        <p class="tut-desc">Get notified instantly when a scam attempt is blocked on a loved one's device.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>In your Family dashboard (or account settings for Guardian), find the <strong>Alerts</strong> section.</li>
+            <li>Enter the <strong>email address</strong> where you want scam alerts delivered.</li>
+            <li>When KinSentry blocks a scam attempt on a protected device, you'll get an alert so you can check in on your loved one.</li>
+            <li>Save your settings — alerts start working immediately.</li>
+          </ol>
+          <div class="tut-tip"><strong>Coming soon:</strong> SMS and WhatsApp alert delivery are on the way. Email alerts are available now.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10. Activity dashboard -->
+    <article class="tut-card" data-cat="account" data-keywords="activity dashboard history blocked attempts monitor track status">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Account</div>
+        <h3>Reading your Activity Dashboard</h3>
+        <p class="tut-desc">Track what KinSentry has blocked and check protection status across all your family devices.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Open the extension and go to the <strong>Dashboard</strong>, or visit your account on kinsentry.com.</li>
+            <li>View <strong>blocked attempts</strong> — every scam site, popup, or remote-access attempt KinSentry has stopped.</li>
+            <li>Check the <strong>protection status</strong> for each device in your household at a glance.</li>
+            <li>Block history is kept based on your plan: 7 days (Free), 30 days (Guardian), or 90 days (Family).</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> Reviewing the dashboard weekly helps you spot if a loved one is being targeted repeatedly.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 11. Manage account -->
+    <article class="tut-card" data-cat="account" data-keywords="account manage profile subscription password delete cancel settings">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Account</div>
+        <h3>Managing your account</h3>
+        <p class="tut-desc">Update your profile, change your password, manage your subscription, or delete your account.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Log in at <strong>kinsentry.com</strong> — you'll land on your account page.</li>
+            <li>Use the tabs to manage <strong>Profile</strong> (name), <strong>Subscription</strong> (your plan), and <strong>Security</strong> (password).</li>
+            <li>To change your password, open the Security tab and enter your current and new password.</li>
+            <li>To close your account, use <strong>Delete Account</strong>. There's a 90-day grace period — log back in within that window to restore everything.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> If you signed up with Google, you'll sign in with Google rather than a password.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 12. Report a scam -->
+    <article class="tut-card" data-cat="protection" data-keywords="report scam number url site phone false positive submit">
+      <div class="tut-video">
+        <div class="play-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="tut-duration">~2 min</span>
+        <span class="video-soon">Video soon</span>
+      </div>
+      <div class="tut-body">
+        <div class="tut-cat">Protection</div>
+        <h3>Reporting a scam or a false alarm</h3>
+        <p class="tut-desc">Help improve protection for everyone by reporting scam numbers, scam sites, or a site that was blocked by mistake.</p>
+        <button class="tut-toggle">Read the steps <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="tut-steps">
+          <ol>
+            <li>Open the extension and choose <strong>Report</strong>.</li>
+            <li>To report a scam, enter the suspicious <strong>phone number or website</strong> you encountered.</li>
+            <li>If KinSentry blocked a legitimate site by mistake, you can report it as a <strong>false positive</strong> so we can fix it.</li>
+            <li>Submit — your report helps keep the whole KinSentry community safer.</li>
+          </ol>
+          <div class="tut-tip"><strong>Tip:</strong> Reports are reviewed by our team and feed directly into the protection database.</div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="no-results" id="noResults">No tutorials match your search. Try a different keyword.</div>
+</div>
+
+<!-- ── HELP CTA ── -->
+<div class="help-cta">
+  <div class="help-cta-inner">
+    <h2>Still need a hand?</h2>
+    <p>Can't find what you're looking for? Our support team is happy to help.</p>
+    <a href="support.html" class="help-cta-btn">
+      Visit Support
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>. All rights reserved.</span>
+    <div class="footer-links-row">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="support.html">Support</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Expand/collapse step guides ──
+document.querySelectorAll('.tut-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const steps = btn.nextElementSibling;
+    const isOpen = steps.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.firstChild.textContent = isOpen ? 'Hide the steps ' : 'Read the steps ';
+  });
+});
+
+// ── Video placeholder click (no video yet) ──
+document.querySelectorAll('.tut-video').forEach(v => {
+  v.addEventListener('click', () => {
+    const badge = v.querySelector('.video-soon');
+    if (badge) {
+      const prev = badge.textContent;
+      badge.textContent = 'Coming shortly!';
+      setTimeout(() => { badge.textContent = prev; }, 1800);
+    }
+  });
+});
+
+// ── Filter + search ──
+const cards = Array.from(document.querySelectorAll('.tut-card'));
+const chips = document.querySelectorAll('.filter-chip');
+const search = document.getElementById('tutSearch');
+const noResults = document.getElementById('noResults');
+let activeCat = 'all';
+
+function applyFilters() {
+  const q = search.value.trim().toLowerCase();
+  let visible = 0;
+  cards.forEach(card => {
+    const catMatch = activeCat === 'all' || card.dataset.cat === activeCat;
+    const haystack = (card.dataset.keywords + ' ' + card.textContent).toLowerCase();
+    const searchMatch = !q || haystack.includes(q);
+    const show = catMatch && searchMatch;
+    card.style.display = show ? 'flex' : 'none';
+    if (show) visible++;
+  });
+  noResults.classList.toggle('show', visible === 0);
+}
+
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    applyFilters();
+  });
+});
+search.addEventListener('input', applyFilters);
+</script>
+</body>
+</html>
