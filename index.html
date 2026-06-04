@@ -2728,20 +2728,54 @@ updateCTAs();
   const notifyBtn   = document.querySelector('.cs-notify-btn');
   const notifyInput = document.querySelector('.cs-notify-input');
   if (notifyBtn && notifyInput) {
-    notifyBtn.addEventListener('click', () => {
+    const originalBtnHTML = notifyBtn.innerHTML;
+
+    notifyBtn.addEventListener('click', async () => {
       const email = notifyInput.value.trim();
-      if (!email || !email.includes('@')) {
+
+      // Client-side validation
+      if (!email || !email.includes('@') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         notifyInput.style.borderColor = 'rgba(255,80,80,0.6)';
+        notifyInput.focus();
         setTimeout(() => { notifyInput.style.borderColor = ''; }, 1500);
         return;
       }
-      notifyBtn.innerHTML = "✓ You're on the list!";
-      notifyBtn.style.background = 'linear-gradient(135deg, #1a8c5a, #0ea87a)';
-      notifyBtn.style.boxShadow = '0 8px 28px rgba(14,168,122,0.4)';
-      notifyInput.value = '';
-      notifyInput.placeholder = "Thanks! We'll be in touch.";
-      notifyInput.disabled = true;
+
+      // Loading state
       notifyBtn.disabled = true;
+      notifyBtn.innerHTML = 'Submitting…';
+
+      try {
+        const resp = await fetch('https://api.kinsentry.com/api/waitlist', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, source: 'coming_soon' })
+        });
+
+        if (!resp.ok) throw new Error('Request failed');
+
+        // Success
+        notifyBtn.innerHTML = "✓ You're on the list!";
+        notifyBtn.style.background = 'linear-gradient(135deg, #1a8c5a, #0ea87a)';
+        notifyBtn.style.boxShadow = '0 8px 28px rgba(14,168,122,0.4)';
+        notifyInput.value = '';
+        notifyInput.placeholder = "Thanks! We'll be in touch.";
+        notifyInput.disabled = true;
+        // btn stays disabled
+      } catch (err) {
+        // Network / server error — let them retry
+        notifyBtn.disabled = false;
+        notifyBtn.innerHTML = originalBtnHTML;
+        notifyInput.style.borderColor = 'rgba(255,80,80,0.6)';
+        notifyInput.value = email;
+        const sub = document.querySelector('.cs-notify-sub');
+        if (sub) {
+          const prev = sub.textContent;
+          sub.textContent = 'Something went wrong — please try again.';
+          sub.style.color = '#ff8080';
+          setTimeout(() => { sub.textContent = prev; sub.style.color = ''; notifyInput.style.borderColor = ''; }, 3000);
+        }
+      }
     });
   }
 
