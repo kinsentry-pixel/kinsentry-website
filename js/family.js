@@ -347,6 +347,8 @@
   const PROTECTION_TOGGLES = [
     { key: 'remoteBlock', title: 'Block remote desktop sites',
       desc: 'Automatically block sites like TeamViewer, AnyDesk, UltraViewer.' },
+    { key: 'downloadGuard', title: 'Warn before downloading programs',
+      desc: 'Pause and ask before any app or installer downloads, in case a link tried to download something unexpected.' },
     { key: 'scamPage',    title: 'Block scam pages',
       desc: 'Show a warning overlay on fake virus-alert and tech-support scam pages.' },
     { key: 'phishingEmail', title: 'Detect phishing emails',
