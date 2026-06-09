@@ -7,24 +7,26 @@
 <title>Account scheduled for deletion — KinSentry</title>
 <link rel="icon" href="images/logo-nav.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy:    #0D1B3E;
-    --blue:    #1565C0;
-    --blue-dark: #0D47A1;
-    --teal:    #1D9E75;
-    --teal-light:#E1F5EE;
-    --bg:      #F5F6F8;
-    --surface: #FFFFFF;
-    --border:  rgba(0,0,0,0.08);
-    --text:    #0D1B3E;
-    --text-2:  #5A6478;
-    --radius:  12px;
+    --navy:    #111A2B;
+    --blue:    #2E7BFF;
+    --blue-dark: #1E63E0;
+    --blue-light:rgba(46,123,255,0.12);
+    --teal:    #00E8C8;
+    --teal-light:rgba(0,232,200,0.12);
+    --bg:      #0A0E16;
+    --surface: #111A2B;
+    --border:  rgba(255,255,255,0.09);
+    --text:    #FFFFFF;
+    --text-2:  #9FB2CE;
+    --radius:  14px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -37,7 +39,7 @@
   }
   .logo-img { width: 28px; height: 28px; object-fit: contain; }
   .logo-text {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; letter-spacing:-0.02em;
     font-size: 18px; color: #fff; text-decoration: none;
   }
   .header-tagline {
@@ -72,7 +74,7 @@
     margin: 0 auto 20px;
   }
   h1 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; letter-spacing:-0.02em;
     font-size: 24px;
     margin-bottom: 12px;
   }
@@ -88,7 +90,7 @@
     border-radius: 8px;
     padding: 14px 16px;
     font-size: 13px;
-    color: #0F6E56;
+    color: #7BEAD8;
     line-height: 1.5;
     margin-bottom: 24px;
     text-align: left;
@@ -114,16 +116,16 @@
     color: var(--text);
     cursor: pointer;
   }
-  .btn:hover { background: rgba(0,0,0,0.03); }
+  .btn:hover { background: rgba(255,255,255,0.05); }
   .btn.primary {
-    background: var(--blue);
-    color: #fff;
-    border-color: var(--blue);
+    background: var(--teal);
+    color: #051018;
+    border-color: var(--teal);
   }
-  .btn.primary:hover { background: var(--blue-dark); }
+  .btn.primary:hover { filter: brightness(1.08); }
 
   footer {
-    background: #fff;
+    background: #070B12;
     border-top: 0.5px solid var(--border);
     padding: 18px 24px;
     text-align: center;

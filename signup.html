@@ -6,30 +6,31 @@
   <title>KinSentry — Sign In / Sign Up</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy:      #0D1B3E;
-      --blue:      #1565C0;
-      --blue-dark: #0D47A1;
-      --accent:    #42A5F5;
-      --teal:      #1D9E75;
-      --teal-light:#E1F5EE;
-      --red:       #EF4444;
-      --bg:        #F5F6F8;
-      --surface:   #FFFFFF;
-      --border:    rgba(0,0,0,0.08);
-      --text:      #0D1B3E;
-      --text-2:    #5A6478;
-      --text-3:    #9BA3B4;
-      --input-bg:  #FFFFFF;
+      --navy:      #111A2B;
+      --blue:      #2E7BFF;
+      --blue-dark: #1E63E0;
+      --accent:    #38BDF8;
+      --teal:      #00E8C8;
+      --teal-light:rgba(0,232,200,0.12);
+      --red:       #FF5C5C;
+      --bg:        #0A0E16;
+      --surface:   #111A2B;
+      --border:    rgba(255,255,255,0.09);
+      --text:      #FFFFFF;
+      --text-2:    #9FB2CE;
+      --text-3:    #647691;
+      --input-bg:  #0E1422;
       --radius:    12px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -47,7 +48,7 @@
     }
     .logo-img { width: 28px; height: 28px; object-fit: contain; }
     .logo-text {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; letter-spacing:-0.02em;
       font-size: 18px; color: #fff;
       text-decoration: none;
     }
@@ -94,7 +95,7 @@
     .card-hero { text-align: center; margin-bottom: 28px; }
     .card-logo { width: 52px; height: 52px; object-fit: contain; margin: 0 auto 12px; display: block; }
     .card-title {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; letter-spacing:-0.02em;
       font-size: 22px; color: var(--text); margin-bottom: 6px;
     }
     .card-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
@@ -105,7 +106,7 @@
     .chip {
       font-size: 11px; padding: 3px 10px;
       border-radius: 20px;
-      background: var(--teal-light); color: #0F6E56;
+      background: var(--teal-light); color: #7BEAD8;
     }
 
     /* Google button */
@@ -145,7 +146,7 @@
       font-family: inherit; outline: none;
       transition: border-color 0.15s;
     }
-    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(21,101,192,0.1); }
+    input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,232,200,0.18); }
     input::placeholder { color: var(--text-3); }
 
     /* Terms */
@@ -159,13 +160,13 @@
 
     /* Submit */
     .btn-submit {
-      width: 100%; background: var(--blue); color: #fff;
+      width: 100%; background: linear-gradient(135deg,var(--teal),#15C8DE); color: #051018;
       border: none; border-radius: var(--radius);
       padding: 13px; font-size: 15px; font-weight: 600;
       cursor: pointer; font-family: inherit;
       transition: background 0.15s; margin-bottom: 12px;
     }
-    .btn-submit:hover { background: var(--blue-dark); }
+    .btn-submit:hover { filter: brightness(1.08); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* Messages */
@@ -173,8 +174,8 @@
       border-radius: var(--radius); padding: 10px 14px;
       font-size: 13px; margin-bottom: 12px; display: none;
     }
-    .msg.error   { background: rgba(239,68,68,0.08); border: 0.5px solid rgba(239,68,68,0.2); color: #B91C1C; }
-    .msg.success { background: rgba(29,158,117,0.08); border: 0.5px solid rgba(29,158,117,0.2); color: #065F46; }
+    .msg.error   { background: rgba(239,68,68,0.08); border: 0.5px solid rgba(239,68,68,0.2); color: #FF8585; }
+    .msg.success { background: rgba(29,158,117,0.08); border: 0.5px solid rgba(29,158,117,0.2); color: #7BEAD8; }
     .msg.show { display: block; }
 
     /* Mode toggle */
@@ -202,8 +203,8 @@
     /* Spinner */
     .spinner {
       display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff; border-radius: 50%;
+      border: 2px solid rgba(5,16,24,0.35);
+      border-top-color: #051018; border-radius: 50%;
       animation: spin 0.7s linear infinite;
       vertical-align: middle; margin-right: 6px;
     }
