@@ -354,6 +354,7 @@ nav {
   border-radius: 50%;
 }
 .soon-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--blue); background: rgba(46,123,255,0.14); padding: 2px 7px; border-radius: 5px; margin-left: 4px; white-space: nowrap; }
+.plan-inherits { color: var(--teal); font-weight: 700; background: rgba(0,232,200,0.10); padding: 2px 8px; border-radius: 5px; }
 .pricing-btn {
   display: block; text-align: center; font-size: 15px; font-weight: 700; padding: 14px; border-radius: var(--radius-sm);
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
@@ -1059,7 +1060,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         <div class="price" id="guardianPrice">$4.99<span>/mo</span></div>
         <div class="plan-desc" id="guardianBilling">Billed annually at $59.88/yr</div>
         <ul>
-          <li>Everything in Free</li>
+          <li><span class="plan-inherits">Everything in Free</span></li>
           <li>Voice warning alerts</li>
           <li>Scam Ad Blocker</li>
           <li>Scam Page/Popup Blocker</li>
@@ -1075,7 +1076,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         <div class="price" id="familyPrice">$9.99<span>/mo</span></div>
         <div class="plan-desc" id="familyBilling">Billed annually at $119.88/yr</div>
         <ul>
-          <li>Everything in Guardian</li>
+          <li><span class="plan-inherits">Everything in Guardian</span></li>
           <li>Up to 3 devices</li>
           <li>Family dashboard</li>
           <li>90-day block history</li>
