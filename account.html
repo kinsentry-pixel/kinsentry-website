@@ -71,7 +71,7 @@
   }
   .account-wrap {
     width: 100%;
-    max-width: 960px;
+    max-width: 1040px;
   }
   .page-title {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; letter-spacing:-0.02em;
@@ -86,20 +86,63 @@
 
   .layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 28px;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
     align-items: start;
   }
 
   /* ── SIDEBAR ── */
   .sidebar {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 0;
     position: sticky;
     top: 20px;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(46,123,255,0.05), rgba(0,232,200,0.02)),
+      var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0 0 8px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
   }
+
+  /* ── IDENTITY CARD ── */
+  .id-card {
+    position: relative;
+    padding: 24px 20px 18px;
+    text-align: center;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .id-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), var(--blue), transparent);
+    opacity: 0.6;
+  }
+  .id-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 26px; font-weight: 800;
+    color: #051018;
+    background: linear-gradient(135deg, var(--teal), var(--blue));
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px rgba(0,232,200,0.22);
+    text-transform: uppercase;
+  }
+  .id-name {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 3px;
+    word-break: break-word;
+  }
+  .id-email {
+    font-size: 12px; color: var(--text-2);
+    word-break: break-all;
+    margin-bottom: 12px;
+  }
+  .sidebar-nav { padding-top: 4px; }
   .sidebar a {
     display: flex;
     align-items: center;
@@ -136,11 +179,22 @@
 
   /* ── CONTENT ── */
   .panel {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 26px 28px;
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(46,123,255,0.05), rgba(0,232,200,0.02)),
+      var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 30px;
     display: none;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), var(--blue), transparent);
+    opacity: 0.6;
   }
   .panel.active { display: block; }
   .panel h2 {
@@ -386,6 +440,23 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── ANIMATED BG ── */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(46,123,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(46,123,255,0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .bg-orb {
+    position: fixed; border-radius: 50%; filter: blur(130px); opacity: 0.12; z-index: 0; pointer-events: none;
+    animation: orbFloat 24s ease-in-out infinite alternate;
+  }
+  .bg-orb.a { width: 560px; height: 560px; background: var(--blue); top: -12%; left: -8%; }
+  .bg-orb.b { width: 480px; height: 480px; background: var(--teal); bottom: -12%; right: -6%; animation-delay: -10s; }
+  @keyframes orbFloat { 0%{transform:translate(0,0)} 100%{transform:translate(40px,-30px)} }
+  header, main { position: relative; z-index: 1; }
+
   /* ── FOOTER ── */
   footer {
     background: #070B12;
@@ -412,6 +483,10 @@
     }
     .sidebar {
       position: static;
+      padding: 0;
+    }
+    .id-card { display: none; }
+    .sidebar-nav {
       display: flex;
       overflow-x: auto;
       padding: 6px;
@@ -435,6 +510,10 @@
 </style>
 </head>
 <body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb a"></div>
+<div class="bg-orb b"></div>
 
 <header>
   <img class="logo-img" src="images/logo-nav.png" alt="KinSentry">
@@ -465,22 +544,30 @@
       <div class="layout">
         <!-- Sidebar -->
         <nav class="sidebar">
-          <a data-tab="profile" class="active">
-            <span class="nav-emoji">👤</span> Profile
-          </a>
-          <a data-tab="subscription">
-            <span class="nav-emoji">💳</span> Subscription
-          </a>
-          <a data-tab="security">
-            <span class="nav-emoji">🔒</span> Security
-          </a>
-          <a data-tab="delete">
-            <span class="nav-emoji">🗑️</span> Delete account
-          </a>
-          <div class="sidebar-divider"></div>
-          <a id="sign-out-link" class="sign-out">
-            <span class="nav-emoji">↪︎</span> Sign out
-          </a>
+          <div class="id-card">
+            <div class="id-avatar" id="id-initial">—</div>
+            <div class="id-name" id="id-name">—</div>
+            <div class="id-email" id="id-email">—</div>
+            <span class="tier-badge" id="id-plan">—</span>
+          </div>
+          <div class="sidebar-nav">
+            <a data-tab="profile" class="active">
+              <span class="nav-emoji">👤</span> Profile
+            </a>
+            <a data-tab="subscription">
+              <span class="nav-emoji">💳</span> Subscription
+            </a>
+            <a data-tab="security">
+              <span class="nav-emoji">🔒</span> Security
+            </a>
+            <a data-tab="delete">
+              <span class="nav-emoji">🗑️</span> Delete account
+            </a>
+            <div class="sidebar-divider"></div>
+            <a id="sign-out-link" class="sign-out">
+              <span class="nav-emoji">↪︎</span> Sign out
+            </a>
+          </div>
         </nav>
 
         <!-- Content panels -->

@@ -105,7 +105,19 @@
 
     document.getElementById('name-input').value = u.name || '';
 
+    syncIdentityCard();
+
     document.getElementById('save-name-btn').addEventListener('click', saveName);
+  }
+
+  // Keep the sidebar identity card in sync with CURRENT_USER.
+  function syncIdentityCard() {
+    const u = CURRENT_USER;
+    const display = u.name || u.email || '';
+    document.getElementById('id-initial').textContent =
+      (display.trim()[0] || '?');
+    document.getElementById('id-name').textContent = u.name || 'Your account';
+    document.getElementById('id-email').textContent = u.email || '';
   }
 
   async function saveName() {
@@ -137,6 +149,7 @@
       CURRENT_USER.name = data.name || name;
       document.getElementById('account-greeting').textContent =
         `Welcome${CURRENT_USER.name ? ', ' + CURRENT_USER.name : ''}.`;
+      syncIdentityCard();
       toast('Saved', 'success');
     } catch (err) {
       showAlert(alertEl, 'error', 'Network error. Please try again.');
@@ -158,6 +171,12 @@
     };
     pill.className = 'tier-badge ' + (u.tier || 'free');
     pill.textContent = tierLabels[u.tier] || u.tier || 'Free';
+
+    const idPlan = document.getElementById('id-plan');
+    if (idPlan) {
+      idPlan.className = 'tier-badge ' + (u.tier || 'free');
+      idPlan.textContent = tierLabels[u.tier] || u.tier || 'Free';
+    }
 
     if (u.tier === 'free_trial' && u.trialExpiry) {
       document.getElementById('trial-row').style.display = 'flex';
