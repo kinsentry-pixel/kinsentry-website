@@ -86,18 +86,50 @@
     margin-bottom: 24px;
   }
 
-  /* ── DASHBOARD GRID ── */
-  .fam-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-    align-items: start;
-  }
-  .fam-col {
+  /* ── DASHBOARD LAYOUT ── */
+  .fam-stack {
     display: flex;
     flex-direction: column;
     gap: 22px;
-    min-width: 0;
+  }
+  .fam-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+  }
+  .fam-bottom-grid > .panel { margin-bottom: 0; }
+
+  /* ── HOUSEHOLD STAT STRIP ── */
+  .household-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .hh-stat {
+    position: relative;
+    background:
+      linear-gradient(135deg, rgba(0,232,200,0.06), transparent 60%),
+      var(--bg, #0E1422);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .hh-stat-value {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .hh-stat-label {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 5px;
+  }
+  @media (max-width: 560px) {
+    .household-stats { grid-template-columns: 1fr; }
   }
 
   /* ── PANEL ── */
@@ -250,9 +282,10 @@
 
   /* ── DEVICE CARDS ── */
   .device-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    align-items: start;
   }
   .device-card {
     border: 0.5px solid var(--border);
@@ -541,7 +574,7 @@
   /* ── EMPTY STATE ── */
   .empty-state {
     text-align: center;
-    padding: 28px 20px;
+    padding: 16px 20px;
     color: var(--text-3);
     font-size: 13px;
     border: 0.5px dashed var(--border);
@@ -635,7 +668,7 @@
 
   /* ── RESPONSIVE GRID COLLAPSE ── */
   @media (max-width: 900px) {
-    .fam-grid { grid-template-columns: 1fr; }
+    .fam-bottom-grid { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 640px) {
@@ -667,10 +700,8 @@
       <h1 class="page-title">Family</h1>
       <p class="page-sub">Manage the devices protected under your Family plan.</p>
 
-      <div class="fam-grid">
-        <!-- ══ LEFT COLUMN: Household + Invite codes ══ -->
-        <div class="fam-col">
-      <!-- ── HOUSEHOLD SUMMARY ── -->
+      <div class="fam-stack">
+        <!-- ══ HOUSEHOLD SUMMARY (full-width strip) ══ -->
       <section class="panel">
         <div class="panel-head">
           <h2>Household</h2>
@@ -680,15 +711,36 @@
 
         <div class="alert hidden" id="household-alert"></div>
 
-        <div class="info-row">
-          <span class="key">Devices in use</span>
-          <span class="val" id="seats-used">—</span>
-        </div>
-        <div class="info-row">
-          <span class="key">Outstanding invite codes</span>
-          <span class="val" id="outstanding-count">—</span>
+        <div class="household-stats">
+          <div class="hh-stat">
+            <div class="hh-stat-value" id="seats-used">—</div>
+            <div class="hh-stat-label">Devices in use</div>
+          </div>
+          <div class="hh-stat">
+            <div class="hh-stat-value" id="outstanding-count">—</div>
+            <div class="hh-stat-label">Outstanding invite codes</div>
+          </div>
         </div>
       </section>
+
+      <!-- ══ MEMBER DEVICES (full-width) ══ -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Member devices</h2>
+        </div>
+        <p class="panel-sub">
+          Each device runs the KinSentry extension, activated with an invite code.
+        </p>
+
+        <div class="alert hidden" id="devices-alert"></div>
+        <div id="devices-loading" class="section-loading">
+          <span class="spinner"></span>Loading devices…
+        </div>
+        <div class="device-list" id="device-list" style="display:none;"></div>
+      </section>
+
+      <!-- ══ BOTTOM ROW: Invite codes | Family alerts ══ -->
+      <div class="fam-bottom-grid">
 
       <!-- ── INVITE CODES ── -->
       <section class="panel">
@@ -737,27 +789,6 @@
           </div>
           <div class="codes-list" id="codes-list"></div>
         </div>
-      </section>
-
-        </div>
-
-        <!-- ══ RIGHT COLUMN: Member devices + Family alerts ══ -->
-        <div class="fam-col">
-
-      <!-- ── MEMBER DEVICES ── -->
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Member devices</h2>
-        </div>
-        <p class="panel-sub">
-          Each device runs the KinSentry extension, activated with an invite code.
-        </p>
-
-        <div class="alert hidden" id="devices-alert"></div>
-        <div id="devices-loading" class="section-loading">
-          <span class="spinner"></span>Loading devices…
-        </div>
-        <div class="device-list" id="device-list" style="display:none;"></div>
       </section>
 
       <!-- ── FAMILY ALERTS ── -->
@@ -822,8 +853,8 @@
         </button>
       </section>
 
-        </div>
-      </div><!-- /fam-grid -->
+        </div><!-- /fam-bottom-grid -->
+      </div><!-- /fam-stack -->
     </div>
   </div>
 </main>
