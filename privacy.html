@@ -29,7 +29,7 @@
 <div class="page-header">
   <div class="page-label">Legal</div>
   <h1 class="page-title">Privacy Policy</h1>
-  <p class="page-subtitle">Last updated: May 18, 2026</p>
+  <p class="page-subtitle">Last updated: June 12, 2026</p>
 </div>
 
 <div class="content-card">
@@ -41,9 +41,9 @@
 <div class="content-card">
   <h2>2. Information We Collect</h2>
   <h3>2.1 Account Information</h3>
-  <p>When you create an account, we collect your name, email address, and a hashed password. If you sign up with Google, we receive your Google profile information — specifically your name, email address, profile picture, and Google account ID. We do <span class="highlight">not</span> access your contacts, calendar, Gmail, Drive, or any other Google services.</p>
+  <p>When you create an account, we collect your name, email address, and a hashed password. If you sign up with Google, we receive your Google profile information — specifically your name, email address, profile picture, and Google account ID. We do <span class="highlight">not</span> access your contacts, calendar, Gmail, Drive, or any other Google services through your Google account or Google APIs. (Separately, our on-page phishing detection reads the email you have open in your webmail tab, locally on your device only — see Section 2.8.)</p>
   <h3>2.2 Payment Information</h3>
-  <p>If you subscribe to a paid plan, payment is processed entirely by Stripe. We never see, store, or transmit your full credit card number, CVV, or banking details. We retain only Stripe's transaction reference, the last 4 digits of your card, and billing metadata required for invoicing and tax purposes.</p>
+  <p>If you subscribe to a paid plan, payment is processed entirely by our PCI-DSS-compliant payment processor. We never see, store, or transmit your full credit card number, CVV, or banking details. We retain only the processor’s transaction reference, the last 4 digits of your card, and billing metadata required for invoicing and tax purposes.</p>
   <h3>2.3 Extension Activity Data</h3>
   <p>KinSentry blocks scam websites in real-time. URL pattern matching is performed locally inside the extension against a blocklist downloaded to your device. When a URL appears suspicious or matches a high-confidence pattern, it is also transmitted to our servers for manual verification. If a URL is confirmed harmful by our review process, it is added to our shared blocklist database to protect all KinSentry users.</p>
   <p>We do <span class="highlight">not</span> track, log, or transmit your general browsing history. The only URLs we process server-side are those flagged by the local extension as potentially harmful.</p>
@@ -55,6 +55,23 @@
   <p>Voice warnings are generated locally on your device using your operating system's built-in text-to-speech engine. We do <span class="highlight">not</span> capture, transmit, or store any audio or microphone input.</p>
   <h3>2.7 Technical &amp; Diagnostic Data</h3>
   <p>We may collect basic technical information such as browser type, operating system, extension version, anonymized IP address, and crash logs. This is used solely for troubleshooting, security, and improving the Service.</p>
+  <h3>2.8 Phishing Email Detection (Webmail Scanning)</h3>
+  <p>If you use the phishing email detection feature, the extension analyses the email you currently have open in supported webmail services (Gmail, Outlook, Yahoo Mail, and AOL Mail). This analysis — covering the sender, subject line, and message body — happens <span class="highlight">entirely locally on your device</span>. The contents of your emails are <span class="highlight">never transmitted to, stored by, or readable by</span> KinSentry or anyone else.</p>
+  <p>When an email is flagged as a likely phishing attempt, only minimal detection metadata leaves your device: the <span class="highlight">sender’s domain</span> (for example, <code>example.com</code>) and the detection category. This is logged as a protection event in the same way as a blocked website (see Section 2.4) and, on a Family plan, may be visible to the plan administrator on their dashboard. We never receive the email itself, the sender’s full address, the subject, any attachments, or any other message content.</p>
+  <p>Your personal “safe senders” list is stored locally in your browser and is never uploaded. You can turn phishing email detection off at any time in the extension settings.</p>
+  <h3>2.9 Download Guard</h3>
+  <p>The Download Guard feature checks files you download against a list of known remote-support and remote-access software commonly abused by scammers. This check happens <span class="highlight">entirely locally on your device</span>: the extension may pause a matching download and ask you to confirm before it continues. The names, URLs, and contents of your downloads are <span class="highlight">never transmitted</span> to our servers.</p>
+  <h3>2.10 Family Plan Monitoring (Member Devices)</h3>
+  <p>The Family plan is designed to let a trusted family member (the <span class="highlight">plan administrator</span>) help protect other members of their household. If you use KinSentry on a device that was activated with a Family invite code, the following applies:</p>
+  <ul>
+    <li><span class="highlight">No account required for members.</span> Member devices are not linked to an email address or password. Each device is identified by a randomly generated device token and a display name chosen by the administrator (for example, “Mom’s laptop”).</li>
+    <li><span class="highlight">The administrator can see protection activity.</span> Protection events from member devices — blocked scam sites, detected scam pages, flagged phishing sender domains, and the associated URLs, timestamps, and counts — are visible to the plan administrator on their dashboard. General browsing history is <span class="highlight">not</span> collected or visible; only events where a protection feature was triggered.</li>
+    <li><span class="highlight">The administrator controls protection settings remotely.</span> The administrator can enable or disable individual protection features (such as scam-page detection, phishing email detection, download guard, voice warnings, and notifications) for each member device, and can remove a device from the household at any time.</li>
+    <li><span class="highlight">Member devices know who the administrator is.</span> The administrator’s display name is shown on the member device so household members can see who manages their protection.</li>
+  </ul>
+  <p>If you are a plan administrator, you are responsible for ensuring that the people who use member devices are aware of, and have agreed to, this monitoring. When a device is removed from a household (or the household is dissolved), its protection stops and the device disconnects from the plan.</p>
+  <h3>2.11 Support Requests &amp; Website Forms</h3>
+  <p>If you contact support through the extension or website, we collect the email address you provide, the issue category, your message, and — if you are signed in — your account email and plan tier, so that we can respond to your request. If you join a product waiting list on our website (for example, for an upcoming mobile app), we store the email address you submit so that we can notify you when the product launches. Waiting-list emails are used for that notification only unless you separately opt in to marketing.</p>
 </div>
 
 <div class="content-card">
@@ -82,6 +99,8 @@
   <ul>
     <li>To provide, maintain, and secure the KinSentry Service</li>
     <li>To send family alerts when scam sites are blocked</li>
+    <li>To detect phishing emails in your webmail (analysed locally on your device — see Section 2.8)</li>
+    <li>To provide Family plan monitoring and remote protection management (see Section 2.10)</li>
     <li>To power your activity dashboard and block history</li>
     <li>To send you transactional emails (account, billing, security)</li>
     <li>To send you product updates and weekly digests (only if you have opted in)</li>
@@ -106,7 +125,7 @@
   <h2>6. Data Sharing &amp; Third-Party Processors</h2>
   <p>We do <span class="highlight">not</span> sell, rent, or share your personal information with third parties for advertising or marketing purposes. We share data only with the following service providers, each bound by a data-processing agreement:</p>
   <ul>
-    <li><span class="highlight">Stripe</span> — payment processing and subscription management</li>
+    <li><span class="highlight">Payment processor</span> — secure payment processing and subscription management (PCI-DSS-compliant)</li>
     <li><span class="highlight">Supabase</span> — primary database and authentication</li>
     <li><span class="highlight">Railway</span> — API and infrastructure hosting</li>
     <li><span class="highlight">Twilio</span> — SMS and WhatsApp delivery for family alerts</li>
@@ -119,7 +138,7 @@
 
 <div class="content-card">
   <h2>7. International Data Transfers</h2>
-  <p>KinSentry and several of our service providers (including Stripe, Supabase, Railway, Twilio, and SendGrid) are based in or process data in the United States and other countries outside the EEA, UK, and Switzerland. Where such transfers occur, we rely on the European Commission's Standard Contractual Clauses (SCCs) and equivalent UK and Swiss safeguards to ensure your data receives an adequate level of protection.</p>
+  <p>KinSentry and several of our service providers (including our payment processor, Supabase, Railway, Twilio, and SendGrid) are based in or process data in the United States and other countries outside the EEA, UK, and Switzerland. Where such transfers occur, we rely on the European Commission's Standard Contractual Clauses (SCCs) and equivalent UK and Swiss safeguards to ensure your data receives an adequate level of protection.</p>
 </div>
 
 <div class="content-card">
@@ -129,6 +148,7 @@
     <li><span class="highlight">Account data</span> — retained while your account is active, plus 90 days after deletion to allow recovery</li>
     <li><span class="highlight">Blocked-event history</span> — retained per your plan tier (Free: 7 days, Guardian: 30 days, Family: 90 days)</li>
     <li><span class="highlight">Family contact details</span> — retained until you remove them or delete your account</li>
+    <li><span class="highlight">Family member device data</span> — deleted when the device is removed from the household or the household is dissolved</li>
     <li><span class="highlight">Payment records and invoices</span> — retained for up to 7 years to comply with tax, accounting, and audit obligations</li>
     <li><span class="highlight">Server logs and diagnostic data</span> — retained for up to 90 days, then automatically purged</li>
     <li><span class="highlight">Confirmed-harmful URLs in our blocklist</span> — retained indefinitely as part of our shared protection database (no personal identifiers attached)</li>
