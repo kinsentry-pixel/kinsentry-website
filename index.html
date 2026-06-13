@@ -1054,7 +1054,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>1 device</li>
           <li>Community scam updates</li>
         </ul>
-        <a href="/signup.html" class="pricing-btn outline">Get Started Free</a>
+        <a href="/signup.html" data-plan="free" class="pricing-btn outline">Get Started Free</a>
       </div>
       <div class="pricing-card featured reveal">
         <div class="pricing-popular">Most Popular</div>
@@ -1073,7 +1073,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>30-day block history</li>
           <li>1 device</li>
         </ul>
-        <a href="/signup.html" class="pricing-btn filled">Start 30-day free trial</a>
+        <a href="/signup.html" data-plan="guardian" class="pricing-btn filled">Start 30-day free trial</a>
       </div>
       <div class="pricing-card reveal">
         <div class="plan-name">Family</div>
@@ -1086,7 +1086,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
-        <a href="/signup.html" class="pricing-btn outline">Start Family Plan</a>
+        <a href="/signup.html" data-plan="family" class="pricing-btn outline">Start Family Plan</a>
       </div>
     </div>
   </div>
@@ -1325,8 +1325,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 <script>
 // ── Extension detection & smart routing ──────────────────────────────────────
 // The extension exposes a known resource URL we can ping to detect installation
-const EXT_PING_URL = 'chrome-extension://fhlcnjndhiakbmcjcoiifigjfacfhiee/icons/icon-128.png';
-// NOTE: Replace fhlcnjndhiakbmcjcoiifigjfacfhiee with your actual extension ID
+const EXT_PING_URL = 'chrome-extension://ecohlgdpgikbddaabjmmhmchcamnbhba/icons/icon-128.png';
+// NOTE: Replace ecohlgdpgikbddaabjmmhmchcamnbhba with your actual extension ID
 // Found at chrome://extensions when developer mode is on
 
 let extInstalled  = false;
@@ -1364,7 +1364,7 @@ function getExtensionLoginState() {
 // Route: "Add to Chrome" or "Open Dashboard" depending on install state
 function getAddToChromeUrl() {
   // Chrome Web Store URL (replace with your actual listing URL after publishing)
-  return 'https://chrome.google.com/webstore/detail/kinsentry/fhlcnjndhiakbmcjcoiifigjfacfhiee';
+  return 'https://chrome.google.com/webstore/detail/kinsentry/ecohlgdpgikbddaabjmmhmchcamnbhba';
 }
 
 function getExtensionUrl(page) {
@@ -1374,7 +1374,7 @@ function getExtensionUrl(page) {
     login:     'signup/signup.html?mode=login',
     newtab:    'newtab/newtab.html'
   };
-  return `chrome-extension://fhlcnjndhiakbmcjcoiifigjfacfhiee/${pages[page] || pages.dashboard}`;
+  return `chrome-extension://ecohlgdpgikbddaabjmmhmchcamnbhba/${pages[page] || pages.dashboard}`;
 }
 
 // Update all CTAs based on extension state
@@ -1439,13 +1439,21 @@ async function updateCTAs() {
     }
   });
 
-    // Pricing buttons
+  // Pricing buttons — route by plan.
+  // Free keeps the install-first acquisition path. Guardian & Family go to the
+  // hosted signup so plan/trial intent isn't lost — and Family MUST stay on the
+  // web (admins manage their household there and must never activate the
+  // extension as a personal account).
   document.querySelectorAll('.pricing-btn').forEach(btn => {
-    if (installed) {
-      btn.href   = getExtensionUrl('signup');
-      btn.target = '_blank';
+    const plan = btn.dataset.plan;
+    if (plan === 'family') {
+      btn.href   = '/signup.html';
+      btn.target = '';
+    } else if (plan === 'guardian') {
+      btn.href   = installed ? getExtensionUrl('signup') : '/signup.html';
+      btn.target = installed ? '_blank' : '';
     } else {
-      btn.href   = getAddToChromeUrl();
+      btn.href   = installed ? getExtensionUrl('signup') : getAddToChromeUrl();
       btn.target = '_blank';
     }
   });
