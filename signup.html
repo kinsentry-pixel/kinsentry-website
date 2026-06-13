@@ -300,6 +300,9 @@
         </label>
       </div>
 
+      <!-- Cloudflare Turnstile mounts here when TURNSTILE_SITE_KEY is set; hidden otherwise -->
+      <div id="turnstile-box" style="display:none;justify-content:center;margin-bottom:12px;"></div>
+
       <button class="btn-submit" id="btn-submit">Start free trial →</button>
 
       <div class="mode-toggle">
@@ -357,6 +360,51 @@ const STORE_URL     = 'https://chromewebstore.google.com/detail/kinsentry/ecohlg
 
 const params = new URLSearchParams(location.search);
 let mode = params.get('mode') === 'login' ? 'login' : 'signup';
+
+// ── Bot protection (Cloudflare Turnstile) ──────────────────────────────────────
+// DISABLED by default. To turn on:
+//   1. Set TURNSTILE_SITE_KEY to your Cloudflare Turnstile *site* key.
+//   2. Have the backend verify the `turnstileToken` field on /api/auth/signup,
+//      /resend-code and /forgot-password using the matching *secret* key.
+// Until a site key is set, nothing loads and outgoing requests are unchanged.
+// NOTE: the extension's signup page (chrome-extension:// origin) does NOT send a
+// token — when the backend starts enforcing this, exempt extension-origin
+// requests or it will break in-extension signup.
+const TURNSTILE_SITE_KEY = '';                 // e.g. '0x4AAAAAAA...'
+const TURNSTILE_ENABLED  = !!TURNSTILE_SITE_KEY;
+let   turnstileWidgetId  = null;
+
+function getTurnstileToken() {
+  if (!TURNSTILE_ENABLED || !window.turnstile || turnstileWidgetId === null) return '';
+  try { return window.turnstile.getResponse(turnstileWidgetId) || ''; } catch (_) { return ''; }
+}
+function resetTurnstile() {
+  if (!TURNSTILE_ENABLED || !window.turnstile || turnstileWidgetId === null) return;
+  try { window.turnstile.reset(turnstileWidgetId); } catch (_) {}
+}
+// Attach the token only when protection is on, so requests stay byte-identical
+// while disabled.
+function withTurnstile(payload) {
+  if (TURNSTILE_ENABLED) payload.turnstileToken = getTurnstileToken();
+  return payload;
+}
+
+if (TURNSTILE_ENABLED) {
+  window.onTurnstileLoad = () => {
+    const box = document.getElementById('turnstile-box');
+    if (!box || !window.turnstile) return;
+    box.style.display = 'flex';
+    turnstileWidgetId = window.turnstile.render(box, {
+      sitekey:    TURNSTILE_SITE_KEY,
+      appearance: 'interaction-only',   // invisible unless a challenge is needed
+      theme:      'dark'
+    });
+  };
+  const s = document.createElement('script');
+  s.src   = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad';
+  s.async = true; s.defer = true;
+  document.head.appendChild(s);
+}
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const elTitle      = document.getElementById('card-title');
@@ -503,7 +551,7 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
     const res  = await fetch(`${API}${endpoint}`, {
       method:      'POST',
       headers:     { 'Content-Type': 'application/json' },
-      body:        JSON.stringify({ name, email, password: pass }),
+      body:        JSON.stringify(withTurnstile({ name, email, password: pass })),
       signal:      controller.signal,
       credentials: 'include'   // accept Set-Cookie from api.kinsentry.com
     });
@@ -526,12 +574,14 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
       } else {
         showMsg(data.message || 'Something went wrong. Please try again.', 'error');
       }
+      resetTurnstile();   // token is single-use; refresh for the retry
       setLoading(false);
       return;
     }
 
     // Signup now requires email verification — backend returns no session yet.
     if (data.pendingVerification) {
+      resetTurnstile();   // signup spent the token; refresh it for "resend code"
       setLoading(false);
       showVerifyView(data.email || email, name);
       return;
@@ -539,6 +589,7 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
 
     await afterAuth({ email: data.email || email, name: data.name || name, tier: data.tier });
   } catch(e) {
+    resetTurnstile();
     showMsg('Could not connect. Please check your connection and try again.', 'error');
   }
   setLoading(false);
@@ -623,10 +674,11 @@ document.getElementById('btn-resend').addEventListener('click', async () => {
     const res = await fetch(`${API}/api/auth/resend-code`, {
       method:      'POST',
       headers:     { 'Content-Type': 'application/json' },
-      body:        JSON.stringify({ email: pendingEmail }),
+      body:        JSON.stringify(withTurnstile({ email: pendingEmail })),
       credentials: 'include'
     });
     const data = await res.json();
+    resetTurnstile();   // refresh the single-use token for any further sends
     if (!res.ok) { showVerifyMsg(data.message || 'Could not resend.', 'error'); return; }
     showVerifyMsg('A new code is on its way. Check your inbox (and spam).', 'success');
     startResendCooldown();
@@ -659,9 +711,10 @@ document.getElementById('btn-forgot').addEventListener('click', async () => {
     const res = await fetch(`${API}/api/auth/forgot-password`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email }),
+      body:    JSON.stringify(withTurnstile({ email })),
       signal:  AbortSignal.timeout(8000)
     });
+    resetTurnstile();
     showMsg(
       res.ok ? `✓ Reset link sent to ${email}` : 'Could not send reset link. Try again.',
       res.ok ? 'success' : 'error'
@@ -680,8 +733,9 @@ async function sendResetForMerge(email) {
     await fetch(`${API}/api/auth/forgot-password`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email })
+      body:    JSON.stringify(withTurnstile({ email }))
     });
+    resetTurnstile();
     showMsg(`✓ Password setup link sent to ${email}. Check your inbox — once set, you can sign in with email or Google.`, 'success');
   } catch(e) {
     showMsg('Could not send email. Please try again.', 'error');
