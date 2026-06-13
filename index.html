@@ -355,6 +355,7 @@ nav {
 }
 .soon-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--blue); background: rgba(46,123,255,0.14); padding: 2px 7px; border-radius: 5px; margin-left: 4px; white-space: nowrap; }
 .plan-inherits { color: var(--teal); font-weight: 700; background: rgba(0,232,200,0.10); padding: 2px 8px; border-radius: 5px; }
+.plan-trial { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--teal); background: rgba(0,232,200,0.10); border: 1px solid rgba(0,232,200,0.25); border-radius: 7px; padding: 8px 10px; margin-bottom: 18px; text-align: center; }
 .pricing-btn {
   display: block; text-align: center; font-size: 15px; font-weight: 700; padding: 14px; border-radius: var(--radius-sm);
   transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
@@ -1029,7 +1030,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <div class="pricing-header reveal">
       <div class="section-label">Pricing</div>
       <h2 class="section-title">Simple, honest pricing</h2>
-      <p class="section-subtitle">Start free. Upgrade when you want voice alerts, scam popup blocking, phishing detection, and multi-device coverage.</p>
+      <p class="section-subtitle">Start free, or try Guardian free for 30 days — no card needed. Upgrade anytime for voice alerts, scam-number warnings, phishing detection, and multi-device coverage.</p>
 
       <!-- Billing toggle -->
       <div class="billing-toggle" id="billingToggle">
@@ -1045,31 +1046,34 @@ a:focus-visible, button:focus-visible, input:focus-visible {
       <div class="pricing-card reveal">
         <div class="plan-name">Free</div>
         <div class="price">$0<span>/mo</span></div>
-        <div class="plan-desc">Basic protection for one device</div>
+        <div class="plan-desc">Always-free protection for one device</div>
         <ul>
-          <li>Block 70+ scam sites</li>
-          <li>Full-screen warning overlay</li>
+          <li>Blocks 70+ known remote sites</li>
+          <li>Full-screen scam warnings</li>
+          <li>Fake/Scam Ads Detector</li>
           <li>1 device</li>
-          <li>Community updates</li>
+          <li>Community scam updates</li>
         </ul>
-        <a href="/login.html" class="pricing-btn outline">Get Started Free</a>
+        <a href="/signup.html" class="pricing-btn outline">Get Started Free</a>
       </div>
       <div class="pricing-card featured reveal">
         <div class="pricing-popular">Most Popular</div>
         <div class="plan-name">Guardian</div>
         <div class="price" id="guardianPrice">$4.99<span>/mo</span></div>
         <div class="plan-desc" id="guardianBilling">Billed annually at $59.88/yr</div>
+        <div class="plan-trial">✓ Try free for 30 days — no card needed</div>
         <ul>
           <li><span class="plan-inherits">Everything in Free</span></li>
-          <li>Voice warning alerts</li>
-          <li>Scam Ad Blocker</li>
-          <li>Scam Page/Popup Blocker</li>
-          <li>Phishing/Scam Email Detection</li>
-          <li>Family alerts via Email <span class="soon-badge">SMS &amp; WhatsApp soon</span></li>
+          <li>Voice scam alerts</li>
+          <li>Dangerous scam-number warnings</li>
+          <li>Scam-page &amp; popup blocking</li>
+          <li>Phishing Email Detector</li>
+          <li>Live scam-news feed</li>
+          <li>Family alerts via email <span class="soon-badge">SMS &amp; WhatsApp soon</span></li>
           <li>30-day block history</li>
           <li>1 device</li>
         </ul>
-        <a href="/login.html" class="pricing-btn filled">Start Guardian Plan</a>
+        <a href="/signup.html" class="pricing-btn filled">Start 30-day free trial</a>
       </div>
       <div class="pricing-card reveal">
         <div class="plan-name">Family</div>
@@ -1078,11 +1082,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         <ul>
           <li><span class="plan-inherits">Everything in Guardian</span></li>
           <li>Up to 3 devices</li>
-          <li>Family dashboard</li>
+          <li>Family dashboard to manage everyone</li>
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
-        <a href="/login.html" class="pricing-btn outline">Start Family Plan</a>
+        <a href="/signup.html" class="pricing-btn outline">Start Family Plan</a>
       </div>
     </div>
   </div>
