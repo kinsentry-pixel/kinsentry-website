@@ -239,7 +239,7 @@
     <div class="trial-badge" id="trial-badge">
       <div class="trial-badge-icon">🛡️</div>
       <div class="trial-badge-text">
-        <strong>Free account includes a 30-day Guardian trial</strong> — voice alerts, scam number notifications, and more. No credit card needed.
+        <strong>Your free account starts with 30 days of Guardian free</strong> — voice scam alerts, dangerous-number warnings, and a live scam-news feed. No credit card, nothing to cancel.
       </div>
     </div>
 
@@ -250,11 +250,13 @@
       <div class="card-hero">
         <img class="card-logo" src="images/logo-nav.png" alt="KinSentry">
         <div class="card-title" id="card-title">Create your free account</div>
-        <div class="card-desc" id="card-desc">Protect your family from remote desktop scams — takes 30 seconds.</div>
+        <div class="card-desc" id="card-desc">Block the remote-access scams that target older adults — setup takes 30 seconds.</div>
         <div class="feature-chips" id="feature-chips">
-          <span class="chip">✓ Remote site blocking</span>
-          <span class="chip">✓ 30-day Guardian trial</span>
-          <span class="chip">✓ No credit card</span>
+          <span class="chip">✓ Blocks remote-access scams</span>
+          <span class="chip">✓ Catches phishing &amp; fake-support pages</span>
+          <span class="chip">✓ Voice alerts + scam-number warnings</span>
+          <span class="chip">✓ 30 days of Guardian, free</span>
+          <span class="chip">✓ No card, nothing to cancel</span>
         </div>
       </div>
 
@@ -303,7 +305,7 @@
       <!-- Cloudflare Turnstile mounts here when TURNSTILE_SITE_KEY is set; hidden otherwise -->
       <div id="turnstile-box" style="display:none;justify-content:center;margin-bottom:12px;"></div>
 
-      <button class="btn-submit" id="btn-submit">Start free trial →</button>
+      <button class="btn-submit" id="btn-submit">Start free protection →</button>
 
       <div class="mode-toggle">
         <span id="mode-text">Already have an account?</span>
@@ -437,13 +439,13 @@ function applyMode() {
     document.getElementById('password').placeholder  = 'Your password';
   } else {
     elTitle.textContent      = 'Create your free account';
-    elDesc.textContent       = 'Protect your family from remote desktop scams — takes 30 seconds.';
+    elDesc.textContent       = 'Block the remote-access scams that target older adults — setup takes 30 seconds.';
     elChips.style.display    = 'flex';
     elTrialBadge.style.display = 'flex';
     elNameGroup.style.display  = 'block';
     elForgot.style.display   = 'none';
     elTerms.style.display    = 'flex';
-    elSubmit.textContent     = 'Start free trial →';
+    elSubmit.textContent     = 'Start free protection →';
     elModeText.textContent   = 'Already have an account?';
     elModeBtn.textContent    = ' Sign in';
     elGoogleText.textContent = 'Sign up with Google';
@@ -476,7 +478,7 @@ function setLoading(on) {
   elSubmit.disabled = on;
   elSubmit.innerHTML = on
     ? `<span class="spinner"></span> Please wait…`
-    : (mode === 'login' ? 'Sign in →' : 'Start free trial →');
+    : (mode === 'login' ? 'Sign in →' : 'Start free protection →');
 }
 
 // ── Detect extension installed ────────────────────────────────────────────────
