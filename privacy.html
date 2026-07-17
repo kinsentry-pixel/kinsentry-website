@@ -29,7 +29,7 @@
 <div class="page-header">
   <div class="page-label">Legal</div>
   <h1 class="page-title">Privacy Policy</h1>
-  <p class="page-subtitle">Last updated: June 12, 2026</p>
+  <p class="page-subtitle">Last updated: July 17, 2026</p>
 </div>
 
 <div class="content-card">
@@ -46,6 +46,7 @@
   <p>If you subscribe to a paid plan, payment is processed entirely by our PCI-DSS-compliant payment processor. We never see, store, or transmit your full credit card number, CVV, or banking details. We retain only the processor’s transaction reference, the last 4 digits of your card, and billing metadata required for invoicing and tax purposes.</p>
   <h3>2.3 Extension Activity Data</h3>
   <p>KinSentry blocks scam websites in real-time. URL pattern matching is performed locally inside the extension against a blocklist downloaded to your device. When a URL appears suspicious or matches a high-confidence pattern, it is also transmitted to our servers for manual verification. If a URL is confirmed harmful by our review process, it is added to our shared blocklist database to protect all KinSentry users.</p>
+  <p>On search-engine results pages (Google, Bing, Yahoo, and DuckDuckGo), the extension also scans the visible page locally to warn you about advertisements that lead to known scam or tech-support-fraud destinations. This scan runs <span class="highlight">entirely on your device</span>; when a scam ad is detected, only an anonymous "ad flagged" signal is recorded — the contents of your search or the results page are never transmitted to us.</p>
   <p>We do <span class="highlight">not</span> track, log, or transmit your general browsing history. The only URLs we process server-side are those flagged by the local extension as potentially harmful.</p>
   <h3>2.4 Blocked Event Data</h3>
   <p>When a scam site is blocked, we log the event (timestamp, blocked URL, device identifier, plan tier) to power your dashboard and family alerts. This data is encrypted in transit (TLS 1.3) and at rest (AES-256).</p>
@@ -72,6 +73,8 @@
   <p>If you are a plan administrator, you are responsible for ensuring that the people who use member devices are aware of, and have agreed to, this monitoring. When a device is removed from a household (or the household is dissolved), its protection stops and the device disconnects from the plan.</p>
   <h3>2.11 Support Requests &amp; Website Forms</h3>
   <p>If you contact support through the extension or website, we collect the email address you provide, the issue category, your message, and — if you are signed in — your account email and plan tier, so that we can respond to your request. If you join a product waiting list on our website (for example, for an upcoming mobile app), we store the email address you submit so that we can notify you when the product launches. Waiting-list emails are used for that notification only unless you separately opt in to marketing.</p>
+  <h3>2.12 New-Tab Shortcuts</h3>
+  <p>KinSentry replaces your browser's new-tab page. If the "Show top sites shortcuts" setting is enabled (you can turn it off at any time in the extension settings), the new-tab page reads your browser's list of most-visited sites — provided by the browser through its <code>topSites</code> permission — to display up to eight quick-launch shortcuts. Each shortcut's icon is loaded from your browser's own local favicon cache. This list is read and rendered <span class="highlight">entirely locally on your device</span>, with <span class="highlight">no request to any third party</span>. We do <span class="highlight">not</span> collect, log, transmit, or store your most-visited sites or any browsing history on our servers.</p>
 </div>
 
 <div class="content-card">
