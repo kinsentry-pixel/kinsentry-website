@@ -364,6 +364,11 @@ nav {
 .pricing-btn.filled:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(0,232,200,0.4); }
 .pricing-btn.outline { background: rgba(255,255,255,0.03); color: var(--ink); border: 1.5px solid var(--border); }
 .pricing-btn.outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+.free-now-banner { display: inline-flex; align-items: center; gap: 9px; margin: 8px auto 0; padding: 11px 20px; border-radius: 10px; background: rgba(0,232,200,0.10); border: 1px solid rgba(0,232,200,0.28); color: var(--teal); font-weight: 700; font-size: 14px; }
+/* Dim ONLY the amount on preview plans, not features or CTA */
+.pricing-card.preview .price { color: var(--muted); }
+.price .price-soon { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--blue); background: rgba(46,123,255,0.12); border: 1px solid rgba(46,123,255,0.28); border-radius: 6px; padding: 3px 9px; vertical-align: middle; margin-right: 9px; }
+.pricing-btn.soon { background: rgba(255,255,255,0.03); color: var(--muted); border: 1.5px solid var(--border); cursor: default; pointer-events: none; }
 
 /* ── Trust / testimonials ──────────────────── */
 .trust-section { text-align: center; }
@@ -1030,10 +1035,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <div class="pricing-header reveal">
       <div class="section-label">Pricing</div>
       <h2 class="section-title">Simple, honest pricing</h2>
-      <p class="section-subtitle">Start free, or try Guardian free for 30 days — no card needed. Upgrade anytime for voice alerts, scam-number warnings, phishing detection, and multi-device coverage.</p>
+      <p class="section-subtitle">Voice alerts, scam-number warnings, phishing detection, and multi-device coverage — here's what each plan includes.</p>
+      <div class="free-now-banner">🎉 Pricing coming soon — enjoy every feature free for now.</div>
 
-      <!-- Billing toggle -->
-      <div class="billing-toggle" id="billingToggle">
+      <!-- Billing toggle — hidden until paid plans launch -->
+      <div class="billing-toggle" id="billingToggle" hidden>
         <button class="toggle-btn active" id="toggleAnnual" onclick="setBilling('annual')">
           Annually <span class="save-badge">Save 28%</span>
         </button>
@@ -1056,12 +1062,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         </ul>
         <a href="/signup.html" data-plan="free" class="pricing-btn outline">Get Started Free</a>
       </div>
-      <div class="pricing-card featured reveal">
+      <div class="pricing-card featured preview reveal">
         <div class="pricing-popular">Most Popular</div>
         <div class="plan-name">Guardian</div>
-        <div class="price" id="guardianPrice">$4.99<span>/mo</span></div>
+        <div class="price" id="guardianPrice"><span class="price-soon">Coming Soon</span>$4.99<span>/mo</span></div>
         <div class="plan-desc" id="guardianBilling">Billed annually at $59.88/yr</div>
-        <div class="plan-trial">✓ Try free for 30 days — no card needed</div>
         <ul>
           <li><span class="plan-inherits">Everything in Free</span></li>
           <li>Voice scam alerts</li>
@@ -1073,11 +1078,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>30-day block history</li>
           <li>1 device</li>
         </ul>
-        <a href="/signup.html" data-plan="guardian" class="pricing-btn filled">Start 30-day free trial</a>
+        <a href="/signup.html" data-plan="guardian" class="pricing-btn filled">Enjoy free for 30 days</a>
       </div>
-      <div class="pricing-card reveal">
+      <div class="pricing-card preview reveal">
         <div class="plan-name">Family</div>
-        <div class="price" id="familyPrice">$9.99<span>/mo</span></div>
+        <div class="price" id="familyPrice"><span class="price-soon">Coming Soon</span>$9.99<span>/mo</span></div>
         <div class="plan-desc" id="familyBilling">Billed annually at $119.88/yr</div>
         <ul>
           <li><span class="plan-inherits">Everything in Guardian</span></li>
@@ -1086,7 +1091,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
-        <a href="/signup.html" data-plan="family" class="pricing-btn outline">Start Family Plan</a>
+        <span class="pricing-btn soon" aria-disabled="true">Coming Soon</span>
       </div>
     </div>
   </div>
@@ -1446,6 +1451,7 @@ async function updateCTAs() {
   // extension as a personal account).
   document.querySelectorAll('.pricing-btn').forEach(btn => {
     const plan = btn.dataset.plan;
+    if (!plan) return; // skip inert buttons (e.g. Family "Coming Soon")
     if (plan === 'family') {
       btn.href   = '/signup.html';
       btn.target = '';
@@ -1553,7 +1559,7 @@ function showExtensionPrompt(intent) {
                 font-weight:600;font-size:15px;margin-bottom:12px;">
         Add to Chrome — Free
       </a>
-      <p style="color:#7B93B5;font-size:12px;">No credit card needed · 30-day Guardian trial included</p>
+      <p style="color:#7B93B5;font-size:12px;">Free to install · No credit card needed</p>
     </div>
   `;
   document.body.appendChild(modal);
@@ -1593,6 +1599,8 @@ function setBilling(type) {
   const fPrice   = document.getElementById('familyPrice');
   const gBill    = document.getElementById('guardianBilling');
   const fBill    = document.getElementById('familyBilling');
+
+  if (!gPrice || !fPrice) return; // paid pricing hidden until launch
 
   if (type === 'annual') {
     annual.classList.add('active');
