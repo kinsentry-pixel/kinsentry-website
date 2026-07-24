@@ -1330,9 +1330,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 <script>
 // ── Extension detection & smart routing ──────────────────────────────────────
 // The extension exposes a known resource URL we can ping to detect installation
-const EXT_PING_URL = 'chrome-extension://ecohlgdpgikbddaabjmmhmchcamnbhba/icons/icon-128.png';
-// NOTE: Replace ecohlgdpgikbddaabjmmhmchcamnbhba with your actual extension ID
-// Found at chrome://extensions when developer mode is on
+// Published extension ID (bipgibopdjmcbggbhpalgpbgiaaloede). Loading a
+// web-accessible resource from it succeeds only if the extension is installed.
+const EXT_PING_URL = 'chrome-extension://bipgibopdjmcbggbhpalgpbgiaaloede/icons/icon-128.png';
 
 let extInstalled  = false;
 let extSignedIn   = false;
@@ -1368,8 +1368,8 @@ function getExtensionLoginState() {
 
 // Route: "Add to Chrome" or "Open Dashboard" depending on install state
 function getAddToChromeUrl() {
-  // Chrome Web Store URL (replace with your actual listing URL after publishing)
-  return 'https://chrome.google.com/webstore/detail/kinsentry/ecohlgdpgikbddaabjmmhmchcamnbhba';
+  // Published Chrome Web Store listing (canonical chromewebstore.google.com host).
+  return 'https://chromewebstore.google.com/detail/bipgibopdjmcbggbhpalgpbgiaaloede';
 }
 
 function getExtensionUrl(page) {
@@ -1379,7 +1379,7 @@ function getExtensionUrl(page) {
     login:     'signup/signup.html?mode=login',
     newtab:    'newtab/newtab.html'
   };
-  return `chrome-extension://ecohlgdpgikbddaabjmmhmchcamnbhba/${pages[page] || pages.dashboard}`;
+  return `chrome-extension://bipgibopdjmcbggbhpalgpbgiaaloede/${pages[page] || pages.dashboard}`;
 }
 
 // Update all CTAs based on extension state
@@ -1464,12 +1464,23 @@ async function updateCTAs() {
     }
   });
 
-  // Hero CTA
+  // Hero CTA. These buttons carry an icon + label, so for the store / install
+  // states we set only href/onclick and keep the existing innerHTML — unlike
+  // the nav buttons, which are text-only and can be relabelled wholesale.
   document.querySelectorAll('.hero-cta .btn-primary, .cta-section .btn-primary').forEach(btn => {
     if (installed && signedIn) {
       btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="margin-right:8px"><path d="M9 1L2 4.5V9C2 12.8 5.1 16.4 9 17C12.9 16.4 16 12.8 16 9V4.5L9 1Z" fill="white" opacity="0.9"/><path d="M6 9L8 11L12 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>Open Dashboard`;
-      btn.href   = getExtensionUrl('dashboard');
-      btn.target = '_blank';
+      btn.href    = getExtensionUrl('dashboard');
+      btn.target  = '_blank';
+      btn.onclick = null;
+    } else if (signedIn && !installed) {
+      btn.href    = '#';
+      btn.target  = '';
+      btn.onclick = (e) => { e.preventDefault(); showInstallPrompt(); };
+    } else {
+      btn.href    = getAddToChromeUrl();
+      btn.target  = '_blank';
+      btn.onclick = null;
     }
   });
 

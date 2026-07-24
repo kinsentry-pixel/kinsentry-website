@@ -5,7 +5,7 @@
 
 (function () {
   const API = 'https://api.kinsentry.com';
-  const EXT_ID = 'ecohlgdpgikbddaabjmmhmchcamnbhba';
+  const EXT_ID = 'bipgibopdjmcbggbhpalgpbgiaaloede';
 
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const loadingEl  = document.getElementById('loading-state');
