@@ -514,10 +514,11 @@ async function afterAuth({ email, name, tier } = {}) {
       if (installed && typeof chrome !== 'undefined' && chrome.runtime?.sendMessage) {
         try {
           chrome.runtime.sendMessage(EXT_ID, {
-            type:  'KINSENTRY_USER_SIGNED_IN',
-            email: email,
-            name:  name || '',
-            tier:  tier || 'free_trial'
+            type:   'KINSENTRY_USER_SIGNED_IN',
+            email:  email,
+            name:   name || '',
+            tier:   tier || 'free_trial',
+            source: window.KinSentryAttribution?.sourceLabel()
           }, () => { if (chrome.runtime.lastError) {} });
         } catch (_) {}
       }
@@ -782,5 +783,6 @@ async function sendResetForMerge(email) {
   }
 })();
 </script>
+<script src="js/kinsentry-tracking.js"></script>
 </body>
 </html>
