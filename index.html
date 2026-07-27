@@ -462,6 +462,10 @@ nav {
 footer { background: #070B12; color: var(--body); padding: 64px 24px 30px; position: relative; z-index: 1; border-top: 1px solid var(--border-soft); }
 .footer-top { max-width: var(--maxw); margin: 0 auto; display: grid; grid-template-columns: 1.4fr 2fr; gap: 48px; padding-bottom: 40px; border-bottom: 1px solid var(--border-soft); }
 .footer-brand p { font-size: 14px; color: var(--muted); margin-top: 12px; line-height: 1.7; max-width: 320px; }
+.footer-social { display: flex; gap: 12px; margin-top: 20px; }
+.footer-social a { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-soft); color: var(--muted); transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease; }
+.footer-social a:hover { color: var(--teal); border-color: var(--teal); background: rgba(0,232,200,0.08); transform: translateY(-2px); }
+.footer-social svg { width: 18px; height: 18px; fill: currentColor; }
 .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 .footer-links h4 { color: #fff; font-family: var(--mono); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
 .footer-links a { display: block; font-size: 14px; color: var(--muted); padding: 5px 0; transition: color .18s ease; }
@@ -1297,6 +1301,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>
       </a>
       <p>Protecting families from tech support scams. Built with care in India, trusted worldwide.</p>
+      <div class="footer-social">
+        <!-- TODO: replace href="#" with live profile URLs -->
+        <a href="#" aria-label="KinSentry on Facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+        </a>
+        <a href="#" aria-label="KinSentry on Instagram" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0Zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03Zm0 3.678a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm7.846-10.405a1.441 1.441 0 0 1-2.88 0 1.44 1.44 0 0 1 2.88 0Z"/></svg>
+        </a>
+        <a href="#" aria-label="KinSentry on Reddit" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M24 11.779c0-1.459-1.192-2.645-2.657-2.645-.715 0-1.363.286-1.84.746-1.81-1.191-4.259-1.949-6.971-2.046l1.483-4.669 4.016.941-.006.058c0 1.193.975 2.163 2.174 2.163 1.198 0 2.172-.97 2.172-2.163s-.975-2.164-2.172-2.164c-.92 0-1.704.574-2.021 1.379l-4.329-1.015a.379.379 0 0 0-.44.26l-1.654 5.207c-2.759.076-5.245.83-7.075 2.033-.475-.446-1.111-.72-1.813-.72C1.192 9.134 0 10.32 0 11.779c0 .945.508 1.774 1.263 2.238a4.43 4.43 0 0 0-.062.72c0 3.638 4.386 6.597 9.783 6.597 5.395 0 9.782-2.959 9.782-6.597 0-.246-.021-.487-.06-.723.752-.465 1.256-1.293 1.256-2.235zM6.775 13.638c0-.947.771-1.719 1.718-1.719.947 0 1.719.772 1.719 1.719 0 .947-.772 1.718-1.719 1.718-.947 0-1.718-.771-1.718-1.718zm8.293 4.652c-.882.882-2.407 1.312-4.06 1.312-1.653 0-3.178-.43-4.06-1.312a.379.379 0 0 1 .535-.535c.674.674 1.955 1.006 3.525 1.006 1.57 0 2.851-.332 3.525-1.006a.379.379 0 0 1 .535.535zm-.328-2.934c-.947 0-1.719-.771-1.719-1.718 0-.947.772-1.719 1.719-1.719.947 0 1.718.772 1.718 1.719 0 .947-.771 1.718-1.718 1.718z"/></svg>
+        </a>
+      </div>
     </div>
     <div class="footer-links">
       <div>
