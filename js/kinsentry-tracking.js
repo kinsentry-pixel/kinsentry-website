@@ -50,13 +50,15 @@
   async function reportOnce(visitorId, a) {
     if (localStorage.getItem(SENT_KEY)) return;
     try {
-      await fetch(`${API_BASE}/api/track`, {
+      const res = await fetch(`${API_BASE}/api/track`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ visitorId, ...a }),
         keepalive: true, // survive the navigation to the store/signup
       });
-      localStorage.setItem(SENT_KEY, '1');
+      // fetch only rejects on network errors, not HTTP errors — guard on the
+      // status so a 404/5xx doesn't permanently mark the visitor as reported.
+      if (res.ok) localStorage.setItem(SENT_KEY, '1');
     } catch (_) { /* best-effort */ }
   }
 
