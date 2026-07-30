@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Anatomy of a Tech-Support Scam: How Scammers Steal $38,000 in 20 Minutes | KinSentry</title>
+<meta name="description" content="A step-by-step breakdown of how a tech-support scam actually unfolds — from the fake pop-up to the moment the money leaves the account — why antivirus misses it, and how to protect an older parent.">
+<link rel="canonical" href="https://kinsentry.com/anatomy-of-a-tech-support-scam.html">
+
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="shortcut icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/favicon.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Anatomy of a Tech-Support Scam: How Scammers Steal $38,000 in 20 Minutes">
+<meta property="og:description" content="How a tech-support scam actually unfolds, step by step — and why your parent's antivirus does nothing to stop it.">
+<meta property="og:url" content="https://kinsentry.com/anatomy-of-a-tech-support-scam.html">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+
+<!-- Article structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Anatomy of a Tech-Support Scam: How Scammers Steal $38,000 in 20 Minutes",
+  "description": "A step-by-step breakdown of how a tech-support scam unfolds, why antivirus misses it, and how to protect an older parent.",
+  "author": {"@type": "Organization", "name": "KinSentry"},
+  "publisher": {"@type": "Organization", "name": "KinSentry"},
+  "mainEntityOfPage": "https://kinsentry.com/anatomy-of-a-tech-support-scam.html",
+  "articleSection": "Scam Alert"
+}
+</script>
+
+<style>
+/* ── Article typography (reusable template) ── */
+.article-meta-row{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:8px;
+}
+.article-meta-row .tag{
+  font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+  padding:4px 10px; border-radius:6px;
+  background:rgba(0,232,200,0.1); color:var(--teal); border:1px solid var(--border-accent);
+}
+.article-lead{
+  font-size:19px; line-height:1.7; color:var(--light); font-weight:500;
+  margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid var(--border-soft);
+}
+.article-body p{ font-size:16px; line-height:1.85; color:var(--body); margin-bottom:18px; }
+.article-body strong{ color:var(--white); font-weight:700; }
+.article-body a{ color:var(--teal); text-decoration:none; }
+.article-body a:hover{ text-decoration:underline; }
+.article-body h2{
+  font-size:25px; font-weight:800; color:var(--white); line-height:1.2;
+  letter-spacing:-0.02em; margin:44px 0 14px;
+}
+.article-body h3{ font-size:18px; font-weight:700; color:var(--light); margin:30px 0 10px; }
+
+/* numbered step list */
+.step-list{ list-style:none; counter-reset:step; padding:0; margin:24px 0; }
+.step-list > li{
+  position:relative; padding:0 0 22px 56px; margin:0;
+  border-left:2px solid var(--border); margin-left:16px;
+}
+.step-list > li:last-child{ border-left-color:transparent; padding-bottom:0; }
+.step-list > li::before{
+  counter-increment:step; content:counter(step);
+  position:absolute; left:-17px; top:-2px; width:32px; height:32px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,var(--teal),var(--blue)); color:#051018;
+  font-weight:800; font-size:14px; border-radius:50%; font-family:var(--mono);
+}
+.step-list h3{ margin:0 0 6px; color:var(--white); font-size:17px; }
+.step-list p{ font-size:15px; margin-bottom:0; }
+
+/* recommendation list (check bullets, not numbered) */
+.tip-list{ list-style:none; padding:0; margin:24px 0; }
+.tip-list > li{ position:relative; padding:0 0 18px 42px; }
+.tip-list > li:last-child{ padding-bottom:0; }
+.tip-list > li::before{
+  content:'✓'; position:absolute; left:0; top:0; width:27px; height:27px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,232,200,0.12); color:var(--teal); border:1px solid var(--border-accent);
+  border-radius:50%; font-weight:800; font-size:13px;
+}
+.tip-list h3{ margin:0 0 4px; color:var(--white); font-size:17px; }
+.tip-list p{ font-size:15px; margin-bottom:0; }
+
+/* pull quote */
+.pull{
+  border-left:3px solid var(--teal); background:var(--surface);
+  padding:20px 24px; border-radius:0 12px 12px 0; margin:26px 0;
+  font-size:18px; line-height:1.6; color:var(--white); font-weight:600;
+}
+
+/* warning callout */
+.callout{
+  display:flex; gap:14px; align-items:flex-start;
+  background:rgba(255,90,90,0.08); border:1px solid rgba(255,90,90,0.3);
+  border-radius:12px; padding:18px 20px; margin:26px 0;
+}
+.callout .ic{ font-size:22px; flex-shrink:0; line-height:1.2; }
+.callout p{ font-size:14.5px; margin:0; color:var(--body); }
+.callout strong{ color:var(--white); }
+
+/* stat highlight */
+.stat-highlight{
+  text-align:center; padding:28px; margin:30px 0; border-radius:14px;
+  background:radial-gradient(120% 140% at 50% 0%, rgba(255,90,90,0.12), transparent 66%);
+  border:1px solid var(--border);
+}
+.stat-highlight .n{
+  font-size:clamp(38px,7vw,60px); font-weight:800; letter-spacing:-0.03em; line-height:1;
+  background:linear-gradient(135deg,#FF8A5B,#FF4D6D);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.stat-highlight .c{ margin-top:10px; font-size:14px; color:var(--body); }
+.stat-highlight .src{ margin-top:8px; font-size:11.5px; color:var(--muted); }
+
+/* end-of-article CTA */
+.article-cta{
+  margin:44px 0 8px; padding:34px 30px; border-radius:16px; text-align:center;
+  background:linear-gradient(180deg,rgba(0,232,200,0.07),rgba(0,232,200,0.02));
+  border:1px solid var(--border-accent);
+}
+.article-cta h3{ color:var(--white); font-size:22px; font-weight:800; margin-bottom:8px; letter-spacing:-0.01em; }
+.article-cta p{ color:var(--body); font-size:15px; margin-bottom:20px; }
+.article-cta .btn-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-primary,.btn-ghost{
+  display:inline-block; padding:13px 26px; border-radius:10px; font-weight:700;
+  font-size:14.5px; text-decoration:none; transition:transform .2s, box-shadow .2s;
+}
+.btn-primary{ background:linear-gradient(135deg,var(--teal),var(--teal-2)); color:#051018; }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,232,200,0.32); }
+.btn-ghost{ background:rgba(255,255,255,0.04); color:var(--white); border:1px solid var(--border); }
+.btn-ghost:hover{ border-color:var(--border-accent); color:var(--teal); }
+
+.article-back{ display:inline-block; margin-top:36px; font-size:14px; color:var(--muted); text-decoration:none; }
+.article-back:hover{ color:var(--teal); }
+.article-sources{ margin-top:32px; padding-top:20px; border-top:1px solid var(--border-soft); font-size:12.5px; color:var(--muted); line-height:1.7; }
+.article-sources a{ color:var(--muted); text-decoration:underline; }
+.article-sources a:hover{ color:var(--teal); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo-nav.png" alt="KinSentry">
+    <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="blog.html" class="nav-back">← Back to Blog</a>
+  </div>
+</nav>
+
+<div class="page-content">
+
+  <div class="page-header">
+    <div class="article-meta-row">
+      <span class="tag">Scam Alert</span>
+      <span>April 2026</span>
+      <span>·</span>
+      <span>6 min read</span>
+    </div>
+    <h1 class="page-title" style="margin-top:14px;">The anatomy of a tech-support scam: how scammers steal $38,000 in 20 minutes</h1>
+  </div>
+
+  <article class="article-body">
+
+    <p class="article-lead">It never looks like a robbery. There's no broken window and no stranger at the door — just a friendly voice on the phone, a computer screen, and about twenty minutes. By the end, an older person's life savings can be gone, and they'll often thank the person who took it. Here's exactly how it happens, step by step.</p>
+
+    <p>The most important thing to understand is this: <strong>a tech-support scam is not a hack. It's a performance.</strong> No virus breaks in. Instead, the scammer convinces a real person to open the door themselves — to install software, grant access, and move money — all while believing they're being helped. That's why it works on smart, careful people, and it's why ordinary antivirus does nothing to stop it.</p>
+
+    <div class="pull">The scammer's real target isn't the computer. It's the person's trust — and their sense of panic.</div>
+
+    <h2>Act by act: how the 20 minutes unfold</h2>
+
+    <ol class="step-list">
+      <li>
+        <h3>The hook: a fake alarm</h3>
+        <p>It starts with a full-screen pop-up — "Your computer is infected! Do NOT shut down. Call Microsoft Support now." Often it beeps or reads the warning aloud. Sometimes it's an unsolicited phone call instead. The goal is the same: create instant fear and a phone number to call. The "problem" is fake, but the panic is real.</p>
+      </li>
+      <li>
+        <h3>The voice: building false authority</h3>
+        <p>On the line is a calm, professional "technician" — from Microsoft, Apple, or the bank. They sound official, use technical words, and take control of the conversation. They reassure your parent that they've called the right place and that everything will be fine if they just follow along.</p>
+      </li>
+      <li>
+        <h3>The handover: remote access</h3>
+        <p>This is the pivotal moment. The technician asks your parent to install a remote-access program — usually <strong>AnyDesk</strong> or <strong>TeamViewer</strong> — and read out a code. These are real, legitimate tools. But once your parent shares that code, the scammer can see and control their screen. Antivirus sees normal software being installed normally, so it stays silent.</p>
+      </li>
+      <li>
+        <h3>The theater: a fake "diagnosis"</h3>
+        <p>Now the scammer performs. They open harmless system windows that look alarming to a non-expert — error logs, network screens, blinking text — and narrate a crisis: "See all these red entries? Hackers are in your account right now." It's pure theater, designed to deepen the fear and justify what comes next.</p>
+      </li>
+      <li>
+        <h3>The payment: the money leaves</h3>
+        <p>With trust and access secured, they direct the money. Sometimes it's a "fee" for repairs or a "security service." A common twist is the <strong>fake refund</strong>: they claim to refund a small amount, pretend to "accidentally" send too much, and pressure your parent to repay the difference in gift cards, a wire, or a bank transfer. Because they control the screen, they can even make bank balances appear to change.</p>
+      </li>
+      <li>
+        <h3>The cover-up: keeping it quiet</h3>
+        <p>Finally, they coach silence: "Don't tell the bank the real reason — they won't understand." "Let's keep this between us until it's fixed." This buys time and isolates the victim, which is why families often find out only after the money is long gone.</p>
+      </li>
+    </ol>
+
+    <div class="stat-highlight">
+      <div class="n">≈ $38,000</div>
+      <div class="c">The average loss for an older fraud victim — often from a single scam like this one.</div>
+      <div class="src">Source: FBI Internet Crime Complaint Center (IC3), 2025</div>
+    </div>
+
+    <h2>Why their antivirus doesn't help</h2>
+    <p>People assume good antivirus will catch this. It won't — and not because the software is bad. Antivirus is built to stop <em>malware</em>: hostile code that sneaks in. A tech-support scam contains none. Every dangerous step is something the person is <strong>persuaded to do themselves</strong>: install a real program, share a real code, approve a real transfer. From the computer's point of view, nothing is wrong. The breach is human, not technical.</p>
+
+    <div class="callout">
+      <div class="ic">⚠️</div>
+      <p><strong>The tell:</strong> No real company — not Microsoft, Apple, your bank, or the government — will ever call out of the blue and ask to remotely control a computer, or ask for payment in gift cards. If that happens, it is a scam, every time.</p>
+    </div>
+
+    <h2>Why it works so well on older adults</h2>
+    <p>It isn't about intelligence. Scammers engineer three pressures at once: <strong>authority</strong> (posing as a trusted institution), <strong>urgency</strong> (act now or lose everything), and often <strong>isolation</strong> (no one nearby to sanity-check). Older adults are also more likely to be home, alone, and reachable by phone — and, once remote access is granted, the whole thing can be over before anyone else in the family knows it began.</p>
+
+    <h2>How to stop it — before the 20 minutes start</h2>
+    <p>The scam depends on speed and secrecy. Take those away and it collapses. A few things genuinely help:</p>
+    <ul class="tip-list">
+      <li><h3>Agree a family rule, out loud</h3><p>"If anyone ever asks you to install software or read them a code — hang up and call me first." This one sentence stops most of these scams cold.</p></li>
+      <li><h3>Remove remote-access apps they don't use</h3><p>If AnyDesk or TeamViewer aren't needed, uninstall them so there's nothing to hand over.</p></li>
+      <li><h3>Put a safety net on their browser</h3><p>Because you can't sit beside them 24/7, the practical answer is software that blocks the scam sites and tells you the moment something happens.</p></li>
+    </ul>
+
+    <div class="article-cta">
+      <h3>Know the moment someone tries this on your parent</h3>
+      <p>KinSentry blocks the remote-access and tech-support scam sites automatically — and alerts your family the instant one is attempted. All scanning runs on the device; it never records the screen or browsing history.</p>
+      <div class="btn-row">
+        <a href="/protect.html" class="btn-primary">See how KinSentry protects them</a>
+        <a href="https://chromewebstore.google.com/detail/bipgibopdjmcbggbhpalgpbgiaaloede" class="btn-ghost" target="_blank" rel="noopener">Add to Chrome — Free</a>
+      </div>
+    </div>
+
+    <div class="article-sources">
+      Figures from the <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI Internet Crime Complaint Center (IC3) 2025 Elder Fraud Report</a>. "Older adults" refers to people aged 60 and over.
+    </div>
+
+    <div class="related">
+      <h2>Related reading</h2>
+      <div class="related-links">
+        <a href="5-signs-your-loved-one-is-being-targeted.html"><span class="r-tag">Safety Guide</span><span class="r-title">5 signs someone you love is being targeted by a scammer</span></a>
+        <a href="why-older-adults-are-targeted.html"><span class="r-tag">Research</span><span class="r-title">Why older adults are 5× more likely to lose money to tech-support scams</span></a>
+      </div>
+    </div>
+
+    <a href="blog.html" class="article-back">← Back to all articles</a>
+
+  </article>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>. All rights reserved.</span>
+    <div class="footer-links-row">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="support.html">Support</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/kinsentry-tracking.js"></script>
+</body>
+</html>

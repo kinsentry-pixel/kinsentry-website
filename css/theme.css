@@ -189,6 +189,16 @@ nav {
   border-radius: var(--radius); padding: 32px;
   transition: transform 0.3s, border-color 0.3s, box-shadow .3s;
 }
+a.blog-card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+
+/* Related articles (blog post footer) */
+.related { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--border-soft); }
+.related h2 { font-size: 18px; font-weight: 800; color: var(--white); margin-bottom: 16px; letter-spacing: -0.01em; }
+.related-links { display: grid; gap: 12px; }
+.related-links a { display: block; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: border-color .25s, transform .25s; }
+.related-links a:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+.related-links .r-tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal); }
+.related-links .r-title { display: block; margin-top: 4px; color: var(--white); font-size: 15.5px; font-weight: 700; line-height: 1.35; }
 .blog-card:hover {
   transform: translateY(-3px); border-color: var(--border-accent);
   box-shadow: 0 0 0 1px rgba(0,232,200,0.25), 0 16px 40px rgba(0,232,200,0.12);
