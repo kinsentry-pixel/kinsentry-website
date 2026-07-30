@@ -190,6 +190,8 @@ nav {
   transition: transform 0.3s, border-color 0.3s, box-shadow .3s;
 }
 a.blog-card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+.blog-card.featured { border-color: var(--border-accent); box-shadow: 0 0 0 1px rgba(0,232,200,0.22), 0 16px 40px rgba(0,232,200,0.10); }
+.blog-card.featured .blog-tag { background: linear-gradient(135deg, var(--teal), var(--teal-2)); color: #051018; border: none; }
 
 /* Related articles (blog post footer) */
 .related { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--border-soft); }
@@ -199,6 +201,7 @@ a.blog-card { display: block; text-decoration: none; color: inherit; cursor: poi
 .related-links a:hover { border-color: var(--border-accent); transform: translateY(-2px); }
 .related-links .r-tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal); }
 .related-links .r-title { display: block; margin-top: 4px; color: var(--white); font-size: 15.5px; font-weight: 700; line-height: 1.35; }
+.related-links a.hub { border-color: var(--border-accent); background: linear-gradient(180deg, rgba(0,232,200,0.06), rgba(0,232,200,0.02)); }
 .blog-card:hover {
   transform: translateY(-3px); border-color: var(--border-accent);
   box-shadow: 0 0 0 1px rgba(0,232,200,0.25), 0 16px 40px rgba(0,232,200,0.12);
