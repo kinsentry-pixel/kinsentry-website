@@ -156,6 +156,16 @@ nav {
 .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0,232,200,0.4); }
 .nav-cta.ext-installed { background: linear-gradient(135deg, var(--blue), var(--blue-2)); color: #fff !important; box-shadow: 0 10px 26px rgba(46,123,255,0.34); }
 .roadmap-link { color: var(--teal) !important; font-weight: 700 !important; }
+.why-link {
+  font-weight: 700 !important;
+  background: linear-gradient(90deg, var(--teal), var(--blue), var(--teal));
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent !important;
+  animation: navShimmer 3s linear infinite;
+}
+@keyframes navShimmer { to { background-position: 200% center; } }
+@media (prefers-reduced-motion: reduce) { .why-link { animation: none; } }
 
 .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
 .nav-hamburger span { width: 24px; height: 2.5px; background: var(--ink); border-radius: 2px; transition: .25s ease; }
@@ -526,12 +536,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <span class="brand-name"><span class="kin-dark">Kin</span><span class="sentry-gradient">Sentry</span></span>
   </a>
   <div class="nav-links">
-    <a href="/protect.html">Protect</a>
-    <a href="/why-kinsentry.html">Why KinSentry</a>
+    <a href="/why-kinsentry.html" class="why-link">Why KinSentry</a>
     <a href="#features">Features</a>
     <a href="#how">How It Works</a>
     <a href="#pricing">Pricing</a>
-    <a href="#trust">Reviews</a>
     <a href="/tutorials.html">Tutorials</a>
     <a href="#coming-soon" class="roadmap-link">Roadmap</a>
     <a href="/signup.html?mode=login" class="nav-login" id="nav-login">Log In</a>
@@ -543,12 +551,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 </nav>
 
 <div class="mobile-nav" id="mobileNav">
-  <a href="/protect.html" onclick="closeMobileNav()">Protect</a>
-  <a href="/why-kinsentry.html" onclick="closeMobileNav()">Why KinSentry</a>
+  <a href="/why-kinsentry.html" onclick="closeMobileNav()" class="why-link">Why KinSentry</a>
   <a href="#features" onclick="closeMobileNav()">Features</a>
   <a href="#how" onclick="closeMobileNav()">How It Works</a>
   <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
-  <a href="#trust" onclick="closeMobileNav()">Reviews</a>
   <a href="/tutorials.html" onclick="closeMobileNav()">Tutorials</a>
   <a href="#coming-soon" onclick="closeMobileNav()" class="roadmap-link">Roadmap</a>
   <a href="/signup.html?mode=login" onclick="closeMobileNav()">Log In / Sign Up</a>
@@ -566,7 +572,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <img src="images/logo-hero.png" alt="KinSentry" class="hero-logo-img">
   </div>
 
-  <h1>Protect your loved ones from <span class="gradient-text">tech support scams</span></h1>
+  <h1>Protect your loved ones from <span class="gradient-text">tech support &amp; other online scams</span></h1>
 
   <div class="tagline">Prevents scams before they cost you.</div>
 
