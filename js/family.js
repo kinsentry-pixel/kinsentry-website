@@ -1,7 +1,7 @@
 // KinSentry — Family admin dashboard (family.html) client logic
 //
 // Gated by the session cookie set on .kinsentry.com. Only Family-tier admins
-// belong here; anyone else is bounced to /account.html. Member devices have no
+// belong here; anyone else is bounced to /account. Member devices have no
 // user accounts and never reach this page — they activate via invite code in
 // the extension.
 //
@@ -36,7 +36,7 @@
     // 1. Identity check
     const meRes = await fetch(`${API}/api/account/me`, { credentials: 'include' });
     if (meRes.status === 401) {
-      location.replace('/signup.html?mode=login&next=' + encodeURIComponent('/family.html'));
+      location.replace('/signup?mode=login&next=' + encodeURIComponent('/family'));
       return;
     }
     if (!meRes.ok) throw new Error('http_' + meRes.status);
@@ -46,7 +46,7 @@
 
     // 2. Gate: only Family-tier admins belong here
     if (CURRENT_USER.tier !== 'family') {
-      location.replace('/account.html');
+      location.replace('/account');
       return;
     }
 
@@ -67,7 +67,7 @@
       '<div class="alert error" style="display:inline-block;text-align:left;max-width:480px;">' +
         'Something went wrong loading your family dashboard. Please refresh the page. ' +
         'If the problem persists, ' +
-        '<a href="/support.html" style="color:inherit;font-weight:500;text-decoration:underline;">contact support</a>.' +
+        '<a href="/support" style="color:inherit;font-weight:500;text-decoration:underline;">contact support</a>.' +
       '</div>';
   }
 
