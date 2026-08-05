@@ -1,9 +1,14 @@
 User-agent: *
 Allow: /
+Disallow: /account
 Disallow: /account.html
+Disallow: /account-deleted
 Disallow: /account-deleted.html
+Disallow: /reset-password
 Disallow: /reset-password.html
+Disallow: /signup
 Disallow: /signup.html
+Disallow: /family
 Disallow: /family.html
 
 Sitemap: https://kinsentry.com/sitemap.xml
