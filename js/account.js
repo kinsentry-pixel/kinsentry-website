@@ -34,7 +34,7 @@
     const res = await fetch(`${API}/api/account/me`, { credentials: 'include' });
     if (res.status === 401) {
       // Not signed in — bounce to login
-      location.replace('/signup.html?mode=login&next=' + encodeURIComponent('/account.html'));
+      location.replace('/signup?mode=login&next=' + encodeURIComponent('/account'));
       return;
     }
     if (!res.ok) throw new Error('http_' + res.status);
@@ -68,7 +68,7 @@
     loadingEl.innerHTML =
       '<div class="alert error" style="display:inline-block;text-align:left;max-width:480px;">' +
         'Something went wrong loading your account. Please refresh the page. If the problem persists, ' +
-        '<a href="/support.html" style="color:inherit;font-weight:500;text-decoration:underline;">contact support</a>.' +
+        '<a href="/support" style="color:inherit;font-weight:500;text-decoration:underline;">contact support</a>.' +
       '</div>';
   }
 
@@ -195,7 +195,7 @@
       cta.innerHTML = `
         <p style="font-size:13px;color:var(--text-2);">
           You're on the <strong>${tierLabels[u.tier]}</strong> plan. To change or cancel your plan,
-          <a href="/support.html" style="color:var(--blue);">contact support</a>.
+          <a href="/support" style="color:var(--blue);">contact support</a>.
         </p>
       `;
     }
@@ -320,7 +320,7 @@
         return;
       }
       // Redirect to deleted page
-      location.replace('/account-deleted.html');
+      location.replace('/account-deleted');
     } catch (err) {
       showAlert(alertEl, 'error', 'Network error. Please try again.');
       btn.disabled = false;
@@ -340,7 +340,7 @@
       try {
         localStorage.removeItem('ks_user');
       } catch (_) {}
-      location.replace('/signup.html?mode=login');
+      location.replace('/signup?mode=login');
     });
   }
   function openExtensionDashboard() {
@@ -387,7 +387,7 @@
       actionsEl.innerHTML = '';
       const familyLink = document.createElement('a');
       familyLink.className   = 'btn primary';
-      familyLink.href        = '/family.html';
+      familyLink.href        = '/family';
       familyLink.textContent = 'View & control your family settings';
       actionsEl.appendChild(familyLink);
       return;
