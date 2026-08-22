@@ -10,5 +10,6 @@ Disallow: /signup
 Disallow: /signup.html
 Disallow: /family
 Disallow: /family.html
+Disallow: /api/
 
 Sitemap: https://kinsentry.com/sitemap.xml
