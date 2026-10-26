@@ -375,11 +375,6 @@ nav {
 .pricing-btn.filled:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(0,232,200,0.4); }
 .pricing-btn.outline { background: rgba(255,255,255,0.03); color: var(--ink); border: 1.5px solid var(--border); }
 .pricing-btn.outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
-.free-now-banner { display: inline-flex; align-items: center; gap: 9px; margin: 8px auto 0; padding: 11px 20px; border-radius: 10px; background: rgba(0,232,200,0.10); border: 1px solid rgba(0,232,200,0.28); color: var(--teal); font-weight: 700; font-size: 14px; }
-/* Dim ONLY the amount on preview plans, not features or CTA */
-.pricing-card.preview .price { color: var(--muted); }
-.price .price-soon { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--blue); background: rgba(46,123,255,0.12); border: 1px solid rgba(46,123,255,0.28); border-radius: 6px; padding: 3px 9px; vertical-align: middle; margin-right: 9px; }
-.pricing-btn.soon { background: rgba(255,255,255,0.03); color: var(--muted); border: 1.5px solid var(--border); cursor: default; pointer-events: none; }
 
 /* ── Trust / testimonials ──────────────────── */
 .trust-section { text-align: center; }
@@ -1052,10 +1047,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
       <div class="section-label">Pricing</div>
       <h2 class="section-title">Simple, honest pricing</h2>
       <p class="section-subtitle">Voice alerts, scam-number warnings, phishing detection, and multi-device coverage — here's what each plan includes.</p>
-      <div class="free-now-banner">🎉 Pricing coming soon — enjoy every feature free for now.</div>
-
-      <!-- Billing toggle — hidden until paid plans launch -->
-      <div class="billing-toggle" id="billingToggle" hidden>
+      <!-- Billing toggle -->
+      <div class="billing-toggle" id="billingToggle">
         <button class="toggle-btn active" id="toggleAnnual" onclick="setBilling('annual')">
           Annually <span class="save-badge">Save 28%</span>
         </button>
@@ -1078,10 +1071,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         </ul>
         <a href="/signup" data-plan="free" class="pricing-btn outline">Get Started Free</a>
       </div>
-      <div class="pricing-card featured preview reveal">
+      <div class="pricing-card featured reveal">
         <div class="pricing-popular">Most Popular</div>
         <div class="plan-name">Guardian</div>
-        <div class="price" id="guardianPrice"><span class="price-soon">Coming Soon</span>$4.99<span>/mo</span></div>
+        <div class="price" id="guardianPrice">$4.99<span>/mo</span></div>
         <div class="plan-desc" id="guardianBilling">Billed annually at $59.88/yr</div>
         <ul>
           <li><span class="plan-inherits">Everything in Free</span></li>
@@ -1096,9 +1089,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
         </ul>
         <a href="/signup" data-plan="guardian" class="pricing-btn filled">Enjoy free for 30 days</a>
       </div>
-      <div class="pricing-card preview reveal">
+      <div class="pricing-card reveal">
         <div class="plan-name">Family</div>
-        <div class="price" id="familyPrice"><span class="price-soon">Coming Soon</span>$9.99<span>/mo</span></div>
+        <div class="price" id="familyPrice">$9.99<span>/mo</span></div>
         <div class="plan-desc" id="familyBilling">Billed annually at $119.88/yr</div>
         <ul>
           <li><span class="plan-inherits">Everything in Guardian</span></li>
@@ -1107,7 +1100,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
-        <span class="pricing-btn soon" aria-disabled="true">Coming Soon</span>
+        <a href="/signup.html" data-plan="family" class="pricing-btn outline">Choose Family</a>
       </div>
     </div>
   </div>
@@ -1481,7 +1474,7 @@ async function updateCTAs() {
   // extension as a personal account).
   document.querySelectorAll('.pricing-btn').forEach(btn => {
     const plan = btn.dataset.plan;
-    if (!plan) return; // skip inert buttons (e.g. Family "Coming Soon")
+    if (!plan) return;
     if (plan === 'family') {
       btn.href   = '/signup.html';
       btn.target = '';
@@ -1641,7 +1634,7 @@ function setBilling(type) {
   const gBill    = document.getElementById('guardianBilling');
   const fBill    = document.getElementById('familyBilling');
 
-  if (!gPrice || !fPrice) return; // paid pricing hidden until launch
+  if (!gPrice || !fPrice) return;
 
   if (type === 'annual') {
     annual.classList.add('active');
