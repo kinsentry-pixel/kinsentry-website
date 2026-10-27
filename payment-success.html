@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Payment confirmation — KinSentry</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; color: #101114; background: #fff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 28px; }
+    main { width: min(100%, 560px); text-align: center; padding: 48px 36px; }
+    .check { width: 64px; height: 64px; margin: 0 auto 22px; color: #42b98c; }
+    .spinner { width: 54px; height: 54px; margin: 5px auto 27px; border: 5px solid #e8f3ef; border-top-color: #42b98c; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h1 { margin: 0 0 30px; font-size: clamp(25px, 5vw, 30px); line-height: 1.2; }
+    p { margin: 8px 0; color: #24262a; font-size: 16px; line-height: 1.5; }
+    #plan-message { max-width: 480px; margin: 0 auto; }
+    .subtle { margin-top: 24px; color: #687078; font-size: 14px; }
+    a { display: inline-block; margin-top: 20px; color: #1267c5; font-weight: 600; }
+    [hidden] { display: none !important; }
+    @media (max-width: 480px) { main { padding: 32px 12px; } }
+  </style>
+  <script src="/js/payment-success.js" defer></script>
+</head>
+<body>
+  <main aria-live="polite">
+    <div id="spinner" class="spinner" aria-hidden="true"></div>
+    <svg id="success-icon" class="check" viewBox="0 0 64 64" role="img" aria-label="Payment successful" hidden>
+      <path fill="currentColor" d="M32 2 39 7l9-1 4 9 8 5-2 9 4 8-7 7-1 9-10 2-6 8-9-4-9 2-5-8-9-4 1-10-5-8 6-7-1-10 9-4 5-8 9 4z"/>
+      <path d="m19 33 9 9 18-20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h1 id="title">Confirming your payment…</h1>
+    <p id="message">Stripe is confirming your payment. Please keep this page open.</p>
+    <p id="plan-message" hidden></p>
+    <p id="countdown" class="subtle" hidden></p>
+    <a id="account-link" href="/account#subscription" hidden>Go to your account now</a>
+  </main>
+</body>
+</html>
