@@ -193,6 +193,7 @@
       if (!data.url) throw new Error('checkout_unavailable');
       location.assign(data.url);
     } catch (err) {
+      console.error('[KinSentry checkout]', err);
       cta.textContent = '';
       const msg = document.createElement('p');
       msg.className = 'alert error';
