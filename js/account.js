@@ -62,6 +62,10 @@
     populateProfile();
     populateSubscription();
     const billingState = params.get('billing');
+    if (billingState === 'success') {
+      activateTab('subscription');
+      showPaymentConfirmation(params.get('session_id'));
+    }
     if (billingState === 'upgrade_success' || billingState === 'upgrade_sync_pending') {
       const notice = document.createElement('p');
       notice.className = 'alert ' + (billingState === 'upgrade_success' ? 'success' : 'info');
@@ -138,6 +142,63 @@
       retry.textContent = 'Back to plans';
       cta.appendChild(retry);
     }
+  }
+
+  function showPaymentConfirmation(sessionId) {
+    const cta = document.getElementById('subscription-cta');
+    const notice = document.createElement('p');
+    notice.className = 'alert info';
+    notice.setAttribute('role', 'status');
+    notice.textContent = 'Checking your Stripe payment…';
+    cta.prepend(notice);
+
+    if (!sessionId) {
+      notice.className = 'alert error';
+      notice.textContent = 'We could not verify this payment. Refresh your account shortly, or contact support if your plan does not update.';
+      return;
+    }
+
+    (async () => {
+      try {
+        const paymentRes = await fetch(`${API}/api/billing/checkout-session?session_id=${encodeURIComponent(sessionId)}`, {
+          credentials: 'include',
+          cache: 'no-store'
+        });
+        const payment = await paymentRes.json().catch(() => ({}));
+        if (!paymentRes.ok || !payment.paid) throw new Error('payment_not_confirmed');
+        history.replaceState({}, '', '/account#subscription');
+      } catch (_) {
+        notice.className = 'alert error';
+        notice.textContent = 'We could not verify the payment yet. Refresh your account shortly, or contact support if you completed payment.';
+        return;
+      }
+
+      notice.className = 'alert success';
+      notice.textContent = 'Thank you! Your payment was successful. We are activating your KinSentry plan…';
+      for (let attempt = 0; attempt < 15; attempt++) {
+        try {
+          const accountRes = await fetch(`${API}/api/account/me`, {
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          if (accountRes.ok) {
+            const account = await accountRes.json();
+            if (account.user) CURRENT_USER = account.user;
+            if (['guardian', 'family'].includes(CURRENT_USER?.tier)) {
+              populateProfile();
+              populateSubscription();
+              notice.textContent = `Thank you! Your payment was successful, and your ${CURRENT_USER.tier === 'family' ? 'Family' : 'Guardian'} plan is active.`;
+              return;
+            }
+          }
+        } catch (_) {
+          // Keep the verified payment notice visible while the plan sync retries.
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      notice.className = 'alert info';
+      notice.textContent = 'Thank you! Your payment was successful. Your plan is still syncing and this page will update shortly.';
+    })();
   }
 
   async function activateGuardianTrial(interval) {
