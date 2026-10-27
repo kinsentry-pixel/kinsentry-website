@@ -56,7 +56,13 @@
 
     populateProfile();
     populateSubscription();
-    if (requestedPlan) await startCheckout(requestedPlan);
+    if (requestedPlan) {
+      // Keep the checkout result visible if Stripe rejects the request. The
+      // failure used to be written inside the hidden Subscription tab, making
+      // a failed checkout look like a successful trip to the account dashboard.
+      activateTab('subscription');
+      await startCheckout(requestedPlan);
+    }
     populateSecurity();
     populateDelete();
     wireTabs();
@@ -93,9 +99,12 @@
       const msg = document.createElement('p');
       msg.className = 'alert error';
       msg.setAttribute('role', 'alert');
-      msg.textContent = err.message === 'subscription_exists'
-        ? 'This account already has a subscription. Contact support if you need to change plans.'
-        : 'We could not open checkout. Please try again or contact support.';
+      const errors = {
+        subscription_exists: 'This account already has a subscription. Contact support if you need to change plans.',
+        invalid_plan: 'This plan is not configured for checkout yet. Please contact support.',
+        checkout_unavailable: 'Stripe could not start checkout. Please try again or contact support.'
+      };
+      msg.textContent = errors[err.message] || 'We could not open checkout. Please try again or contact support.';
       cta.appendChild(msg);
       const retry = document.createElement('a');
       retry.className = 'btn primary';
