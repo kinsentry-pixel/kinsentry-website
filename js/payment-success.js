@@ -7,8 +7,12 @@
   const title = document.getElementById('title');
   const message = document.getElementById('message');
   const planMessage = document.getElementById('plan-message');
+  const planCard = document.getElementById('plan-card');
+  const planNameEl = document.getElementById('plan-name');
+  const returnArea = document.getElementById('return-area');
   const countdown = document.getElementById('countdown');
   const accountLink = document.getElementById('account-link');
+  const stateLabel = document.getElementById('state-label');
   const planNames = {
     guardian_monthly: 'Guardian',
     guardian_annual: 'Guardian',
@@ -17,9 +21,14 @@
   };
 
   function showProblem(text) {
+    document.body.classList.add('is-problem');
+    stateLabel.textContent = 'PAYMENT PROCESSING';
     spinner.hidden = true;
     title.textContent = 'We’re checking your payment';
     message.textContent = text;
+    planMessage.hidden = true;
+    planCard.hidden = true;
+    returnArea.hidden = true;
     accountLink.hidden = false;
   }
 
@@ -54,8 +63,10 @@
   }
 
   function showSuccess(planKey) {
+    document.body.classList.add('is-success');
     spinner.hidden = true;
     successIcon.hidden = false;
+    stateLabel.textContent = 'PAYMENT CONFIRMED';
     title.textContent = 'Your payment was successful!';
     message.textContent = 'Thank you for your payment!';
     const planName = planNames[planKey];
@@ -63,12 +74,16 @@
       ? `Your payment for KinSentry’s ${planName} subscription has been received.`
       : 'Your payment for your KinSentry subscription has been received.';
     planMessage.hidden = false;
-    countdown.hidden = false;
+    planNameEl.textContent = planName || 'KinSentry subscription';
+    planCard.hidden = false;
+    returnArea.hidden = false;
     accountLink.hidden = false;
+    accountLink.textContent = 'Go to your account now →';
     history.replaceState({}, '', '/payment-success.html');
 
     let seconds = 5;
     countdown.textContent = `Taking you to your account in ${seconds} seconds…`;
+    requestAnimationFrame(() => document.body.classList.add('is-counting'));
     const timer = setInterval(() => {
       seconds--;
       if (seconds <= 0) {

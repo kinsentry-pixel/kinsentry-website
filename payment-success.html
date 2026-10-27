@@ -4,37 +4,205 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0A0E16">
   <title>Payment confirmation — KinSentry</title>
+  <link rel="icon" href="/images/logo-nav.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; color: #101114; background: #fff; }
+    :root {
+      color-scheme: dark;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --bg: #0A0E16;
+      --surface: #111A2B;
+      --border: rgba(255,255,255,.10);
+      --teal: #00E8C8;
+      --blue: #2E7BFF;
+      --text: #F7FAFF;
+      --muted: #9FB2CE;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 28px; }
-    main { width: min(100%, 560px); text-align: center; padding: 48px 36px; }
-    .check { width: 64px; height: 64px; margin: 0 auto 22px; color: #42b98c; }
-    .spinner { width: 54px; height: 54px; margin: 5px auto 27px; border: 5px solid #e8f3ef; border-top-color: #42b98c; border-radius: 50%; animation: spin .8s linear infinite; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 42%, rgba(46,123,255,.16), transparent 42%),
+        radial-gradient(ellipse at 88% 70%, rgba(0,232,200,.12), transparent 38%),
+        var(--bg);
+    }
+    .topbar {
+      height: 70px;
+      padding: 0 clamp(20px, 5vw, 72px);
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(17,26,43,.86);
+      backdrop-filter: blur(14px);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+    .brand img { width: 34px; height: 34px; object-fit: contain; }
+    .brand span { font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
+    .secure-label {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #A9B8CE;
+      font: 600 10px 'JetBrains Mono', monospace;
+      letter-spacing: .12em;
+    }
+    .secure-label svg { color: var(--teal); }
+    main { flex: 1; display: grid; place-items: center; padding: 54px 22px 46px; }
+    .content { width: min(100%, 620px); text-align: center; }
+    .success-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(30px, 6vw, 54px) clamp(24px, 7vw, 66px) 36px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, rgba(46,123,255,.08), transparent 45%),
+        linear-gradient(180deg, rgba(18,29,49,.98), rgba(14,21,35,.98));
+      box-shadow: 0 28px 90px rgba(0,0,0,.48), 0 0 60px rgba(0,232,200,.07), inset 0 1px rgba(255,255,255,.06);
+      animation: rise .55s cubic-bezier(.2,.75,.25,1) both;
+    }
+    .success-card::before {
+      position: absolute; inset: 0 15% auto; height: 2px; content: '';
+      background: linear-gradient(90deg, transparent, var(--teal), var(--blue), transparent); opacity: .9;
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px) scale(.99); } to { opacity: 1; transform: none; } }
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(0,232,200,.18);
+      border-radius: 999px;
+      background: rgba(0,232,200,.08);
+      color: #79F4DF;
+      font: 600 10px 'JetBrains Mono', monospace;
+      letter-spacing: .09em;
+    }
+    .state-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal); }
+    .success-mark, .spinner {
+      width: 78px; height: 78px; margin: 28px auto 20px;
+      display: grid; place-items: center; border-radius: 50%;
+    }
+    .success-mark {
+      color: #06241F;
+      background: linear-gradient(135deg, #67F5D8, #1EC9A8);
+      box-shadow: 0 0 0 9px rgba(0,232,200,.08), 0 12px 36px rgba(0,232,200,.24);
+      animation: pop .45s .12s cubic-bezier(.16,1.3,.4,1) both;
+    }
+    .success-mark svg { width: 39px; height: 39px; }
+    @keyframes pop { from { opacity: 0; transform: scale(.65); } to { opacity: 1; transform: scale(1); } }
+    .spinner { border: 3px solid rgba(255,255,255,.09); border-top-color: var(--teal); animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    h1 { margin: 0 0 30px; font-size: clamp(25px, 5vw, 30px); line-height: 1.2; }
-    p { margin: 8px 0; color: #24262a; font-size: 16px; line-height: 1.5; }
-    #plan-message { max-width: 480px; margin: 0 auto; }
-    .subtle { margin-top: 24px; color: #687078; font-size: 14px; }
-    a { display: inline-block; margin-top: 20px; color: #1267c5; font-weight: 600; }
+    .eyebrow { margin: 25px 0 10px; color: #66DCC9; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .18em; }
+    h1 { margin: 0; font-size: clamp(29px, 5vw, 39px); line-height: 1.17; letter-spacing: -.045em; font-weight: 800; }
+    .lead { max-width: 440px; margin: 15px auto 0; color: #B3C2D8; font-size: 15px; line-height: 1.7; }
+    .plan-message { margin: 7px auto 0; color: #F1F6FF; font-size: 15px; line-height: 1.65; font-weight: 600; }
+    .plan-card {
+      margin: 30px 0 25px;
+      padding: 17px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 15px;
+      background: rgba(5,11,21,.36);
+    }
+    .plan-icon { flex: 0 0 42px; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; color: var(--teal); background: rgba(0,232,200,.10); }
+    .plan-label { margin-bottom: 4px; color: #8092AE; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .12em; }
+    .plan-name { font-size: 14px; font-weight: 700; }
+    .plan-confirmed { margin-left: auto; color: #6CE1C7; font-size: 11px; white-space: nowrap; }
+    .return-area { display: grid; gap: 13px; }
+    .progress-track { height: 4px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.09); }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal), #53B7FF); }
+    body.is-counting .progress-fill { width: 100%; transition: width 5s linear; }
+    .countdown { color: #8FA3C0; font-size: 12px; }
+    .account-link {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 13px;
+      background: linear-gradient(105deg, #00DDBE, #20BFE3);
+      color: #04151B;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 10px 28px rgba(0,220,190,.18);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .account-link:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,220,190,.28); }
+    .help { margin: 22px 0 0; color: #8294AE; font-size: 12px; }
+    .help a { color: #62CFFF; text-decoration: none; }
+    .help a:hover { text-decoration: underline; }
     [hidden] { display: none !important; }
-    @media (max-width: 480px) { main { padding: 32px 12px; } }
+    body.is-problem .state-badge { border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.08); color: #FFD48B; }
+    body.is-problem .state-dot { background: #F6B74B; box-shadow: 0 0 12px #F6B74B; }
+    body.is-problem .success-card::before { background: linear-gradient(90deg, transparent, #F6B74B, transparent); }
+    @media (max-width: 520px) {
+      .topbar { height: 62px; padding-inline: 18px; }
+      .brand span { font-size: 17px; }
+      .secure-label { font-size: 8px; letter-spacing: .07em; }
+      main { padding: 28px 14px; }
+      .plan-card { padding: 14px; }
+      .plan-confirmed { font-size: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      body.is-counting .progress-fill { transition: none; }
+    }
   </style>
-  <script src="/js/payment-success.js" defer></script>
+  <script src="/js/payment-success.js?v=2" defer></script>
 </head>
 <body>
-  <main aria-live="polite">
-    <div id="spinner" class="spinner" aria-hidden="true"></div>
-    <svg id="success-icon" class="check" viewBox="0 0 64 64" role="img" aria-label="Payment successful" hidden>
-      <path fill="currentColor" d="M32 2 39 7l9-1 4 9 8 5-2 9 4 8-7 7-1 9-10 2-6 8-9-4-9 2-5-8-9-4 1-10-5-8 6-7-1-10 9-4 5-8 9 4z"/>
-      <path d="m19 33 9 9 18-20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <h1 id="title">Confirming your payment…</h1>
-    <p id="message">Stripe is confirming your payment. Please keep this page open.</p>
-    <p id="plan-message" hidden></p>
-    <p id="countdown" class="subtle" hidden></p>
-    <a id="account-link" href="/account#subscription" hidden>Go to your account now</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="KinSentry home">
+      <img src="/images/logo-nav.png" alt="">
+      <span>KinSentry</span>
+    </a>
+    <span class="secure-label">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5 16 5v4.6c0 3.7-2.5 6.4-6 7.9-3.5-1.5-6-4.2-6-7.9V5l6-2.5Z" stroke="currentColor" stroke-width="1.6"/><path d="m7.5 9.8 1.7 1.7 3.5-3.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SECURE PAYMENT
+    </span>
+  </header>
+  <main>
+    <div class="content">
+      <section class="success-card" aria-live="polite" aria-atomic="true">
+        <div class="state-badge"><span class="state-dot" aria-hidden="true"></span><span id="state-label">VERIFYING PAYMENT</span></div>
+        <div id="spinner" class="spinner" aria-hidden="true"></div>
+        <div id="success-icon" class="success-mark" role="img" aria-label="Payment successful" hidden>
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="m9 20.5 7.2 7.2L31 12.8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="eyebrow">KINSENTRY · PAYMENT CONFIRMATION</p>
+        <h1 id="title">Confirming your payment…</h1>
+        <p id="message" class="lead">Stripe is confirming your payment. Please keep this page open.</p>
+        <p id="plan-message" class="plan-message" hidden></p>
+        <div id="plan-card" class="plan-card" hidden>
+          <div class="plan-icon" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 20 6v5.7c0 4.3-3.2 7.7-8 9.3-4.8-1.6-8-5-8-9.3V6l8-3Z" stroke="currentColor" stroke-width="1.7"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><p class="plan-label">YOUR SUBSCRIPTION</p><p id="plan-name" class="plan-name">KinSentry</p></div>
+          <span class="plan-confirmed">Active</span>
+        </div>
+        <div id="return-area" class="return-area" hidden>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill"></div></div>
+          <p id="countdown" class="countdown"></p>
+        </div>
+        <a id="account-link" class="account-link" href="/account#subscription" hidden>
+          Go to your account now <span aria-hidden="true">→</span>
+        </a>
+      </section>
+      <p class="help">Need help with your subscription? <a href="/support">Contact KinSentry support</a></p>
+    </div>
   </main>
 </body>
 </html>
