@@ -76,11 +76,14 @@
       document.getElementById('subscription-cta').prepend(notice);
     }
     if (requestedPlan) {
-      // Keep the checkout result visible if Stripe rejects the request. The
-      // failure used to be written inside the hidden Subscription tab, making
-      // a failed checkout look like a successful trip to the account dashboard.
+      // Guardian → Family upgrades require explicit consent after the server
+      // previews the immediate proration. No subscription update happens here.
       activateTab('subscription');
-      await startCheckout(requestedPlan);
+      if (CURRENT_USER.tier === 'guardian' && requestedPlan.startsWith('family_')) {
+        await confirmFamilyUpgrade(requestedPlan);
+      } else {
+        await startCheckout(requestedPlan);
+      }
     } else if (requestedTrial) {
       activateTab('subscription');
       await activateGuardianTrial(params.get('interval') === 'monthly' ? 'monthly' : 'annual');
@@ -101,7 +104,75 @@
     }
   }
 
-  async function startCheckout(plan) {
+  async function confirmFamilyUpgrade(plan) {
+    const cta = document.getElementById('subscription-cta');
+    cta.textContent = 'Calculating your prorated Family upgrade…';
+    try {
+      const res = await fetch(`${API}/api/billing/upgrade-preview`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan })
+      });
+      const quote = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(quote.error || 'upgrade_quote_unavailable');
+      showFamilyUpgradeConfirmation(plan, quote);
+    } catch (err) {
+      cta.textContent = '';
+      const msg = document.createElement('p');
+      msg.className = 'alert error';
+      msg.setAttribute('role', 'alert');
+      msg.textContent = err.message === 'billing_interval_change_not_supported'
+        ? 'Choose Family with the same monthly or annual billing interval as your current Guardian plan.'
+        : 'We could not calculate the prorated Family upgrade. No change was made and you were not charged. Please try again.';
+      cta.appendChild(msg);
+      const back = document.createElement('a');
+      back.className = 'btn'; back.href = '/#pricing'; back.textContent = 'Back to plans';
+      cta.appendChild(back);
+    }
+  }
+
+  function showFamilyUpgradeConfirmation(plan, quote) {
+    const cta = document.getElementById('subscription-cta');
+    cta.textContent = '';
+    const card = document.createElement('section');
+    card.className = 'upgrade-confirmation';
+    card.setAttribute('aria-labelledby', 'upgrade-confirmation-title');
+    const title = document.createElement('h3');
+    title.id = 'upgrade-confirmation-title'; title.textContent = 'Review your Family upgrade';
+    const explanation = document.createElement('p');
+    explanation.textContent = 'Your unused Guardian time will be credited toward Family for the rest of your current billing period. Stripe will invoice the prorated difference now; your renewal date stays the same.';
+    const amount = Number(quote.amount_due_now || 0);
+    const currency = String(quote.currency || 'usd').toUpperCase();
+    const formatted = new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount / 100);
+    const due = document.createElement('div');
+    due.className = 'upgrade-quote-row';
+    const dueLabel = document.createElement('span'); dueLabel.textContent = amount > 0 ? 'Estimated charge today' : amount < 0 ? 'Credit applied today' : 'Due today';
+    const dueValue = document.createElement('strong'); dueValue.textContent = amount < 0 ? formatted.replace('-', '−') : formatted;
+    due.append(dueLabel, dueValue);
+    const renewal = document.createElement('div');
+    renewal.className = 'upgrade-quote-row';
+    const renewalLabel = document.createElement('span'); renewalLabel.textContent = 'Family renewal';
+    const renewalValue = document.createElement('strong');
+    const renewalDate = quote.next_renewal ? new Date(Number(quote.next_renewal) * 1000).toLocaleDateString() : 'your current renewal date';
+    const renewalAmount = quote.renewal_amount == null ? '' : new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(quote.renewal_amount / 100);
+    renewalValue.textContent = `${renewalAmount}${quote.interval === 'year' ? ' / year' : ' / month'} · ${renewalDate}`;
+    renewal.append(renewalLabel, renewalValue);
+    const note = document.createElement('p');
+    note.className = 'upgrade-quote-note';
+    note.textContent = 'The amount above is Stripe’s proration preview. Confirm only if you agree to the immediate charge and Family renewal shown.';
+    const actions = document.createElement('div'); actions.className = 'upgrade-confirm-actions';
+    const cancel = document.createElement('a'); cancel.className = 'btn'; cancel.href = '/#pricing'; cancel.textContent = 'Cancel';
+    const confirm = document.createElement('button'); confirm.type = 'button'; confirm.className = 'btn primary';
+    confirm.textContent = amount > 0 ? 'Confirm upgrade & pay' : 'Confirm Family upgrade';
+    confirm.addEventListener('click', () => {
+      confirm.disabled = true;
+      startCheckout(plan, quote.proration_date);
+    }, { once: true });
+    actions.append(cancel, confirm);
+    card.append(title, explanation, due, renewal, note, actions);
+    cta.appendChild(card);
+  }
+  async function startCheckout(plan, prorationDate) {
     const cta = document.getElementById('subscription-cta');
     cta.textContent = 'Opening secure Stripe checkout…';
     try {
@@ -111,7 +182,7 @@
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
-        body: JSON.stringify({ plan })
+        body: JSON.stringify({ plan, ...(prorationDate ? { proration_date: prorationDate } : {}) })
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'checkout_unavailable');
@@ -131,6 +202,7 @@
         billing_interval_change_not_supported: 'Choose Family with the same monthly or annual billing interval as your current Guardian plan to keep your renewal date.',
         subscription_not_upgradeable: 'This Guardian subscription cannot be upgraded right now. Please contact support.',
         upgrade_pending: 'Your Family upgrade is awaiting payment confirmation. Please retry shortly or contact support.',
+        upgrade_quote_expired: 'Your price preview expired. Please review the updated amount before confirming again.',
         invalid_plan: 'This plan is not configured for checkout yet. Please contact support.',
         checkout_unavailable: 'Stripe could not start checkout. Please try again or contact support.'
       };

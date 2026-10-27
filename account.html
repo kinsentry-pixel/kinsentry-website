@@ -292,6 +292,26 @@
   }
   .btn.danger:hover { background: #DC2626; }
 
+  .upgrade-confirmation {
+    max-width: 640px;
+    padding: 18px 20px;
+    border: 1px solid rgba(32, 191, 227, .28);
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(32, 191, 227, .08), rgba(13, 24, 42, .5));
+  }
+  .upgrade-confirmation h3 { margin: 0 0 8px; color: var(--text); font-size: 16px; }
+  .upgrade-confirmation > p { margin: 0 0 14px; color: var(--text-2); font-size: 13px; line-height: 1.55; }
+  .upgrade-quote-row { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-top: 1px solid var(--border); font-size: 13px; }
+  .upgrade-quote-row span { color: var(--text-2); }
+  .upgrade-quote-row strong { text-align: right; color: var(--text); }
+  .upgrade-confirmation .upgrade-quote-row:first-of-type strong { color: var(--teal); font-size: 15px; }
+  .upgrade-confirmation .upgrade-quote-note { margin: 10px 0 16px; color: var(--text-3); font-size: 11px; line-height: 1.5; }
+  .upgrade-confirm-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  @media (max-width: 520px) {
+    .upgrade-quote-row { align-items: flex-start; flex-direction: column; gap: 4px; }
+    .upgrade-quote-row strong { text-align: left; }
+    .upgrade-confirm-actions .btn { flex: 1; }
+  }
   /* Tier badge */
   .tier-badge {
     display: inline-flex;
