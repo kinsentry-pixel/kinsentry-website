@@ -1087,7 +1087,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>30-day block history</li>
           <li>1 device</li>
         </ul>
-        <a href="/signup?checkout=guardian_annual" data-plan="guardian" id="guardianCheckout" class="pricing-btn filled">Enjoy free for 30 days</a>
+        <a href="/account.html?checkout=guardian_annual" data-plan="guardian" id="guardianCheckout" class="pricing-btn filled">Enjoy free for 30 days</a>
       </div>
       <div class="pricing-card reveal">
         <div class="plan-name">Family</div>
@@ -1100,7 +1100,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
-        <a href="/signup?checkout=family_annual" data-plan="family" id="familyCheckout" class="pricing-btn outline">Choose Family</a>
+        <a href="/account.html?checkout=family_annual" data-plan="family" id="familyCheckout" class="pricing-btn outline">Choose Family</a>
       </div>
     </div>
   </div>
@@ -1637,8 +1637,8 @@ function setBilling(type) {
   if (!gPrice || !fPrice) return;
 
   if (type === 'annual') {
-    document.getElementById('guardianCheckout').href = '/signup?checkout=guardian_annual';
-    document.getElementById('familyCheckout').href = '/signup?checkout=family_annual';
+    document.getElementById('guardianCheckout').href = '/account.html?checkout=guardian_annual';
+    document.getElementById('familyCheckout').href = '/account.html?checkout=family_annual';
     annual.classList.add('active');
     monthly.classList.remove('active');
     gPrice.innerHTML = '$4.99<span>/mo</span>';
@@ -1646,8 +1646,8 @@ function setBilling(type) {
     gBill.textContent = 'Billed annually at $59.88/yr';
     fBill.textContent = 'Billed annually at $119.88/yr';
   } else {
-    document.getElementById('guardianCheckout').href = '/signup?checkout=guardian_monthly';
-    document.getElementById('familyCheckout').href = '/signup?checkout=family_monthly';
+    document.getElementById('guardianCheckout').href = '/account.html?checkout=guardian_monthly';
+    document.getElementById('familyCheckout').href = '/account.html?checkout=family_monthly';
     monthly.classList.add('active');
     annual.classList.remove('active');
     gPrice.innerHTML = '$6.99<span>/mo</span>';
