@@ -61,6 +61,16 @@
 
     populateProfile();
     populateSubscription();
+    const billingState = params.get('billing');
+    if (billingState === 'upgrade_success' || billingState === 'upgrade_sync_pending') {
+      const notice = document.createElement('p');
+      notice.className = 'alert ' + (billingState === 'upgrade_success' ? 'success' : 'info');
+      notice.setAttribute('role', 'status');
+      notice.textContent = billingState === 'upgrade_success'
+        ? 'Your Guardian plan was upgraded to Family. Stripe applied the prorated charge to your saved payment method.'
+        : 'Stripe accepted the Family upgrade. Your account plan is syncing; refresh shortly if it still shows Guardian.';
+      document.getElementById('subscription-cta').prepend(notice);
+    }
     if (requestedPlan) {
       // Keep the checkout result visible if Stripe rejects the request. The
       // failure used to be written inside the hidden Subscription tab, making
@@ -102,7 +112,7 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'checkout_unavailable');
       if (data.upgraded) {
-        location.replace('/account.html?billing=upgrade_success#subscription');
+        location.replace(data.syncPending ? '/account.html?billing=upgrade_sync_pending#subscription' : '/account.html?billing=upgrade_success#subscription');
         return;
       }
       if (!data.url) throw new Error('checkout_unavailable');
