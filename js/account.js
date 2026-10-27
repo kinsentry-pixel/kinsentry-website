@@ -149,6 +149,15 @@
     const dueLabel = document.createElement('span'); dueLabel.textContent = amount > 0 ? 'Estimated charge today' : amount < 0 ? 'Credit applied today' : 'Due today';
     const dueValue = document.createElement('strong'); dueValue.textContent = amount < 0 ? formatted.replace('-', '−') : formatted;
     due.append(dueLabel, dueValue);
+    const payment = quote.payment_method;
+    const paymentRow = document.createElement('div');
+    paymentRow.className = 'upgrade-quote-row';
+    const paymentLabel = document.createElement('span'); paymentLabel.textContent = 'Payment method';
+    const paymentValue = document.createElement('strong');
+    paymentValue.textContent = payment?.type === 'card' && payment.brand && payment.last4
+      ? `${payment.brand.charAt(0).toUpperCase()}${payment.brand.slice(1)} ···· ${payment.last4}`
+      : payment?.type ? `Saved ${payment.type.replaceAll('_', ' ')}` : 'Saved payment method on file';
+    paymentRow.append(paymentLabel, paymentValue);
     const renewal = document.createElement('div');
     renewal.className = 'upgrade-quote-row';
     const renewalLabel = document.createElement('span'); renewalLabel.textContent = 'Family renewal';
@@ -169,7 +178,7 @@
       startCheckout(plan, quote.proration_date);
     }, { once: true });
     actions.append(cancel, confirm);
-    card.append(title, explanation, due, renewal, note, actions);
+    card.append(title, explanation, due, paymentRow, renewal, note, actions);
     cta.appendChild(card);
   }
   async function startCheckout(plan, prorationDate) {
