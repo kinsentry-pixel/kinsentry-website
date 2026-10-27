@@ -375,6 +375,8 @@ nav {
 .pricing-btn.filled:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(0,232,200,0.4); }
 .pricing-btn.outline { background: rgba(255,255,255,0.03); color: var(--ink); border: 1.5px solid var(--border); }
 .pricing-btn.outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+.pricing-btn.current-plan { opacity: .55; cursor: default; pointer-events: none; }
+.pricing-btn.current-plan:hover { transform: none; box-shadow: none; }
 
 /* ── Trust / testimonials ──────────────────── */
 .trust-section { text-align: center; }
@@ -1376,7 +1378,21 @@ async function getWebsiteAccountUser() {
 
 function updatePricingLinks(cycle) {
   document.querySelectorAll('.pricing-btn').forEach(btn => {
+    btn.classList.remove('current-plan');
+    btn.removeAttribute('aria-disabled');
+    btn.removeAttribute('tabindex');
+    btn.style.pointerEvents = '';
     const plan = btn.dataset.plan;
+    if (plan === 'guardian' && websiteAccountUser?.tier === 'guardian') {
+      btn.href = '#pricing';
+      btn.textContent = 'Current Plan';
+      btn.classList.add('current-plan');
+      btn.setAttribute('aria-disabled', 'true');
+      btn.setAttribute('tabindex', '-1');
+      btn.style.pointerEvents = 'none';
+      btn.target = '';
+      return;
+    }
     if (plan === 'guardian') {
       // The account API applies expiry using server time before returning tier.
       const hasActiveTrial = websiteAccountUser?.tier === 'free_trial';
