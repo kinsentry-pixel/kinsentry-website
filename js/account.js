@@ -100,7 +100,12 @@
         body: JSON.stringify({ plan })
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.error || 'checkout_unavailable');
+      if (!res.ok) throw new Error(data.error || 'checkout_unavailable');
+      if (data.upgraded) {
+        location.replace('/account.html?billing=upgrade_success#subscription');
+        return;
+      }
+      if (!data.url) throw new Error('checkout_unavailable');
       location.assign(data.url);
     } catch (err) {
       cta.textContent = '';
@@ -109,6 +114,9 @@
       msg.setAttribute('role', 'alert');
       const errors = {
         subscription_exists: 'This account already has a subscription. Contact support if you need to change plans.',
+        billing_interval_change_not_supported: 'Choose Family with the same monthly or annual billing interval as your current Guardian plan to keep your renewal date.',
+        subscription_not_upgradeable: 'This Guardian subscription cannot be upgraded right now. Please contact support.',
+        upgrade_pending: 'Your Family upgrade is awaiting payment confirmation. Please retry shortly or contact support.',
         invalid_plan: 'This plan is not configured for checkout yet. Please contact support.',
         checkout_unavailable: 'Stripe could not start checkout. Please try again or contact support.'
       };

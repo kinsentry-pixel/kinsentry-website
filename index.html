@@ -1415,7 +1415,7 @@ function updatePricingLinks(cycle) {
     } else if (plan === 'family') {
       btn.href = `/account.html?checkout=family_${cycle}`;
       btn.target = '';
-      btn.textContent = extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Choose Family';
+      btn.textContent = websiteAccountUser?.tier === 'guardian' ? 'Upgrade to Family' : (extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Choose Family');
     }
   });
 }
