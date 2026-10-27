@@ -35,6 +35,14 @@
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.ok) throw new Error(data.error || 'handoff_unavailable');
     setReady(true);
+    buttons.forEach((button) => {
+      button.textContent = 'Subscribe now';
+      const plan = button.dataset.plan;
+      const cycle = document.getElementById('toggleAnnual')?.classList.contains('active')
+        ? 'annual' : 'monthly';
+      button.href = `/account.html?checkout=${plan}_${cycle}`;
+      button.target = '';
+    });
     if (status) status.textContent = 'You’re signed in. Choose a plan to continue to secure checkout.';
   }).catch((error) => {
     setReady(true);

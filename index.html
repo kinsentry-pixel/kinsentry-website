@@ -1467,20 +1467,17 @@ async function updateCTAs() {
     }
   });
 
-  // Pricing buttons — route by plan.
-  // Free keeps the install-first acquisition path. Guardian & Family go to the
-  // hosted signup so plan/trial intent isn't lost — and Family MUST stay on the
-  // web (admins manage their household there and must never activate the
-  // extension as a personal account).
+  // Paid pricing always uses website checkout. Extension sign-in state must
+  // never route a purchase into extension signup or the generic signup page.
+  const billingCycle = document.getElementById('toggleAnnual')?.classList.contains('active')
+    ? 'annual' : 'monthly';
   document.querySelectorAll('.pricing-btn').forEach(btn => {
     const plan = btn.dataset.plan;
     if (!plan) return;
-    if (plan === 'family') {
-      btn.href   = '/signup.html';
+    if (plan === 'guardian' || plan === 'family') {
+      btn.href   = `/account.html?checkout=${plan}_${billingCycle}`;
       btn.target = '';
-    } else if (plan === 'guardian') {
-      btn.href   = installed ? getExtensionUrl('signup') : '/signup.html';
-      btn.target = installed ? '_blank' : '';
+      if (signedIn) btn.textContent = 'Subscribe now';
     } else {
       btn.href   = installed ? getExtensionUrl('signup') : getAddToChromeUrl();
       btn.target = '_blank';
@@ -1655,6 +1652,10 @@ function setBilling(type) {
     gBill.textContent = 'Billed monthly';
     fBill.textContent = 'Billed monthly';
   }
+
+  // Keep the paid CTAs on website checkout and retain the selected interval.
+  document.getElementById('guardianCheckout').href = `/account.html?checkout=guardian_${type}`;
+  document.getElementById('familyCheckout').href = `/account.html?checkout=family_${type}`;
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
