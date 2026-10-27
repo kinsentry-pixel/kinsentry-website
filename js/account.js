@@ -156,7 +156,7 @@
     const paymentValue = document.createElement('strong');
     paymentValue.textContent = payment?.type === 'card' && payment.brand && payment.last4
       ? `${payment.brand.charAt(0).toUpperCase()}${payment.brand.slice(1)} ···· ${payment.last4}`
-      : payment?.type ? `Saved ${payment.type.replaceAll('_', ' ')}` : 'Saved payment method on file';
+      : payment?.type ? `Saved ${payment.type.replaceAll('_', ' ')}` : 'Card details unavailable';
     paymentRow.append(paymentLabel, paymentValue);
     const renewal = document.createElement('div');
     renewal.className = 'upgrade-quote-row';
