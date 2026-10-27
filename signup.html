@@ -365,6 +365,9 @@ const STORE_URL     = 'https://chromewebstore.google.com/detail/bipgibopdjmcbggb
 
 const params = new URLSearchParams(location.search);
 let mode = params.get('mode') === 'login' ? 'login' : 'signup';
+const CHECKOUT_PLANS = new Set(['guardian_monthly', 'guardian_annual', 'family_monthly', 'family_annual']);
+const checkoutPlan = CHECKOUT_PLANS.has(params.get('checkout')) ? params.get('checkout') : '';
+if (checkoutPlan) sessionStorage.setItem('ks_pending_checkout', checkoutPlan);
 
 // ── Bot protection (Cloudflare Turnstile) ──────────────────────────────────────
 // DISABLED by default. To turn on:
@@ -528,7 +531,9 @@ async function afterAuth({ email, name, tier } = {}) {
     } catch (_) {}
   }
 
-  location.replace('/account.html');
+  const plan = CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
+    ? sessionStorage.getItem('ks_pending_checkout') : '';
+  location.replace(plan ? `/account.html?checkout=${encodeURIComponent(plan)}` : '/account.html');
 }
 
 // ── Email/password submit ─────────────────────────────────────────────────────
@@ -760,7 +765,9 @@ async function sendResetForMerge(email) {
       const res  = await fetch(`${API}/api/auth/session`, { credentials: 'include' });
       const data = await res.json().catch(() => ({}));
       if (data?.authenticated) {
-        location.replace('/account.html');
+        const plan = CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
+          ? sessionStorage.getItem('ks_pending_checkout') : '';
+        location.replace(plan ? `/account.html?checkout=${encodeURIComponent(plan)}` : '/account.html');
       }
       // Otherwise fall through and let the login form render.
     } catch (_) {

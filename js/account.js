@@ -6,6 +6,7 @@
 (function () {
   const API = 'https://api.kinsentry.com';
   const EXT_ID = 'bipgibopdjmcbggbhpalgpbgiaaloede';
+  const CHECKOUT_PLANS = new Set(['guardian_monthly', 'guardian_annual', 'family_monthly', 'family_annual']);
 
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const loadingEl  = document.getElementById('loading-state');
@@ -24,6 +25,11 @@
   async function init() {
     // Show restore banner if the URL says we just got restored
     const params = new URLSearchParams(location.search);
+    const requestedPlan = CHECKOUT_PLANS.has(params.get('checkout'))
+      ? params.get('checkout')
+      : (CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
+        ? sessionStorage.getItem('ks_pending_checkout') : '');
+    if (requestedPlan) sessionStorage.removeItem('ks_pending_checkout');
     if (params.get('ks_restored') === '1' || params.get('restored') === '1') {
       restoreEl.classList.remove('hidden');
       // Clean the URL so refresh doesn't keep showing it
@@ -34,7 +40,9 @@
     const res = await fetch(`${API}/api/account/me`, { credentials: 'include' });
     if (res.status === 401) {
       // Not signed in — bounce to login
-      location.replace('/signup?mode=login&next=' + encodeURIComponent('/account'));
+      const next = requestedPlan ? `/account.html?checkout=${encodeURIComponent(requestedPlan)}` : '/account';
+      location.replace('/signup?mode=login&next=' + encodeURIComponent(next) +
+        (requestedPlan ? '&checkout=' + encodeURIComponent(requestedPlan) : ''));
       return;
     }
     if (!res.ok) throw new Error('http_' + res.status);
@@ -48,6 +56,7 @@
 
     populateProfile();
     populateSubscription();
+    if (requestedPlan) await startCheckout(requestedPlan);
     populateSecurity();
     populateDelete();
     wireTabs();
@@ -61,6 +70,38 @@
     const initialTab = (location.hash || '').replace('#', '');
     if (initialTab && ['profile','subscription','security','delete'].includes(initialTab)) {
       activateTab(initialTab);
+    }
+  }
+
+  async function startCheckout(plan) {
+    const cta = document.getElementById('subscription-cta');
+    cta.textContent = 'Opening secure Stripe checkout…';
+    try {
+      const idempotencyKey = crypto.randomUUID ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const res = await fetch(`${API}/api/billing/checkout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
+        body: JSON.stringify({ plan })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) throw new Error(data.error || 'checkout_unavailable');
+      location.assign(data.url);
+    } catch (err) {
+      cta.textContent = '';
+      const msg = document.createElement('p');
+      msg.className = 'alert error';
+      msg.setAttribute('role', 'alert');
+      msg.textContent = err.message === 'subscription_exists'
+        ? 'This account already has a subscription. Contact support if you need to change plans.'
+        : 'We could not open checkout. Please try again or contact support.';
+      cta.appendChild(msg);
+      const retry = document.createElement('a');
+      retry.className = 'btn primary';
+      retry.href = '/#pricing';
+      retry.textContent = 'Back to plans';
+      cta.appendChild(retry);
     }
   }
 
