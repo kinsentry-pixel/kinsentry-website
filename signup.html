@@ -367,7 +367,31 @@ const params = new URLSearchParams(location.search);
 let mode = params.get('mode') === 'login' ? 'login' : 'signup';
 const CHECKOUT_PLANS = new Set(['guardian_monthly', 'guardian_annual', 'family_monthly', 'family_annual']);
 const checkoutPlan = CHECKOUT_PLANS.has(params.get('checkout')) ? params.get('checkout') : '';
-if (checkoutPlan) sessionStorage.setItem('ks_pending_checkout', checkoutPlan);
+if (checkoutPlan) {
+  sessionStorage.setItem('ks_pending_checkout', checkoutPlan);
+  sessionStorage.removeItem('ks_pending_trial');
+  sessionStorage.removeItem('ks_pending_trial_interval');
+}
+const trialIntent = params.get('trial') === 'guardian';
+if (trialIntent) {
+  sessionStorage.removeItem('ks_pending_checkout');
+  sessionStorage.setItem('ks_pending_trial', 'guardian');
+  sessionStorage.setItem('ks_pending_trial_interval', params.get('interval') === 'monthly' ? 'monthly' : 'annual');
+}
+
+function getPostAuthDestination() {
+  const plan = CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
+    ? sessionStorage.getItem('ks_pending_checkout') : '';
+  if (plan) {
+    sessionStorage.removeItem('ks_pending_checkout');
+    return `/account.html?checkout=${encodeURIComponent(plan)}`;
+  }
+  const trial = sessionStorage.getItem('ks_pending_trial') === 'guardian';
+  const interval = sessionStorage.getItem('ks_pending_trial_interval') === 'monthly' ? 'monthly' : 'annual';
+  sessionStorage.removeItem('ks_pending_trial');
+  sessionStorage.removeItem('ks_pending_trial_interval');
+  return trial ? `/account.html?trial=guardian&interval=${interval}` : '/account.html';
+}
 
 // ── Bot protection (Cloudflare Turnstile) ──────────────────────────────────────
 // DISABLED by default. To turn on:
@@ -531,9 +555,7 @@ async function afterAuth({ email, name, tier } = {}) {
     } catch (_) {}
   }
 
-  const plan = CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
-    ? sessionStorage.getItem('ks_pending_checkout') : '';
-  location.replace(plan ? `/account.html?checkout=${encodeURIComponent(plan)}` : '/account.html');
+  location.replace(getPostAuthDestination());
 }
 
 // ── Email/password submit ─────────────────────────────────────────────────────
@@ -765,9 +787,7 @@ async function sendResetForMerge(email) {
       const res  = await fetch(`${API}/api/auth/session`, { credentials: 'include' });
       const data = await res.json().catch(() => ({}));
       if (data?.authenticated) {
-        const plan = CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
-          ? sessionStorage.getItem('ks_pending_checkout') : '';
-        location.replace(plan ? `/account.html?checkout=${encodeURIComponent(plan)}` : '/account.html');
+        location.replace(getPostAuthDestination());
       }
       // Otherwise fall through and let the login form render.
     } catch (_) {

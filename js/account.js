@@ -25,11 +25,13 @@
   async function init() {
     // Show restore banner if the URL says we just got restored
     const params = new URLSearchParams(location.search);
+    const requestedTrial = params.get('trial') === 'guardian';
     const requestedPlan = CHECKOUT_PLANS.has(params.get('checkout'))
       ? params.get('checkout')
-      : (CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
+      : (!requestedTrial && CHECKOUT_PLANS.has(sessionStorage.getItem('ks_pending_checkout'))
         ? sessionStorage.getItem('ks_pending_checkout') : '');
     if (requestedPlan) sessionStorage.removeItem('ks_pending_checkout');
+    if (requestedTrial) sessionStorage.removeItem('ks_pending_checkout');
     if (params.get('ks_restored') === '1' || params.get('restored') === '1') {
       restoreEl.classList.remove('hidden');
       // Clean the URL so refresh doesn't keep showing it
@@ -40,9 +42,12 @@
     const res = await fetch(`${API}/api/account/me`, { credentials: 'include' });
     if (res.status === 401) {
       // Not signed in — bounce to login
-      const next = requestedPlan ? `/account.html?checkout=${encodeURIComponent(requestedPlan)}` : '/account';
+      const interval = params.get('interval') === 'monthly' ? 'monthly' : 'annual';
+      const next = requestedPlan ? `/account.html?checkout=${encodeURIComponent(requestedPlan)}`
+        : requestedTrial ? `/account.html?trial=guardian&interval=${interval}` : '/account';
       location.replace('/signup?mode=login&next=' + encodeURIComponent(next) +
-        (requestedPlan ? '&checkout=' + encodeURIComponent(requestedPlan) : ''));
+        (requestedPlan ? '&checkout=' + encodeURIComponent(requestedPlan)
+          : requestedTrial ? `&trial=guardian&interval=${interval}` : ''));
       return;
     }
     if (!res.ok) throw new Error('http_' + res.status);
@@ -62,6 +67,9 @@
       // a failed checkout look like a successful trip to the account dashboard.
       activateTab('subscription');
       await startCheckout(requestedPlan);
+    } else if (requestedTrial) {
+      activateTab('subscription');
+      await activateGuardianTrial(params.get('interval') === 'monthly' ? 'monthly' : 'annual');
     }
     populateSecurity();
     populateDelete();
@@ -111,6 +119,40 @@
       retry.href = '/#pricing';
       retry.textContent = 'Back to plans';
       cta.appendChild(retry);
+    }
+  }
+
+  async function activateGuardianTrial(interval) {
+    const cta = document.getElementById('subscription-cta');
+    cta.textContent = 'Starting your free Guardian trial…';
+    try {
+      const res = await fetch(`${API}/api/account/trial`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        CURRENT_USER.tier = 'free_trial';
+        CURRENT_USER.trialExpiry = data.trialExpiry;
+        populateSubscription();
+        const expiry = data.trialExpiry ? new Date(data.trialExpiry).toLocaleDateString() : '';
+        cta.innerHTML = `<p role="status">Your 30-day Guardian trial is active${expiry ? ` until ${expiry}` : ''}. No payment or Stripe subscription was used.</p>`;
+        return;
+      }
+      if (data.error === 'trial_already_used') {
+        cta.innerHTML = '<p role="status">Your free Guardian trial has already been used. You can still subscribe to Guardian.</p>';
+        const subscribe = document.createElement('a');
+        subscribe.className = 'btn primary';
+        subscribe.href = `/account.html?checkout=guardian_${interval}`;
+        subscribe.textContent = 'Subscribe to Guardian';
+        cta.appendChild(subscribe);
+        return;
+      }
+      throw new Error(data.error || 'trial_unavailable');
+    } catch (err) {
+      cta.innerHTML = '<p class="alert error" role="alert">We could not start the Guardian trial. Please try again or contact support.</p>';
     }
   }
 

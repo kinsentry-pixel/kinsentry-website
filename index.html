@@ -1087,7 +1087,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>30-day block history</li>
           <li>1 device</li>
         </ul>
-        <a href="/account.html?checkout=guardian_annual" data-plan="guardian" id="guardianCheckout" class="pricing-btn filled">Enjoy free for 30 days</a>
+        <a href="/signup.html" data-plan="guardian" id="guardianCheckout" class="pricing-btn filled">Enjoy free for 30 days</a>
       </div>
       <div class="pricing-card reveal">
         <div class="plan-name">Family</div>
@@ -1360,6 +1360,49 @@ const EXT_PING_URL = 'chrome-extension://bipgibopdjmcbggbhpalgpbgiaaloede/icons/
 let extInstalled  = false;
 let extSignedIn   = false;
 let extUserName   = '';
+let websiteAccountUser = null;
+let websiteSessionReady = false;
+
+async function getWebsiteAccountUser() {
+  try {
+    const response = await fetch('https://api.kinsentry.com/api/account/me', { credentials: 'include' });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.user || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function updatePricingLinks(cycle) {
+  document.querySelectorAll('.pricing-btn').forEach(btn => {
+    const plan = btn.dataset.plan;
+    if (plan === 'guardian') {
+      // The account API applies expiry using server time before returning tier.
+      const hasActiveTrial = websiteAccountUser?.tier === 'free_trial';
+      const hasUsedTrial = !!websiteAccountUser?.trialExpiry;
+      const canStartTrial = websiteAccountUser?.tier === 'free' && !hasUsedTrial;
+      if (canStartTrial) {
+        btn.href = `/account.html?trial=guardian&interval=${cycle}`;
+        btn.textContent = 'Start free 30-day trial';
+      } else if (hasActiveTrial || hasUsedTrial || websiteAccountUser?.tier === 'guardian' || websiteAccountUser?.tier === 'family') {
+        btn.href = `/account.html?checkout=guardian_${cycle}`;
+        btn.textContent = extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Enjoy free for 30 days';
+      } else if (extSignedIn) {
+        btn.href = `/account.html?trial=guardian&interval=${cycle}`;
+        btn.textContent = 'Start free 30-day trial';
+      } else {
+        btn.href = '/signup.html';
+        btn.textContent = 'Enjoy free for 30 days';
+      }
+      btn.target = '';
+    } else if (plan === 'family') {
+      btn.href = `/account.html?checkout=family_${cycle}`;
+      btn.target = '';
+      btn.textContent = extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Choose Family';
+    }
+  });
+}
 
 // Try to detect if extension is installed by loading a known resource
 async function detectExtension() {
@@ -1407,12 +1450,13 @@ function getExtensionUrl(page) {
 
 // Update all CTAs based on extension state
 async function updateCTAs() {
-  const installed = await detectExtension();
+  const [installed, accountUser] = await Promise.all([detectExtension(), getWebsiteAccountUser()]);
+  if (!websiteSessionReady) websiteAccountUser = accountUser;
 
   // Read login state from localStorage (written by content.js bridge)
   const loginState = getExtensionLoginState();
-  const signedIn   = loginState.signedIn;
-  const userName   = loginState.name;
+  const signedIn   = loginState.signedIn || !!websiteAccountUser;
+  const userName   = loginState.name || websiteAccountUser?.name || websiteAccountUser?.email || '';
   extSignedIn = signedIn;
   extUserName = userName;
 
@@ -1467,22 +1511,16 @@ async function updateCTAs() {
     }
   });
 
-  // Paid pricing always uses website checkout. Extension sign-in state must
-  // never route a purchase into extension signup or the generic signup page.
   const billingCycle = document.getElementById('toggleAnnual')?.classList.contains('active')
     ? 'annual' : 'monthly';
   document.querySelectorAll('.pricing-btn').forEach(btn => {
     const plan = btn.dataset.plan;
-    if (!plan) return;
-    if (plan === 'guardian' || plan === 'family') {
-      btn.href   = `/account.html?checkout=${plan}_${billingCycle}`;
-      btn.target = '';
-      if (signedIn) btn.textContent = 'Subscribe now';
-    } else {
+    if (plan === 'free') {
       btn.href   = installed ? getExtensionUrl('signup') : getAddToChromeUrl();
       btn.target = '_blank';
     }
   });
+  updatePricingLinks(billingCycle);
 
   // Hero CTA. These buttons carry an icon + label, so for the store / install
   // states we set only href/onclick and keep the existing innerHTML — unlike
@@ -1653,10 +1691,16 @@ function setBilling(type) {
     fBill.textContent = 'Billed monthly';
   }
 
-  // Keep the paid CTAs on website checkout and retain the selected interval.
-  document.getElementById('guardianCheckout').href = `/account.html?checkout=guardian_${type}`;
-  document.getElementById('familyCheckout').href = `/account.html?checkout=family_${type}`;
+  updatePricingLinks(type);
 }
+
+window.addEventListener('kinsentry:website-session-ready', async (event) => {
+  websiteSessionReady = true;
+  websiteAccountUser = event.detail?.user || await getWebsiteAccountUser();
+  const loginState = getExtensionLoginState();
+  extSignedIn = loginState.signedIn || !!websiteAccountUser;
+  updatePricingLinks(document.getElementById('toggleAnnual')?.classList.contains('active') ? 'annual' : 'monthly');
+});
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 updateCTAs();

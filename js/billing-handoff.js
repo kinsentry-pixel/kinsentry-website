@@ -35,15 +35,13 @@
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.ok) throw new Error(data.error || 'handoff_unavailable');
     setReady(true);
-    buttons.forEach((button) => {
-      button.textContent = 'Subscribe now';
-      const plan = button.dataset.plan;
-      const cycle = document.getElementById('toggleAnnual')?.classList.contains('active')
-        ? 'annual' : 'monthly';
-      button.href = `/account.html?checkout=${plan}_${cycle}`;
-      button.target = '';
-    });
-    if (status) status.textContent = 'You’re signed in. Choose a plan to continue to secure checkout.';
+    let profile = {};
+    try {
+      const profileResponse = await fetch('https://api.kinsentry.com/api/account/me', { credentials: 'include' });
+      if (profileResponse.ok) profile = await profileResponse.json().catch(() => ({}));
+    } catch (_) {}
+    window.dispatchEvent(new CustomEvent('kinsentry:website-session-ready', { detail: { user: profile.user || null } }));
+    if (status) status.textContent = 'Your account is connected. Choose a free trial or paid plan.';
   }).catch((error) => {
     setReady(true);
     if (!status) return;
