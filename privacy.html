@@ -33,7 +33,7 @@
 <div class="page-header">
   <div class="page-label">Legal</div>
   <h1 class="page-title">Privacy Policy</h1>
-  <p class="page-subtitle">Last updated: July 21, 2026</p>
+  <p class="page-subtitle">Last updated: October 28, 2026</p>
 </div>
 
 <div class="content-card">
@@ -47,8 +47,8 @@
   <h3>2.1 Account Information</h3>
   <p>When you create an account, we collect your name, email address, and a hashed password. If you sign up with Google, we receive your Google profile information — specifically your name, email address, profile picture, and Google account ID. We do <span class="highlight">not</span> access your contacts, calendar, Gmail, Drive, or any other Google services through your Google account or Google APIs. (Separately, our on-page phishing detection reads the email you have open in your webmail tab, locally on your device only — see Section 2.8.)</p>
   <h3>2.2 Payment Information</h3>
-  <p>If you subscribe to a paid plan, payment is processed entirely by our PCI-DSS-compliant payment processor. We never see, store, or transmit your full credit card number, CVV, or banking details. We retain only the processor’s transaction reference, the last 4 digits of your card, and billing metadata required for invoicing and tax purposes.</p>
-  <h3>2.3 Extension Activity Data</h3>
+  <p>Paid subscriptions and Guardian-to-Family upgrades are processed by Stripe using Stripe-hosted checkout and billing services. Stripe receives and processes your payment card details; KinSentry does not receive or store your full card number, security code, or bank account details. To administer access, our database stores Stripe customer and subscription identifiers, the selected price and plan, subscription status, trial or billing-period end dates, and whether cancellation is scheduled. When you review an upgrade, our server can retrieve the payment card brand and last four digits from Stripe to display which saved card would be charged; these card details are not stored in the KinSentry application database. Stripe maintains payment methods, invoices, receipts, and transaction records under its own terms and retention practices.</p>
+  <p>The 30-day Guardian trial is managed by KinSentry and does not create a Stripe subscription or require a payment card. Family has no trial. A Guardian trial user may choose to start a paid subscription at any time; paid subscriptions and plan upgrades are processed by Stripe.</p>
   <p>KinSentry blocks scam websites in real-time. URL pattern matching is performed locally inside the extension against a blocklist downloaded to your device. When a URL appears suspicious or matches a high-confidence pattern, it is also transmitted to our servers for manual verification. If a URL is confirmed harmful by our review process, it is added to our shared blocklist database to protect all KinSentry users.</p>
   <p>On search-engine results pages (Google, Bing, Yahoo, and DuckDuckGo), the extension also scans the visible page locally to warn you about advertisements that lead to known scam or tech-support-fraud destinations. This scan runs <span class="highlight">entirely on your device</span>; when a scam ad is detected, only an anonymous "ad flagged" signal is recorded — the contents of your search or the results page are never transmitted to us.</p>
   <p>We do <span class="highlight">not</span> track, log, or transmit your general browsing history. The only URLs we process server-side are those flagged by the local extension as potentially harmful.</p>
@@ -112,7 +112,7 @@
     <li>To detect phishing emails in your webmail (analysed locally on your device — see Section 2.8)</li>
     <li>To provide Family plan monitoring and remote protection management (see Section 2.10)</li>
     <li>To power your activity dashboard and block history</li>
-    <li>To send you transactional emails (account, billing, security)</li>
+    <li>To send account, billing, and security transactional emails through Brevo. Paid-checkout confirmation emails may include your plan and billing cadence, an order or invoice reference, payment date and amount, tax if charged, available card brand and last four digits, renewal information, and a Stripe invoice or receipt link.</li>
     <li>To send you product updates and weekly digests (only if you have opted in)</li>
     <li>To improve our scam-detection capabilities and update our blocklist database</li>
     <li>To process payments and manage subscriptions</li>
@@ -135,11 +135,10 @@
   <h2>6. Data Sharing &amp; Third-Party Processors</h2>
   <p>We do <span class="highlight">not</span> sell, rent, or share your personal information with third parties for advertising or marketing purposes. We share data only with the following service providers, each bound by a data-processing agreement:</p>
   <ul>
-    <li><span class="highlight">Payment processor</span> — secure payment processing and subscription management (PCI-DSS-compliant)</li>
+    <li><span class="highlight">Stripe</span> — hosted checkout, payment processing, invoices, receipts, and subscription billing</li>
     <li><span class="highlight">Supabase</span> — primary database and authentication</li>
     <li><span class="highlight">Railway</span> — API and infrastructure hosting</li>
-    <li><span class="highlight">Twilio</span> — SMS and WhatsApp delivery for family alerts</li>
-    <li><span class="highlight">SendGrid</span> — transactional email delivery</li>
+    <li><span class="highlight">Brevo</span> — transactional email delivery, including account and paid-checkout billing emails</li>
   </ul>
   <p>We may also use anonymous analytics and error-tracking tools to monitor performance and reliability. Where used, these tools are configured to collect only aggregated, non-identifying data.</p>
   <p>When you click an affiliate advertisement on a Free or Free-Trial tier, your browser is redirected to the partner's website through a KinSentry redirect URL that increments an anonymous click counter. We do not transmit your personal information to the partner; any affiliate-reference parameters in the destination URL identify KinSentry as the referring publisher, not you. See Section 3.5 for details.</p>
@@ -148,7 +147,7 @@
 
 <div class="content-card">
   <h2>7. International Data Transfers</h2>
-  <p>KinSentry and several of our service providers (including our payment processor, Supabase, Railway, Twilio, and SendGrid) are based in or process data in the United States and other countries outside the EEA, UK, and Switzerland. Where such transfers occur, we rely on the European Commission's Standard Contractual Clauses (SCCs) and equivalent UK and Swiss safeguards to ensure your data receives an adequate level of protection.</p>
+  <p>KinSentry and several of our service providers, including Stripe, Supabase, Railway, and Brevo, may process data in the United States and other countries outside the EEA, UK, and Switzerland. Where such transfers occur, we use appropriate safeguards, which may include Standard Contractual Clauses and equivalent UK and Swiss safeguards, as applicable.</p>
 </div>
 
 <div class="content-card">
@@ -159,7 +158,7 @@
     <li><span class="highlight">Blocked-event history</span> — retained per your plan tier (Free: 7 days, Guardian: 30 days, Family: 90 days)</li>
     <li><span class="highlight">Family contact details</span> — retained until you remove them or delete your account</li>
     <li><span class="highlight">Family member device data</span> — deleted when the device is removed from the household or the household is dissolved</li>
-    <li><span class="highlight">Payment records and invoices</span> — retained for up to 7 years to comply with tax, accounting, and audit obligations</li>
+    <li><span class="highlight">Subscription and billing administration data</span> — KinSentry retains the Stripe identifiers, plan, status, and billing-period details needed to administer your subscription for as long as your account and related legal or support needs require. Stripe holds your payment method, invoice, receipt, and transaction records under its own terms and retention practices. Any KinSentry accounting records that we are legally required to keep are retained only for the applicable required period.</li>
     <li><span class="highlight">Server logs and diagnostic data</span> — retained for up to 90 days, then automatically purged</li>
     <li><span class="highlight">Confirmed-harmful URLs in our blocklist</span> — retained indefinitely as part of our shared protection database (no personal identifiers attached)</li>
   </ul>
