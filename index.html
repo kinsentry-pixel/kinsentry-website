@@ -787,7 +787,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <div class="saves-header reveal">
       <div class="section-label">Your Money, Protected</div>
       <h2 class="section-title">How KinSentry saves you money</h2>
-      <p class="section-subtitle">Two layers of defense. Two ways scammers lose. Every time, your wallet stays safe.</p>
+      <p class="section-subtitle">Layered browser protection helps you spot and avoid common online scam tactics.</p>
     </div>
 
     <!-- Scenario 1: Scam page/popup blocked before any contact -->
@@ -891,7 +891,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
           <div class="flow-step-label">Family notified</div>
-          <div class="flow-step-desc">SMS, email &amp; WhatsApp alert</div>
+          <div class="flow-step-desc">Email alert to your family contact</div>
         </div>
         <div class="flow-arrow blocked">
           <svg viewBox="0 0 28 20" aria-hidden="true"><line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="2"/><polyline points="18,5 24,10 18,15" fill="none" stroke="currentColor" stroke-width="2"/></svg>
@@ -919,7 +919,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <div class="bills-container" id="billsContainer"></div>
         </div>
       </div>
-      <p>Every tech support scam needs remote access to steal your money. KinSentry makes that impossible — whether the scam is caught at the popup stage or at the remote access stage, scammers can never get in.</p>
+      <p>KinSentry is designed to block known scam pages and remote-access destinations before they load. No security tool can prevent every scam, so stay cautious and never share remote access or payment details with an unsolicited caller.</p>
     </div>
   </div>
 </section>
@@ -1031,7 +1031,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
       <div class="how-step reveal">
         <div class="step-num">2</div>
         <h3>Add Family Contacts</h3>
-        <p>Enter email addresses or phone numbers for family members who should be alerted when a scam is blocked. They'll get instant notifications.</p>
+        <p>Add an email address for a family member who should be notified when a scam is blocked. Email alerts are available now; SMS and WhatsApp alerts are not yet available.</p>
       </div>
       <div class="how-step reveal">
         <div class="step-num">3</div>
@@ -1118,7 +1118,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     </div>
     <div class="trust-cards">
       <div class="trust-card reveal">
-        <p class="quote">"My mother almost fell for a Microsoft scam call. After I installed KinSentry, it blocked the remote access site before she could do anything. I got an SMS alert in seconds."</p>
+        <p class="quote">"My mother almost fell for a Microsoft scam call. After I installed KinSentry, it blocked the remote access site before she could do anything. I got an email alert in seconds."</p>
         <p class="author">— Sarah M., Daughter</p>
       </div>
       <div class="trust-card reveal">
@@ -1383,6 +1383,16 @@ function updatePricingLinks(cycle) {
     btn.removeAttribute('tabindex');
     btn.style.pointerEvents = '';
     const plan = btn.dataset.plan;
+    if (websiteAccountUser?.tier === 'family' && ['guardian', 'family'].includes(plan)) {
+      btn.href = '#pricing';
+      btn.textContent = plan === 'family' ? 'Current Plan' : 'Included in Family';
+      btn.classList.add('current-plan');
+      btn.setAttribute('aria-disabled', 'true');
+      btn.setAttribute('tabindex', '-1');
+      btn.style.pointerEvents = 'none';
+      btn.target = '';
+      return;
+    }
     if (plan === 'guardian' && websiteAccountUser?.tier === 'guardian') {
       btn.href = '#pricing';
       btn.textContent = 'Current Plan';
@@ -1413,9 +1423,9 @@ function updatePricingLinks(cycle) {
       }
       btn.target = '';
     } else if (plan === 'family') {
-      btn.href = `/account.html?checkout=family_${cycle}`;
+      btn.href = `/account.html?checkout=family_${websiteAccountUser?.tier === 'guardian' ? (websiteAccountUser?.billing?.interval || cycle) : cycle}`;
       btn.target = '';
-      btn.textContent = websiteAccountUser?.tier === 'guardian' ? 'Upgrade to Family' : (extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Choose Family');
+      btn.textContent = websiteAccountUser?.tier === 'guardian' ? `Upgrade to Family (${(websiteAccountUser?.billing?.interval || cycle) === 'annual' ? 'annual' : 'monthly'})` : (extSignedIn || websiteAccountUser ? 'Subscribe now' : 'Choose Family');
     }
   });
 }

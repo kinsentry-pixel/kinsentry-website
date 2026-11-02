@@ -445,16 +445,49 @@
         <a class="btn primary" href="/#pricing">View plans</a>
       `;
     } else {
-      cta.innerHTML = `
-        <p style="font-size:13px;color:var(--text-2);">
-          You're on the <strong>${tierLabels[u.tier]}</strong> plan. To change or cancel your plan,
-          <a href="/support" style="color:var(--blue);">contact support</a>.
-        </p>
-      `;
+      const billing = u.billing || {};
+      const info = document.createElement('p');
+      info.style.cssText = 'font-size:13px;color:var(--text-2);margin-bottom:14px;';
+      info.textContent = `You're on the ${tierLabels[u.tier]} plan. Manage your payment method, invoices, or cancellation securely with Stripe.`;
+      if (billing.cancelAtPeriodEnd && billing.currentPeriodEnd) {
+        const endDate = new Date(billing.currentPeriodEnd).toLocaleDateString();
+        info.textContent = `Your ${tierLabels[u.tier]} plan is set to end on ${endDate}. Your access remains available through the paid period.`;
+      }
+      const manage = document.createElement('button');
+      manage.type = 'button';
+      manage.className = 'btn primary';
+      manage.textContent = 'Manage subscription & billing';
+      manage.addEventListener('click', openBillingPortal);
+      cta.replaceChildren(info, manage);
     }
   }
 
-  // ── SECURITY ─────────────────────────────────────────────────────────────
+  async function openBillingPortal(event) {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Opening secure billing...';
+    try {
+      const response = await fetch(`${API}/api/billing/portal`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }, body: '{}'
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) throw new Error(data.error || 'billing_portal_unavailable');
+      location.assign(data.url);
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = 'Manage subscription & billing';
+      const notice = document.createElement('p');
+      notice.className = 'alert error';
+      notice.setAttribute('role', 'alert');
+      notice.textContent = error.message === 'billing_account_not_found'
+        ? 'We could not find a Stripe billing account for this subscription. Please contact support.'
+        : 'We could not open secure billing. Please try again or contact support.';
+      document.getElementById('subscription-cta').prepend(notice);
+    }
+  }
+
+  // SECURITY
   function populateSecurity() {
     const u = CURRENT_USER;
     if (!u.hasPassword) {
@@ -723,6 +756,8 @@
       google_only_account:       'This account uses Google sign-in. Use the password reset flow to set one.',
       google_account_no_password:'This account uses Google sign-in. Use the password reset flow to set one.',
       email_confirmation_mismatch:'Email does not match.',
+      billing_check_failed:         'We could not check your subscription. No account changes were made. Please try again.',
+      billing_cancellation_failed: 'We could not schedule subscription cancellation, so your account was not deleted. Please try again or contact support.',
       db_error:                  'Something went wrong. Please try again.',
     };
     return map[code] || 'Something went wrong. Please try again.';
