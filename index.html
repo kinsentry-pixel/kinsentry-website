@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KinSentry — Prevents scams before they cost you.</title>
+<title>KinSentry — Tech-support scam protection for you and your family</title>
 <link rel="canonical" href="https://kinsentry.com/">
-<meta name="description" content="KinSentry is an anti-scam browser extension with real-time protection against scam pages, phishing emails, and fraud calls — plus remote monitoring to keep parents and family safe online.">
+<meta name="description" content="KinSentry can block known remote-access sites and supported scam pages, show clear warnings, and email configured family contacts when it detects a threat.">
 <link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 <link rel="apple-touch-icon" href="images/favicon.png">
@@ -209,14 +209,18 @@ nav {
 #the-problem { padding: 30px 0 50px; }
 .carousel-section { text-align: center; }
 .carousel-label { font-size: clamp(22px,3vw,32px); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
-.carousel-sublabel { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 10px 0 34px; }
+.carousel-sublabel { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 10px 0 14px; }
+.carousel-toggle { display: inline-flex; align-items: center; justify-content: center; margin: 0 0 20px; padding: 8px 13px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--body); font: 600 12px var(--mono); cursor: pointer; }
+.carousel-toggle:hover { border-color: var(--border-accent); color: var(--teal); }
+.carousel-toggle:focus-visible { outline: 3px solid rgba(0,232,200,0.6); outline-offset: 3px; }
 .carousel-track-wrapper {
   overflow: hidden; position: relative; padding: 8px 0;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
           mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 .carousel-track { display: flex; gap: 22px; width: max-content; animation: scrollX 64s linear infinite; }
-.carousel-track-wrapper:hover .carousel-track { animation-play-state: paused; }
+.carousel-track-wrapper.paused .carousel-track { animation-play-state: paused; }
+.carousel-duplicate { display: contents; }
 @keyframes scrollX { to { transform: translateX(-50%); } }
 .stat-card {
   flex: 0 0 300px; background: var(--surface); border: 1px solid var(--border);
@@ -229,7 +233,9 @@ nav {
 .stat-card-body { padding: 18px 20px 22px; }
 .stat-number { font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
 .stat-title { font-size: 14.5px; font-weight: 600; color: var(--body); margin: 6px 0 10px; line-height: 1.45; }
-.stat-source { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.stat-source { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.stat-source a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.stat-source a:hover, .stat-source a:focus-visible { color: var(--teal); }
 
 /* ── Generic section spacing ───────────────── */
 .saves-section, .features-section, .how-section, .pricing-section, .trust-section { padding: 96px 0; }
@@ -280,13 +286,6 @@ nav {
   position: relative; overflow: visible; cursor: default; box-shadow: var(--shadow-cta);
 }
 .money-bag { margin-right: 4px; }
-.bills-container { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
-.bill { position: absolute; font-size: 22px; animation-name: billUp; animation-timing-function: ease-out; animation-fill-mode: forwards; }
-@keyframes billUp {
-  0%   { opacity: 0; transform: var(--tx) rotate(var(--rot)) translateY(0); }
-  20%  { opacity: 1; }
-  100% { opacity: 0; transform: var(--tx) rotate(var(--rot2)) translateY(-130px); }
-}
 .saves-summary p { font-size: 15.5px; color: var(--body); line-height: 1.75; }
 
 /* ── Features grid ─────────────────────────── */
@@ -332,7 +331,27 @@ nav {
   display: inline-flex; align-items: center; gap: 8px;
 }
 .toggle-btn.active { background: rgba(0,232,200,0.12); color: var(--teal); }
-.save-badge { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--success); background: rgba(37,224,160,0.14); padding: 3px 8px; border-radius: 5px; }
+.pricing-details-link { display: block; margin-top: 14px; color: var(--teal); font-size: 13px; font-weight: 700; text-align: center; text-decoration: underline; text-underline-offset: 4px; }
+.pricing-details-link:hover { color: var(--teal-2); }
+.pricing-details-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; border-radius: 2px; }
+.plan-name.has-discount { display: flex; align-items: flex-start; justify-content: space-between; min-height: 80px; }
+.discount-sticker {
+  position: relative; z-index: 0; isolation: isolate; flex: 0 0 70px; width: 70px; height: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  color: #fff; text-align: center; line-height: 1; letter-spacing: 0;
+}
+.annual-savings[hidden] { display: none; }
+.discount-sticker::before {
+  content: ''; position: absolute; z-index: 0; left: 15px; bottom: 0; width: 40px; height: 26px;
+  background: #a80d21; clip-path: polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);
+}
+.discount-sticker::after {
+  content: ''; position: absolute; z-index: 1; inset: 0 0 10px; background: #ed142b;
+  clip-path: polygon(50% 0%,56% 8%,64% 3%,67% 12%,76% 8%,78% 17%,88% 16%,88% 25%,97% 30%,93% 39%,100% 47%,93% 54%,98% 63%,89% 68%,91% 78%,81% 80%,78% 90%,68% 87%,62% 98%,54% 93%,48% 100%,42% 92%,33% 98%,29% 88%,19% 90%,17% 80%,7% 77%,11% 67%,2% 62%,7% 53%,0% 46%,8% 38%,4% 29%,14% 25%,14% 16%,24% 17%,26% 8%,35% 12%,38% 3%,46% 8%);
+}
+.discount-percent, .discount-off { position: relative; z-index: 2; }
+.discount-percent { font-family: inherit; font-size: 23px; font-weight: 800; letter-spacing: -0.06em; }
+.discount-off { margin-bottom: 3px; font-family: var(--mono); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; }
 .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: start; perspective: 1200px; }
 .pricing-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -517,6 +536,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
   .carousel-track { animation: none; }
+  .carousel-toggle { display: none; }
   .bg-orb { animation: none; }
 }
 </style>
@@ -571,20 +591,20 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <img src="images/logo-hero.png" alt="KinSentry" class="hero-logo-img">
   </div>
 
-  <h1>Protect your loved ones from <span class="gradient-text">tech support &amp; other online scams</span></h1>
+  <h1>Help protect yourself and your family from <span class="gradient-text">tech-support scams.</span></h1>
 
-  <div class="tagline">Prevents scams before they cost you.</div>
+  <div class="tagline">An extra layer of protection while you browse.</div>
 
-  <p>KinSentry blocks remote access scams in real-time, warns with voice alerts, and notifies family members instantly. Peace of mind for the people you care about most.</p>
+  <p>KinSentry can block known remote-access sites and supported scam pages, show clear warnings, and email configured family contacts when it detects a threat—adding another layer of protection while you browse.</p>
 
   <div class="hero-actions">
     <a href="#pricing" class="btn-primary btn-add-chrome">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      Get KinSentry
+      Add to Chrome — Free
     </a>
-    <a href="#the-problem" class="btn-secondary">
+    <a href="#how" class="btn-secondary">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-      Why You Need This
+      See how it works
     </a>
   </div>
 </section>
@@ -594,10 +614,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   <div class="container">
     <!-- ── SCAM STATS CAROUSEL ──────── -->
     <div class="carousel-section">
-      <div class="carousel-label">The Scam Crisis — By The Numbers</div>
-      <div class="carousel-sublabel">Hover to pause. Real data. Real urgency.</div>
+      <div class="carousel-label">Scam Losses — By The Numbers</div>
+      <div class="carousel-sublabel">Reported losses and FTC comparisons for adults 60+.</div>
+      <button class="carousel-toggle" type="button" aria-controls="scamStatsTrack" aria-pressed="false">Pause statistics</button>
       <div class="carousel-track-wrapper">
-        <div class="carousel-track">
+        <div class="carousel-track" id="scamStatsTrack">
           <!-- Set 1 -->
           <div class="stat-card">
             <div class="stat-card-img">
@@ -605,8 +626,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$7.7<span class="teal">B</span></div>
-              <div class="stat-title">Lost by Americans 60+ to fraud in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported fraud losses in IC3 complaints filed by people 60+ (2025)</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -616,8 +637,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$1.04<span class="teal">B</span></div>
-              <div class="stat-title">Lost to tech- &amp; customer-support scams (age 60+)</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported losses to tech/customer-support fraud among people 60+ in 2025</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -626,9 +647,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-3.jpg" alt="Scam statistic illustration" loading="lazy" width="680" height="360">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number"><span class="teal">5×</span></div>
-              <div class="stat-title">More likely to lose money to tech-support scams than younger adults</div>
-              <div class="stat-source">Source: U.S. Federal Trade Commission</div>
+              <div class="stat-number"><span class="teal">Over 4×</span></div>
+              <div class="stat-title">Per-capita reports of tech-support scam losses: adults 60+ vs. ages 18–59 (2025)</div>
+              <div class="stat-source">Source: <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/2026-older-adults-report-10192026.pdf" target="_blank" rel="noopener">FTC, 2025 data</a></div>
             </div>
           </div>
 
@@ -637,9 +658,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-4.jpg" alt="Scam statistic illustration" loading="lazy" width="680" height="360">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number">$38,<span class="teal">000+</span></div>
-              <div class="stat-title">Average loss per older fraud victim</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-number">$38,<span class="teal">500</span></div>
+              <div class="stat-title">Average reported loss in a complaint from someone 60+ (2025)</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -649,8 +670,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number"><span class="teal">201K+</span></div>
-              <div class="stat-title">Fraud complaints filed by older adults in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Complaints filed with IC3 by people 60+ in 2025</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -660,8 +681,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number"><span class="teal">+59%</span></div>
-              <div class="stat-title">Rise in senior fraud losses vs. the year before</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Increase in reported losses from 2024 to 2025</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -670,9 +691,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-7.jpg" alt="Scam statistic illustration" loading="lazy" width="680" height="360">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number"><span class="teal">12,400</span></div>
-              <div class="stat-title">Older adults who lost $100,000+ to a single scam in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-number"><span class="teal">12,444</span></div>
+              <div class="stat-title">IC3 complainants 60+ who reported losses over $100,000</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
@@ -682,20 +703,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$3.52<span class="teal">B</span></div>
-              <div class="stat-title">Lost by seniors to investment &amp; crypto scams (top category)</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported losses to investment fraud among people 60+ in 2025</div>
+              <div class="stat-source">Source: <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf" target="_blank" rel="noopener">FBI IC3, 2025</a></div>
             </div>
           </div>
 
           <!-- Set 2 (duplicate for seamless loop) -->
+          <div class="carousel-duplicate" aria-hidden="true">
           <div class="stat-card">
             <div class="stat-card-img">
               <img src="images/scam-stat-1.jpg" alt="" loading="lazy" width="680" height="360" aria-hidden="true">
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$7.7<span class="teal">B</span></div>
-              <div class="stat-title">Lost by Americans 60+ to fraud in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported fraud losses in IC3 complaints filed by people 60+ (2025)</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -705,8 +727,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$1.04<span class="teal">B</span></div>
-              <div class="stat-title">Lost to tech- &amp; customer-support scams (age 60+)</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported losses to tech/customer-support fraud among people 60+ in 2025</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -715,9 +737,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-3.jpg" alt="" loading="lazy" width="680" height="360" aria-hidden="true">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number"><span class="teal">5×</span></div>
-              <div class="stat-title">More likely to lose money to tech-support scams than younger adults</div>
-              <div class="stat-source">Source: U.S. Federal Trade Commission</div>
+              <div class="stat-number"><span class="teal">Over 4×</span></div>
+              <div class="stat-title">Per-capita reports of tech-support scam losses: adults 60+ vs. ages 18–59 (2025)</div>
+              <div class="stat-source">Source: FTC, 2025 data</div>
             </div>
           </div>
 
@@ -726,9 +748,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-4.jpg" alt="" loading="lazy" width="680" height="360" aria-hidden="true">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number">$38,<span class="teal">000+</span></div>
-              <div class="stat-title">Average loss per older fraud victim</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-number">$38,<span class="teal">500</span></div>
+              <div class="stat-title">Average reported loss in a complaint from someone 60+ (2025)</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -738,8 +760,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number"><span class="teal">201K+</span></div>
-              <div class="stat-title">Fraud complaints filed by older adults in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Complaints filed with IC3 by people 60+ in 2025</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -749,8 +771,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number"><span class="teal">+59%</span></div>
-              <div class="stat-title">Rise in senior fraud losses vs. the year before</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Increase in reported losses from 2024 to 2025</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -759,9 +781,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               <img src="images/scam-stat-7.jpg" alt="" loading="lazy" width="680" height="360" aria-hidden="true">
             </div>
             <div class="stat-card-body">
-              <div class="stat-number"><span class="teal">12,400</span></div>
-              <div class="stat-title">Older adults who lost $100,000+ to a single scam in 2025</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-number"><span class="teal">12,444</span></div>
+              <div class="stat-title">IC3 complainants 60+ who reported losses over $100,000</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
           </div>
 
@@ -771,9 +793,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
             </div>
             <div class="stat-card-body">
               <div class="stat-number">$3.52<span class="teal">B</span></div>
-              <div class="stat-title">Lost by seniors to investment &amp; crypto scams (top category)</div>
-              <div class="stat-source">Source: FBI IC3 Elder Fraud Report, 2025</div>
+              <div class="stat-title">Reported losses to investment fraud among people 60+ in 2025</div>
+              <div class="stat-source">Source: FBI IC3, 2025</div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -785,8 +808,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 <section id="saves">
   <div class="container saves-section">
     <div class="saves-header reveal">
-      <div class="section-label">Your Money, Protected</div>
-      <h2 class="section-title">How KinSentry saves you money</h2>
+      <div class="section-label">Browser Protection</div>
+      <h2 class="section-title">How KinSentry can help interrupt scam attempts</h2>
       <p class="section-subtitle">Layered browser protection helps you spot and avoid common online scam tactics.</p>
     </div>
 
@@ -842,8 +865,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <div class="flow-icon success">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <div class="flow-step-label">Money saved</div>
-          <div class="flow-step-desc">Protected before falling for it</div>
+          <div class="flow-step-label">A chance to pause</div>
+          <div class="flow-step-desc">Review a warning before proceeding</div>
         </div>
       </div>
     </div>
@@ -900,8 +923,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <div class="flow-icon success">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <div class="flow-step-label">Money saved</div>
-          <div class="flow-step-desc">No remote access = no scam</div>
+          <div class="flow-step-label">A chance to stop</div>
+          <div class="flow-step-desc">A blocked site can interrupt one route</div>
         </div>
       </div>
     </div>
@@ -909,17 +932,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     <!-- Summary equation -->
     <div class="saves-summary reveal">
       <div class="saves-equation">
-        <div class="eq-block">No Remote Access</div>
-        <div class="eq-sign">=</div>
-        <div class="eq-block">No Scam</div>
-        <div class="eq-sign">=</div>
-        <div class="eq-block result money-saved-block" id="moneySavedBlock">
-          <span class="money-bag">💰</span>
-          <span class="money-text"> Money Saved</span>
-          <div class="bills-container" id="billsContainer"></div>
+        <div class="eq-block">Supported threat detected</div>
+        <div class="eq-sign">→</div>
+        <div class="eq-block">Warning or block</div>
+        <div class="eq-sign">→</div>
+        <div class="eq-block result">
+          <span class="money-bag">🛡️</span>
+          <span class="money-text"> Added protection</span>
         </div>
       </div>
-      <p>KinSentry is designed to block known scam pages and remote-access destinations before they load. No security tool can prevent every scam, so stay cautious and never share remote access or payment details with an unsolicited caller.</p>
+      <p>KinSentry blocks remote-access sites on its list, which is updated daily, but the list may not include new sites. Scam-page detection may also miss new threats. KinSentry cannot prevent every scam or guarantee that financial loss will be avoided. Stay cautious and never share remote access or payment details with an unsolicited caller.</p>
     </div>
   </div>
 </section>
@@ -929,8 +951,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   <div class="container features-section">
     <div class="features-header reveal">
       <div class="section-label">Features</div>
-      <h2 class="section-title">Everything to keep them safe</h2>
-      <p class="section-subtitle">Built specifically to protect elderly users from the growing threat of remote access tech support scams.</p>
+      <h2 class="section-title">Protection features for safer browsing</h2>
+      <p class="section-subtitle">Built to help older adults recognize and avoid remote-access tech-support scams.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card reveal">
@@ -938,77 +960,77 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><line x1="4" y1="5" x2="20" y2="15"/></svg>
         </div>
         <h3>Remote Access Site Blocking</h3>
-        <p>Automatically blocks 70+ remote desktop software sites including AnyDesk, TeamViewer, UltraViewer, and more. Updated regularly.</p>
+        <p>Blocks listed remote-access sites, including AnyDesk, TeamViewer, and UltraViewer. The list is updated daily, but in rare cases, it may not include new sites.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 3v8M8.5 8.5 12 12l3.5-3.5"/></svg>
         </div>
-        <h3>Remote &amp; Malicious Software Download Blocker</h3>
-        <p>Intercepts downloads of remote-access tools and known malicious software before they reach the device — stopping scammers from installing control software in the first place.</p>
+        <h3>Remote-Access Software Download Guard</h3>
+        <p>Checks downloads for known remote-support and remote-access tools commonly abused by scammers. A matching download may be paused for your confirmation.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
         </div>
         <h3>Voice Warning Alerts</h3>
-        <p>A clear, spoken warning plays instantly when a scam site is detected. Impossible to miss, even for users unfamiliar with pop-ups.</p>
+        <p>When enabled, a clear spoken warning plays on your device when KinSentry detects a supported threat—making the alert harder to miss.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="12"/><line x1="11" y1="15" x2="11.01" y2="15"/></svg>
         </div>
         <h3>ScamAd Detector</h3>
-        <p>Automatically detects fake ads on Google, Bing, Yahoo and DuckDuckGo that impersonate trusted brands like Norton, McAfee and Microsoft — and warns the user before they click.</p>
+        <p>Checks supported search results for ads that impersonate trusted brands and can warn you when it identifies a suspicious result. In rare cases, some threats may be missed.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
         </div>
         <h3>Scam Page &amp; Popup Blocking</h3>
-        <p>Detects and blocks fake tech support pages, deceptive pop-ups, and fraudulent "virus detected" alerts before they can trick your loved ones into calling scam numbers.</p>
+        <p>Detects and blocks supported fake tech-support pages and scam pop-ups. We update our scam page list daily, but in rare cases, new threats may not be detected.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
         </div>
         <h3>Phishing Email Detection</h3>
-        <p>Scans incoming emails for phishing links, spoofed senders, and fraudulent "account suspended" or "payment failed" scams — flagging dangerous messages before they're opened.</p>
+        <p>Checks the email you have open in supported webmail services for signs of phishing, including suspicious links and sender details. In rare cases, detection may miss some threats.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <h3>Family Alert System</h3>
-        <p>Instantly notifies family members via email when a scam attempt is blocked. Stay informed from anywhere.</p>
+        <p>Configured family contacts can receive an email when KinSentry detects a threat. Email alerts are available now; SMS and WhatsApp alerts are coming soon.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
         </div>
         <h3>Full-Screen Overlay</h3>
-        <p>Unmissable visual alert covers the entire screen with clear instructions. CSS-isolated so no website can interfere with it.</p>
+        <p>Shows a full-screen warning with clear instructions when KinSentry blocks a supported threat.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
-        <h3>Tamper-Resistant</h3>
-        <p>Page refresh bypass protection ensures the warning re-appears even if the scammer instructs the user to reload the page.</p>
+        <h3>Warning After Refresh</h3>
+        <p>If a blocked page is reloaded, KinSentry can show the warning again while the page remains on its blocklist.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
         <h3>Activity Dashboard</h3>
-        <p>Track blocked attempts, view history, and monitor protection status across all family devices from one central dashboard.</p>
+        <p>View protection activity and device status from your dashboard. Family plan admins can review activity from linked household devices.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </div>
-        <h3>Real-Time Scam Number Alerts</h3>
-        <p>Get instant push notifications and email alerts when new scam phone numbers are identified. Stay ahead of emerging threats with our continuously updated scam database.</p>
+        <h3>Scam Number Warnings</h3>
+        <p>Get push notifications alerts when new scam numbers are added to ScammerInfo or reported by the KinSentry community. Stay ahead of emerging threats with continuously updated scam-number databases.</p>
       </div>
     </div>
   </div>
@@ -1019,24 +1041,24 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   <div class="container how-section">
     <div class="how-header reveal">
       <div class="section-label">How It Works</div>
-      <h2 class="section-title">Set up in 60 seconds</h2>
-      <p class="section-subtitle">Install KinSentry on your loved one's browser and protect them from day one.</p>
+      <h2 class="section-title">Get started in a few steps</h2>
+      <p class="section-subtitle">Install KinSentry in your browser—or help a family member set it up.</p>
     </div>
     <div class="how-steps">
       <div class="how-step reveal">
         <div class="step-num">1</div>
         <h3>Install the Extension</h3>
-        <p>Add KinSentry from the Chrome Web Store or Microsoft Edge Add-ons. Takes under 30 seconds — no configuration needed for basic protection.</p>
+        <p>Install KinSentry from the Chrome Web Store or Microsoft Edge Add-ons. Basic protection requires no additional configuration.</p>
       </div>
       <div class="how-step reveal">
         <div class="step-num">2</div>
-        <h3>Add Family Contacts</h3>
-        <p>Add an email address for a family member who should be notified when a scam is blocked. Email alerts are available now; SMS and WhatsApp alerts are not yet available.</p>
+        <h3>Add Family Contacts (Optional)</h3>
+        <p>Add an email contact for family alerts. Email alerts are available now; SMS and WhatsApp alerts are not yet available.</p>
       </div>
       <div class="how-step reveal">
         <div class="step-num">3</div>
-        <h3>Protection is Live</h3>
-        <p>KinSentry works silently in the background. When a scam site is detected, it triggers full-screen warnings, voice alerts, and family notifications.</p>
+        <h3>Protection as You Browse</h3>
+        <p>When KinSentry detects a supported threat, it can show a warning, play a voice alert if enabled, and email configured family contacts.</p>
       </div>
     </div>
   </div>
@@ -1052,7 +1074,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
       <!-- Billing toggle -->
       <div class="billing-toggle" id="billingToggle">
         <button class="toggle-btn active" id="toggleAnnual" onclick="setBilling('annual')">
-          Annually <span class="save-badge">Save 28%</span>
+          Annually
         </button>
         <button class="toggle-btn" id="toggleMonthly" onclick="setBilling('monthly')">
           Monthly
@@ -1072,16 +1094,17 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>Community scam updates</li>
         </ul>
         <a href="/signup" data-plan="free" class="pricing-btn outline">Get Started Free</a>
+        <a class="pricing-details-link" href="#features">View feature details</a>
       </div>
       <div class="pricing-card featured reveal">
         <div class="pricing-popular">Most Popular</div>
-        <div class="plan-name">Guardian</div>
+        <div class="plan-name has-discount">Guardian <span class="discount-sticker annual-savings" role="img" aria-label="Save 28% with annual billing"><span class="discount-off">SAVE</span><span class="discount-percent">28%</span></span></div>
         <div class="price" id="guardianPrice">$4.99<span>/mo</span></div>
         <div class="plan-desc" id="guardianBilling">Billed annually at $59.88/yr</div>
         <ul>
           <li><span class="plan-inherits">Everything in Free</span></li>
-          <li>Voice scam alerts</li>
-          <li>Dangerous scam-number warnings</li>
+          <li>Spoken warnings for supported threats (when enabled)</li>
+          <li>Notification alerts for new scam numbers</li>
           <li>Scam-page &amp; popup blocking</li>
           <li>Phishing Email Detector</li>
           <li>Live scam-news feed</li>
@@ -1090,40 +1113,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
           <li>1 device</li>
         </ul>
         <a href="/signup.html" data-plan="guardian" id="guardianCheckout" class="pricing-btn filled">Enjoy free for 30 days</a>
+        <a class="pricing-details-link" href="#features">View feature details</a>
       </div>
       <div class="pricing-card reveal">
-        <div class="plan-name">Family</div>
+        <div class="plan-name has-discount">Family <span class="discount-sticker annual-savings" role="img" aria-label="Save 17% with annual billing"><span class="discount-off">SAVE</span><span class="discount-percent">17%</span></span></div>
         <div class="price" id="familyPrice">$9.99<span>/mo</span></div>
         <div class="plan-desc" id="familyBilling">Billed annually at $119.88/yr</div>
         <ul>
           <li><span class="plan-inherits">Everything in Guardian</span></li>
           <li>Up to 3 devices</li>
-          <li>Family dashboard to manage everyone</li>
+          <li>Manage your household from one dashboard</li>
           <li>90-day block history</li>
           <li>Priority support</li>
         </ul>
         <a href="/account.html?checkout=family_annual" data-plan="family" id="familyCheckout" class="pricing-btn outline">Choose Family</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── TRUST ───────────────────────── -->
-<section id="trust">
-  <div class="container trust-section">
-    <div class="reveal">
-      <div class="section-label">Trusted by Families</div>
-      <h2 class="section-title">Peace of mind, delivered</h2>
-      <p class="section-subtitle" style="margin:0 auto">Real stories from families protected by KinSentry.</p>
-    </div>
-    <div class="trust-cards">
-      <div class="trust-card reveal">
-        <p class="quote">"My mother almost fell for a Microsoft scam call. After I installed KinSentry, it blocked the remote access site before she could do anything. I got an email alert in seconds."</p>
-        <p class="author">— Sarah M., Daughter</p>
-      </div>
-      <div class="trust-card reveal">
-        <p class="quote">"I manage IT for a senior living community. KinSentry was the easiest solution to deploy — no training needed. The voice warnings are perfect for our residents."</p>
-        <p class="author">— James K., IT Administrator</p>
+        <a class="pricing-details-link" href="#features">View feature details</a>
       </div>
     </div>
   </div>
@@ -1133,11 +1137,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 <section class="cta-section">
   <div class="container reveal">
     <div class="section-label">Get Started</div>
-    <h2 class="section-title">Prevents scams<br><span class="gradient-text">before they cost you.</span></h2>
-    <p class="section-subtitle" style="margin:0 auto 36px">Install KinSentry in under a minute and give your family the protection they deserve. Start free — no credit card required.</p>
+    <h2 class="section-title">Add another layer of browser protection.</h2>
+    <p class="section-subtitle" style="margin:0 auto 36px">Get started on your device, or set up KinSentry for your household. Start with the free plan—no credit card required.</p>
     <a href="#" class="btn-primary" style="font-size:17px; padding: 18px 44px;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      Add to Chrome — It's Free
+      Add to Chrome — Free
     </a>
   </div>
 </section>
@@ -1694,6 +1698,9 @@ function setBilling(type) {
   const fPrice   = document.getElementById('familyPrice');
   const gBill    = document.getElementById('guardianBilling');
   const fBill    = document.getElementById('familyBilling');
+  document.querySelectorAll('.annual-savings').forEach(badge => {
+    badge.hidden = type !== 'annual';
+  });
 
   if (!gPrice || !fPrice) return;
 
@@ -1820,42 +1827,6 @@ updateCTAs();
   }
 
 
-  /* ── MONEY SAVED — bills on hover ── */
-  const moneySavedBlock = document.getElementById('moneySavedBlock');
-  const billsContainer  = document.getElementById('billsContainer');
-  const BILL_EMOJIS = ['💵','💴','💶','💷','💸'];
-  let billInterval = null;
-
-  function spawnBill() {
-    if (!billsContainer) return;
-    const bill = document.createElement('span');
-    bill.classList.add('bill');
-    bill.textContent = BILL_EMOJIS[Math.floor(Math.random() * BILL_EMOJIS.length)];
-
-    const startX = (Math.random() * 100) - 50;    // -50% to +50%
-    const rot    = (Math.random() * 60) - 30;
-    const rot2   = rot + (Math.random() * 30) - 15;
-    bill.style.setProperty('--tx',   `translateX(${startX}px)`);
-    bill.style.setProperty('--rot',  `${rot}deg`);
-    bill.style.setProperty('--rot2', `${rot2}deg`);
-    bill.style.left   = `${20 + Math.random() * 60}%`;
-    bill.style.bottom = '10px';
-    bill.style.animationDuration = `${0.8 + Math.random() * 0.6}s`;
-
-    billsContainer.appendChild(bill);
-    setTimeout(() => bill.remove(), 1500);
-  }
-
-  if (moneySavedBlock) {
-    moneySavedBlock.addEventListener('mouseenter', () => {
-      spawnBill();
-      billInterval = setInterval(spawnBill, 180);
-    });
-    moneySavedBlock.addEventListener('mouseleave', () => {
-      clearInterval(billInterval);
-    });
-  }
-
   /* ── COMING SOON — NOTIFY BUTTON ── */
   const notifyBtn   = document.querySelector('.cs-notify-btn');
   const notifyInput = document.querySelector('.cs-notify-input');
@@ -1923,5 +1894,16 @@ updateCTAs();
 </script>
 <script src="js/billing-handoff.js"></script>
 <script src="js/kinsentry-tracking.js"></script>
+<script>
+  const statsToggle = document.querySelector('.carousel-toggle');
+  const statsTrackWrapper = document.querySelector('.carousel-track-wrapper');
+  if (statsToggle && statsTrackWrapper) {
+    statsToggle.addEventListener('click', () => {
+      const isPaused = statsTrackWrapper.classList.toggle('paused');
+      statsToggle.setAttribute('aria-pressed', String(isPaused));
+      statsToggle.textContent = isPaused ? 'Resume statistics' : 'Pause statistics';
+    });
+  }
+</script>
 </body>
 </html>
