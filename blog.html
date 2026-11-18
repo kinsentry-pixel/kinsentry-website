@@ -36,49 +36,64 @@
   <p class="page-subtitle">Stay informed about the latest tech support scams, protection strategies, and KinSentry updates.</p>
 </div>
 
-<div class="blog-grid">
-  <a class="blog-card featured" href="/protect-elderly-parents-from-scams">
+<section class="blog-tools" aria-label="Find articles">
+  <label class="blog-search-label" for="blog-search">Search articles</label>
+  <input id="blog-search" class="blog-search" type="search" placeholder="Try “popups” or “parents”" autocomplete="off">
+  <div class="blog-filters" role="group" aria-label="Filter articles by topic">
+    <button class="blog-filter active" type="button" data-filter="all" aria-pressed="true">All articles</button>
+    <button class="blog-filter" type="button" data-filter="scam" aria-pressed="false">Scam alerts</button>
+    <button class="blog-filter" type="button" data-filter="safety" aria-pressed="false">Safety guides</button>
+    <button class="blog-filter" type="button" data-filter="research" aria-pressed="false">Research</button>
+    <button class="blog-filter" type="button" data-filter="howto" aria-pressed="false">How-to</button>
+    <button class="blog-filter" type="button" data-filter="product" aria-pressed="false">Product updates</button>
+  </div>
+  <p class="blog-results" id="blog-results" aria-live="polite">Showing 6 articles</p>
+</section>
+
+<div class="blog-grid" id="blog-grid">
+  <a class="blog-card featured" data-category="safety" href="/protect-elderly-parents-from-scams">
     <span class="blog-tag">Complete Guide</span>
     <h3>How to protect your elderly parents from online scams</h3>
     <p>Our complete guide: why antivirus isn't enough, the 3 scams that target seniors most, a 20-minute scam-proofing checklist, and how to keep the whole family in the loop.</p>
     <div class="blog-meta">Updated 2026 · 12 min read</div>
   </a>
 
-  <a class="blog-card" href="/anatomy-of-a-tech-support-scam">
+  <a class="blog-card" data-category="scam" href="/anatomy-of-a-tech-support-scam">
     <span class="blog-tag">Scam Alert</span>
     <h3>The anatomy of a tech support scam: how scammers steal $38,000 in 20 minutes</h3>
     <p>A step-by-step breakdown of how modern tech support scams work, from the initial fake popup to the moment money leaves the victim's account. Understanding the playbook is the first step to stopping it.</p>
     <div class="blog-meta">April 2026 · 6 min read</div>
   </a>
 
-  <a class="blog-card" href="/kinsentry-blocks-scam-popups">
+  <a class="blog-card" data-category="product" href="/kinsentry-blocks-scam-popups">
     <span class="blog-tag">Product Update</span>
     <h3>KinSentry now blocks scam popups before you see the phone number</h3>
     <p>Our new scam page detection engine identifies and kills fake "virus alert" popups instantly — before your loved one can even read the scam phone number. Here's how Layer 1 protection works.</p>
     <div class="blog-meta">April 2026 · 4 min read</div>
   </a>
 
-  <a class="blog-card" href="/5-signs-your-loved-one-is-being-targeted">
+  <a class="blog-card" data-category="safety" href="/5-signs-your-loved-one-is-being-targeted">
     <span class="blog-tag">Safety Guide</span>
     <h3>5 signs someone you love is being targeted by a scammer</h3>
     <p>Unusual phone calls, secretive computer use, sudden bank withdrawals — learn the warning signs that a family member may be in contact with a tech support scammer and what to do about it.</p>
     <div class="blog-meta">March 2026 · 5 min read</div>
   </a>
 
-  <a class="blog-card" href="/why-older-adults-are-targeted">
+  <a class="blog-card" data-category="research" href="/why-older-adults-are-targeted">
     <span class="blog-tag">Research</span>
     <h3>Why older adults are 5× more likely to lose money to tech-support scams</h3>
     <p>It's not about intelligence — it's about trust, unfamiliarity with technology, and social isolation. We break down the psychology behind why seniors are disproportionately targeted.</p>
     <div class="blog-meta">March 2026 · 7 min read</div>
   </a>
 
-  <a class="blog-card" href="/setting-up-kinsentry-for-your-parents">
+  <a class="blog-card" data-category="howto" href="/setting-up-kinsentry-for-your-parents">
     <span class="blog-tag">How-To</span>
     <h3>Setting up KinSentry for your parents: a 60-second guide</h3>
     <p>Install the extension, configure family alerts, and walk away knowing your parents are protected. No technical knowledge required — we made it that simple on purpose.</p>
     <div class="blog-meta">February 2026 · 3 min read</div>
   </a>
 </div>
+<p class="blog-empty" id="blog-empty" hidden>No articles match that search. Try another topic or search term.</p>
 </div>
 
 <footer>
@@ -94,5 +109,39 @@
 </footer>
 
 <script src="js/kinsentry-tracking.js"></script>
+<script>
+(() => {
+  const search = document.getElementById('blog-search');
+  const cards = [...document.querySelectorAll('#blog-grid .blog-card')];
+  const buttons = [...document.querySelectorAll('.blog-filter')];
+  const results = document.getElementById('blog-results');
+  const empty = document.getElementById('blog-empty');
+  let activeFilter = 'all';
+
+  function updateArticles() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const matches = (activeFilter === 'all' || card.dataset.category === activeFilter)
+        && (!query || card.textContent.toLocaleLowerCase().includes(query));
+      card.hidden = !matches;
+      if (matches) visible++;
+    });
+    results.textContent = `Showing ${visible} ${visible === 1 ? 'article' : 'articles'}`;
+    empty.hidden = visible !== 0;
+  }
+
+  search.addEventListener('input', updateArticles);
+  buttons.forEach(button => button.addEventListener('click', () => {
+    activeFilter = button.dataset.filter;
+    buttons.forEach(item => {
+      const selected = item === button;
+      item.classList.toggle('active', selected);
+      item.setAttribute('aria-pressed', String(selected));
+    });
+    updateArticles();
+  }));
+})();
+</script>
 </body>
 </html>
