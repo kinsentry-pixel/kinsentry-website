@@ -12,4 +12,15 @@ Disallow: /family
 Disallow: /family.html
 Disallow: /api/
 
+# Allow Search Console's URL Inspection and Rich Results test crawler to fetch public pages.
+# Keep private account and API routes blocked for this crawler too.
+User-agent: Google-InspectionTool
+Allow: /
+Allow: /family-verification-plan-voice-clone-scams
+Disallow: /account
+Disallow: /reset-password
+Disallow: /signup
+Disallow: /family
+Disallow: /api/
+
 Sitemap: https://kinsentry.com/sitemap.xml
